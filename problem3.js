@@ -38,7 +38,7 @@ rl.question('Enter a natural number ', (answer) => {
 
     const sup = Math.sqrt(copy);
 
-    for (let i = 3; i < sup; i = i + 2)
+    for (let i = 3; i <= sup; i = i + 2)
     {
         if (copy % i == 0)
         {
