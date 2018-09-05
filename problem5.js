@@ -6,3 +6,55 @@
 What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
 
 */
+
+/*I will use part of my problem 3 solution, to get the factorisation form of every number below N*/
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question('Enter a natural number ', (answer) => {
+
+    const parsed = parseInt(answer);
+
+    if (isNaN(parsed)) {
+        console.log("Please, enter a natural number next time <3");
+        return 0;
+    }
+
+    if (parsed < 1) {
+        return 0;
+    }
+
+    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", 0);
+    rl.close();
+});
+
+function primeFactorisation(number)
+{
+    let arr = [];
+    while (number%2 == 0){
+        number /= 2;
+        arr.push(2);
+    }
+    
+    const sup = Math.sqrt(number);
+    
+    for (let i = 3; i < sup; i = i + 2)
+    {
+        if (number % i == 0)
+        {
+            number /= i;
+            arr.push(i);
+        }
+    }
+    /*If the number is prime, add it to the array*/
+    if (arr.length == 0)
+    {
+        arr.push(number);
+    }
+
+    return arr;
+}
