@@ -18,7 +18,7 @@ int main ()
 
     int nbr;
     cin >> nbr;
-
+    
 
     cout << "The number was : " << nbr << endl;
 
