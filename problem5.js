@@ -39,16 +39,17 @@ rl.question('Enter a natural number ', (answer) => {
 function primeFactorisation(number)
 {
     let arr = [];
+    
+
     while (number%2 == 0){
         number /= 2;
         arr.push(2);
-    }
-    
+    }  
+
     const sup = Math.sqrt(number);
-    
     for (let i = 3; i <= sup; i = i + 2)
     {
-        if (number % i == 0)
+        while (number % i == 0)
         {
             number /= i;
             arr.push(i);
