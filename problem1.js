@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 /*
 
 If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
@@ -18,7 +19,7 @@ rl.question('Enter a natural number ', (answer) => {
     const parsed = parseInt(answer);
 
     if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3")
+        console.log("Please, enter a natural number next time <3");
         return 0;
     }
 
