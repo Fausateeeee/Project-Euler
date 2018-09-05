@@ -27,8 +27,12 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 1) {
         return 0;
     }
-
-    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", 0);
+    let arr = [];
+    for (let i = 2; i <= parsed; i++)
+    {
+        arr.push(primeFactorisation(i));
+    }
+    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", arr);
     rl.close();
 });
 
@@ -42,7 +46,7 @@ function primeFactorisation(number)
     
     const sup = Math.sqrt(number);
     
-    for (let i = 3; i < sup; i = i + 2)
+    for (let i = 3; i <= sup; i = i + 2)
     {
         if (number % i == 0)
         {
