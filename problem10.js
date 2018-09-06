@@ -26,7 +26,30 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 1) {
         return 0;
     }
+    
+    let primes = getPrimesArray(parsed);
 
-    console.log("The sum of all primes bellow ", parsed, " is :", 0);
+    console.log("The sum of all primes bellow ", parsed, " is :", primes.reduce((accumulator, currentValue) => accumulator + currentValue));
     rl.close();
 });
+
+function getPrimesArray(number)
+{
+    let primes = [2];
+    for (let i = 3; i < number; i = i + 2) 
+    {
+        for (let j = 0; j < primes.length; j++)
+        {
+            if (i%primes[j] == 0)
+            {
+                break;
+            }
+            else if (j == primes.length - 1)
+            {
+                primes.push(i);
+            }
+        }
+    }
+
+    return primes;
+}
