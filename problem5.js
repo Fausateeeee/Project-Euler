@@ -7,7 +7,6 @@ What is the smallest positive number that is evenly divisible by all of the numb
 
 */
 
-/*I will use part of my problem 3 solution, to get the factorisation form of every number below N*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -27,39 +26,35 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 1) {
         return 0;
     }
-    let arr = [];
-    for (let i = 2; i <= parsed; i++)
+    
+    let lcmf = 1;
+    for (let i = 1; i <= answer; i++)
     {
-        arr.push(primeFactorisation(i));
+        lcmf = lcm(lcmf, i);
     }
-    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", arr);
+    
+    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", lcmf);
     rl.close();
 });
 
-function primeFactorisation(number)
+function lcm(number1, number2)
 {
-    let arr = [];
-    
+    return number1*number2/gcd(number1,number2);
+}
 
-    while (number%2 == 0){
-        number /= 2;
-        arr.push(2);
-    }  
-
-    const sup = Math.sqrt(number);
-    for (let i = 3; i <= sup; i = i + 2)
+function gcd(number1, number2)
+{
+    if (number1 < number2)
     {
-        while (number % i == 0)
-        {
-            number /= i;
-            arr.push(i);
-        }
-    }
-    /*If the number is prime, add it to the array*/
-    if (arr.length == 0)
-    {
-        arr.push(number);
+        return gcd(number2, number1);
     }
 
-    return arr;
+    while (number2 > 0)
+    {
+        let rest = number1%number2;
+        number1 = number2;
+        number2 = rest;
+    }
+
+    return number1;
 }

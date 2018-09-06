@@ -29,7 +29,9 @@ rl.question('Enter a natural number ', (answer) => {
     /* Either, the number is prime or the largest prime factor is smaller than the square root of the number */
   
     let copy = parsed;
+
     let arr = [];
+    let primes = [2];
 
     while (copy%2 == 0){
         copy /= 2;
@@ -37,20 +39,29 @@ rl.question('Enter a natural number ', (answer) => {
     }
 
     const sup = Math.sqrt(copy);
-
-    for (let i = 3; i <= sup; i = i + 2)
+    if(primes.indexOf(copy) != -1)
     {
-        if (copy % i == 0)
+        for (let i = 3; i < sup; i = i + 2)
         {
-            copy /= i;
-            arr.push(i);
+            if (copy % i == 0)
+            {
+                copy /= i;
+                arr.push(i);
+            }
         }
     }
+    else if (copy != 1)
+    {
+        arr.push(copy);
+    }
+
     /*If the number is prime, add it to the array*/
     if (arr.length == 0)
     {
         arr.push(parsed);
+        primes.push(copy);
     }
+
     console.log("The largest prime factor of ", parsed, " is :", arr[arr.length - 1]);
     rl.close();
 });
