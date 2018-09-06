@@ -7,7 +7,6 @@ What is the smallest positive number that is evenly divisible by all of the numb
 
 */
 
-/*I will use part of my problem 3 solution, to get the factorisation form of every number below N*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -27,62 +26,35 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 1) {
         return 0;
     }
-    let arr = [];
-    let primes = [2];
-    for (let i = 2; i <= parsed; i++)
+    
+    let lcmf = 1;
+    for (let i = 1; i <= answer; i++)
     {
-        arr.push(primeFactorisation(i, primes));
+        lcmf = lcm(lcmf, i);
     }
-
-    //arr = smallestMultiple(arr);
-    console.log(primes);
-    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", arr);
+    
+    console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", lcmf);
     rl.close();
 });
 
-function primeFactorisation(number, primes)
+function lcm(number1, number2)
 {
-    let arr = [];
-
-
-    while (number%2 == 0){
-        number /= 2;
-        arr.push(2);
-    }  
-
-    const sup = Math.sqrt(number);
-    if(primes.indexOf(number) != -1)
-    {
-        for (let i = 3; i <= sup; i = i + 2)
-        {
-            while (number % i == 0)
-            {
-                number /= i;
-                arr.push(i);
-            }
-        }
-    }
-    else if (number != 1)
-    {
-        arr.push(number);
-    }
-
-    /*If the number is prime, add it to the array*/
-    if (arr.length == 0)
-    {
-        arr.push(number);
-        primes.push(number);
-    }
-    console.log(primes);
-    return arr;
+    return number1*number2/gcd(number1,number2);
 }
 
-function smallestMultiple(primesArr)
+function gcd(number1, number2)
 {
-    let multiple = [];
-    
-    for(let i = 0; i < primesArr.length; i++)
+    if (number1 < number2)
     {
-        
+        return gcd(number2, number1);
     }
+
+    while (number2 > 0)
+    {
+        let rest = number1%number2;
+        number1 = number2;
+        number2 = rest;
+    }
+
+    return number1;
 }
