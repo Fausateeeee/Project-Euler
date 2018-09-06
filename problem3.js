@@ -25,43 +25,45 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 2) {
         return 0;
     }
-
-    /* Either, the number is prime or the largest prime factor is smaller than the square root of the number */
   
-    let copy = parsed;
+    let Primes = getPrimesArray(parsed/2);
 
-    let arr = [];
-    let primes = [2];
-
-    while (copy%2 == 0){
-        copy /= 2;
-        arr.push(2);
+    lpf = -1;
+    for (i = Primes.length - 1; i >=0; i--)
+    {
+        if (parsed % Primes[i] == 0)
+        {
+            lpf = Primes[i];
+            break;
+        }
     }
 
-    const sup = Math.sqrt(copy);
-    if(primes.indexOf(copy) != -1)
+    if (lpf == -1)
     {
-        for (let i = 3; i < sup; i = i + 2)
+        lpf = parsed;
+    }
+
+    console.log("The largest prime factor of ", parsed, " is :", lpf);
+    rl.close();
+});
+
+function getPrimesArray(number)
+{
+    let primes = [2];
+    for (let i = 3; i <= number; i = i + 2) 
+    {
+        for (let j = 0; j < primes.length; j++)
         {
-            if (copy % i == 0)
+            if (i%primes[j] == 0)
             {
-                copy /= i;
-                arr.push(i);
+                break;
+            }
+            else if (j == primes.length - 1)
+            {
+                primes.push(i);
             }
         }
     }
-    else if (copy != 1)
-    {
-        arr.push(copy);
-    }
 
-    /*If the number is prime, add it to the array*/
-    if (arr.length == 0)
-    {
-        arr.push(parsed);
-        primes.push(copy);
-    }
-
-    console.log("The largest prime factor of ", parsed, " is :", arr[arr.length - 1]);
-    rl.close();
-});
+    return primes;
+}
