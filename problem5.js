@@ -28,18 +28,22 @@ rl.question('Enter a natural number ', (answer) => {
         return 0;
     }
     let arr = [];
+    let primes = [2];
     for (let i = 2; i <= parsed; i++)
     {
-        arr.push(primeFactorisation(i));
+        arr.push(primeFactorisation(i, primes));
     }
+
+    //arr = smallestMultiple(arr);
+    console.log(primes);
     console.log("The smallest positive number that is evenly divisible by all of the number from 1 to", parsed, " is : ", arr);
     rl.close();
 });
 
-function primeFactorisation(number)
+function primeFactorisation(number, primes)
 {
     let arr = [];
-    
+
 
     while (number%2 == 0){
         number /= 2;
@@ -47,19 +51,38 @@ function primeFactorisation(number)
     }  
 
     const sup = Math.sqrt(number);
-    for (let i = 3; i <= sup; i = i + 2)
+    if(primes.indexOf(number) != -1)
     {
-        while (number % i == 0)
+        for (let i = 3; i <= sup; i = i + 2)
         {
-            number /= i;
-            arr.push(i);
+            while (number % i == 0)
+            {
+                number /= i;
+                arr.push(i);
+            }
         }
     }
-    /*If the number is prime, add it to the array*/
-    if (arr.length == 0)
+    else if (number != 1)
     {
         arr.push(number);
     }
 
+    /*If the number is prime, add it to the array*/
+    if (arr.length == 0)
+    {
+        arr.push(number);
+        primes.push(number);
+    }
+    console.log(primes);
     return arr;
+}
+
+function smallestMultiple(primesArr)
+{
+    let multiple = [];
+    
+    for(let i = 0; i < primesArr.length; i++)
+    {
+        
+    }
 }
