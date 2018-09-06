@@ -23,7 +23,8 @@ rl.question('Enter a natural number ', (answer) => {
     }
 
     if (parsed < 1) {
-        return 0;
+        console.log("Enter a number greater than 0 next time");
+        rl.close();
     }
 
     const inf = Math.pow(10, parsed - 1); //parsed = 1 => inf = 1, parsed = 2 => inf = 10, etc...

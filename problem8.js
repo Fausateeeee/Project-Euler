@@ -42,11 +42,12 @@ rl.question('Enter a natural number ', (answer) => {
 
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
-        return 0;
+        rl.close();
     }
 
     if (parsed < 0) {
-        return 0;
+        console.log("Enter a positive number next time");
+        rl.close();
     }
     let maxValue = 0;
     for (let i = 0; i < HUGE_NUMBER.length - parsed; i++)

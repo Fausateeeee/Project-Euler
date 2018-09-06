@@ -38,16 +38,18 @@ rl.question('Enter an even natural number ', (answer) => {
 
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
-        return 0;
+        rl.close();
+        
     }
 
     if (parsed%2 != 0) {
         console.log("Please, enter an even natural number next time <3");
-        return 0;
+        rl.close();
     }
 
     if (parsed < 1) {
-        return 0;
+        console.log("Enter a number greater than 0 next time");
+        rl.close();
     }
 
     const K = parsed/2;

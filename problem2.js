@@ -22,11 +22,12 @@ rl.question('Enter a natural number ', (answer) => {
 
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
-        return 0;
+        rl.close();
     }
 
     if (parsed < 2) {
-        return 0;
+        console.log("Enter a number greater than 1 next time");
+        rl.close();
     }
 
     let arr = [2];
