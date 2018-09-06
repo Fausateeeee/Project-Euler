@@ -6,7 +6,7 @@ a^2 + b^2 = c^2
 
 For example, 3^2 + 4^2 = 9 + 16 = 25 = 5^2.
 
-There exists exactly one Pythagorean triplet for which a + b + c = K.
+There exists exactly one Pythagorean triplet for which a + b + c = 1000.
 Find the product abc.
 
 */
@@ -52,20 +52,17 @@ rl.question('Enter an even natural number ', (answer) => {
 
     const K = parsed/2;
     let factor = findFactor(K);
+
     let m_sol = 0;
     let n_sol = 0;
 
     for(let i = 0; i < factor.length; i++)
     {
-        console.log(factor[i]);
         let m = factor[i];
-        let n = K/(2*m) - m;
-        if (n > 0 && Number.isInteger(n))
+        let n = K/m - m;
+
+        if (n > 0 && Number.isInteger(n) && m > n)
         {
-            if (n > m)
-            {
-               [m,n] = [n,m]; 
-            }
             m_sol = m;
             n_sol = n;
             break;
@@ -91,7 +88,7 @@ rl.question('Enter an even natural number ', (answer) => {
 function findFactor(number)
 {
     factor = [];
-    for (let i = 2; i <= Math.ceil(number/2); i++)
+    for (let i = 2; i <= number; i++)
     {
         if (number%i == 0)
         {
