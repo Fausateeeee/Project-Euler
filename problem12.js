@@ -21,6 +21,16 @@ What is the value of the first triangle number to have over five hundred divisor
 
 */
 
+/*
+
+    To have K divisor, the number must be greater than K.
+    I need a great bound or else, the computation may take forever
+
+*/
+
+/*
+    Optimisation needed, brute force is SLOW
+*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -41,9 +51,30 @@ rl.question('Enter a natural number ', (answer) => {
         console.log("Enter a number greater than 0 next time");
         rl.close();
     }
-    
-    let primes = getPrimesArray(parsed);
+    let factor = [];
+    let triangular = 0;
+    let natural = 1;
+    while (factor.length <= parsed)
+    {
+        triangular += natural++;
+        factor = findFactor(triangular);
+    }
 
-    console.log("The sum of all primes bellow ", parsed, " is :", primes.reduce((accumulator, currentValue) => accumulator + currentValue));
+    console.log(triangular);
     rl.close();
 });
+
+function findFactor(number)
+{
+    factor = [];
+    for (let i = 1; i <= Math.ceil(number/2); i++)
+    {
+        if (number%i == 0)
+        {
+            factor.push(i);
+        }
+    }
+
+    factor.push(number);
+    return factor;
+}
