@@ -37,7 +37,28 @@ rl.question('Enter a natural number ', (answer) => {
         console.log("Enter a number greater than 0 next time");
         rl.close();
     }
-
+    console.log(Collatz(parsed));
     console.log("triangular");
     rl.close();
 });
+
+//Collatz will return the starting number and the length of the chain
+function Collatz(nbr)
+{
+    let number = nbr;
+    let length = 1;
+    while(number != 1)
+    {
+        if (number%2 == 0)
+        {
+            length++;
+            number /= 2;
+        }
+        else
+        {
+            length++;
+            number = 3*number + 1;
+        }
+    }
+    return {nbr, length};
+}
