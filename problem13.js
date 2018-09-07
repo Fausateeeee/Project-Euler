@@ -116,7 +116,7 @@ rl.question('Enter a natural number ', (answer) => {
   
     const parsed = parseInt(answer);
     //The data is stored as string
-const arrNbr = 
+const ARR_NBR = 
 ["37107287533902102798797998220837590246510135740250",
 "46376937677490009712648124896970078050417018260538",
 "74324986199524741059474233309513058123726617309629",
@@ -218,6 +218,11 @@ const arrNbr =
 "20849603980134001723930671666823555245252804609722",
 "53503534226472524250874054075591789781264330331690"];
 
+const TEST_NUM = [
+    '37107287533902102798797998220837590246510135740250',
+    '46376937677490009712648124896970078050417018260538'
+  ];
+
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
         rl.close();
@@ -228,7 +233,14 @@ const arrNbr =
         rl.close();
     }
 
+    let partial_arr_nbr=[];
+    for (i = 0; i < ARR_NBR.length; i++)
+    {
+        partial_arr_nbr.push(parseInt(ARR_NBR[i].substring(0, parsed + 3)));
+    }
 
-    console.log("end");
+    let firstDigits = partial_arr_nbr.reduce((accumulator, currentValue) => accumulator + currentValue);
+
+    console.log("The first", parsed, "digits should be :", firstDigits.toString().substring(0,parsed));
     rl.close();
 });
