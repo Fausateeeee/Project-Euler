@@ -234,7 +234,7 @@ const TEST_NUM = [
     }
 
     let partial_arr_nbr=[];
-    for (i = 0; i < ARR_NBR.length; i++)
+    for (let i = 0; i < ARR_NBR.length; i++)
     {
         partial_arr_nbr.push(parseInt(ARR_NBR[i].substring(0, parsed + 3)));
     }
