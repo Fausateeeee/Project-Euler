@@ -36,14 +36,19 @@ rl.question('Enter a natural number ', (answer) => {
 
     }
 
+
     let grid = new simpleConnectedGrid(parsed);
 
-   //grid.printGraph();
-    //grid.breadthFirstSearch("0,0");
-    grid.depthFirstSearch("0,0", parsed.toString()+","+parsed.toString());
-   // grid.getAllPaths("0,0",parsed.toString()+","+parsed.toString());
+    //Old solution by detphFirstSearch, it was really slow
 
-    console.log("The number of path in a", parsed, "x", parsed, "grid is :", grid.path_nbr);
+    let solution = 1;
+    for (let i = 1; i <= parsed; i++)
+    {
+        solution *= (parsed + i)/i;
+    }
+    //grid.depthFirstSearch("0,0", parsed.toString()+","+parsed.toString());
+
+    console.log("The number of path in a", parsed, "x", parsed, "grid is :", Math.ceil(solution));
     rl.close();
 });
 
