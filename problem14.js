@@ -27,6 +27,7 @@ const rl = readline.createInterface({
 rl.question('Enter a natural number ', (answer) => {
   
     const parsed = parseInt(answer);
+    var collatzValues = [];
 
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
@@ -36,29 +37,54 @@ rl.question('Enter a natural number ', (answer) => {
     if (parsed < 1) {
         console.log("Enter a number greater than 0 next time");
         rl.close();
+    
     }
-    console.log(Collatz(parsed));
-    console.log("triangular");
+    let r_collatz = Collatz(parsed);
+
+    let max = r_collatz.reduce((a,b) => Math.max(a,b));
+
+    console.log("The number with the longuest Collatz chain under", parsed, "is", r_collatz.indexOf(max), "with length", max);
     rl.close();
 });
 
 //Collatz will return the starting number and the length of the chain
+
 function Collatz(nbr)
 {
-    let number = nbr;
-    let length = 1;
-    while(number != 1)
+    let values = [true, true];
+    let length = [0,1];
+
+    for (let i = 2; i < nbr; i++)
     {
-        if (number%2 == 0)
+        let number = i;
+        let length_l = 1;
+        while(number > 1)
         {
-            length++;
-            number /= 2;
+            if (values[number])
+            {
+               
+                values[i] = true;
+                length[i] = length[number] + length_l;
+                number=1;
+            }
+
+            else if (number%2 == 0)
+            {
+                length_l++;
+                number /= 2;
+                if (number == 1)
+                {
+                    values[i] = true;
+                    length[i] = length_l;
+                }         
+            }
+            else
+            {
+                length_l++;
+                number = 3*number + 1;
+            }
         }
-        else
-        {
-            length++;
-            number = 3*number + 1;
-        }
+        
     }
-    return {nbr, length};
+    return length;
 }
