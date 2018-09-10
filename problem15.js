@@ -7,6 +7,9 @@ How many such routes are there through a 20×20 grid?
 
 */
 
+/* 
+First, we implement the simpleConnectedGrid which ressemble of a graph class
+*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -29,6 +32,77 @@ rl.question('Enter a natural number ', (answer) => {
     
     }
 
+    let grid = new simpleConnectedGrid(parsed);
+
+    console.log(grid);
+
     console.log("The number of path in a", parsed,"x",parsed, "grid is :");
     rl.close();
 });
+
+class simpleConnectedGrid {
+
+    constructor(dimension) {
+        this.size = Math.pow(dimension+1, 2); //Number of point in the grid equals (dimension + 1)^2
+        this.adjacencyList = new Map ();
+
+        this.generateVertices(dimension);
+        this.generateEdges(dimension);
+    }
+
+    newVertex(vertex) {
+        this.adjacencyList.set(vertex, []);
+    }
+
+    newEdge(firstVertex, secondVertex)
+    {
+        this.adjacencyList.get(firstVertex).push(secondVertex);
+    }
+
+    printGraph(){
+        let keys = this.adjacencyList.keys();
+
+        for (let key of keys)
+        {
+            let values = this.adjacencyList.get(key);
+            let output = "";
+
+            for (let value of values)
+            {
+                output += value + " ";
+            }
+
+            console.log(key + " -> " + output);
+        }
+    }
+
+    generateVertices(dimension) {
+        for (let i = 0; i <= dimension; i++)
+        {
+            for (let j = 0; j <= dimension; j++)
+            {
+                this.newVertex(i.toString()+","+j.toString());
+            }
+        }
+    }
+
+    generateEdges(dimension) {
+    //Horizontal connection
+    for (let i = 0; i <= dimension; i++)
+    {
+        for (let j = 0; j < dimension; j++)
+        {
+            this.newEdge(i.toString()+","+j.toString(),i.toString()+","+(j+1).toString());
+        }
+    }
+    //Vertical connect
+    for (let i = 0; i <= dimension; i++)
+    {
+        for (let j = 0; j < dimension; j++)
+        {
+            this.newEdge(j.toString()+","+i.toString(),(j+1).toString()+","+i.toString());
+        }
+    }
+
+    }
+}
