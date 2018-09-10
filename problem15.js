@@ -46,8 +46,8 @@ class simpleConnectedGrid {
         this.size = Math.pow(dimension+1, 2); //Number of point in the grid equals (dimension + 1)^2
         this.adjacencyList = new Map ();
 
-        this.generateVertices(dimension);
-        this.generateEdges(dimension);
+        this._generateVertices(dimension);
+        this._generateEdges(dimension);
     }
 
     newVertex(vertex) {
@@ -76,7 +76,7 @@ class simpleConnectedGrid {
         }
     }
 
-    generateVertices(dimension) {
+    _generateVertices(dimension) {
         for (let i = 0; i <= dimension; i++)
         {
             for (let j = 0; j <= dimension; j++)
@@ -86,7 +86,7 @@ class simpleConnectedGrid {
         }
     }
 
-    generateEdges(dimension) {
+    _generateEdges(dimension) {
     //Horizontal connection
     for (let i = 0; i <= dimension; i++)
     {
