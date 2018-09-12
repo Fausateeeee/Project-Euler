@@ -73,11 +73,14 @@ rl.question('Press enter to find the maximum path ', (answer) => {
                              [2, 4, 6, 0],
                              [8, 5, 9, 3]];
 
-    let triangle = new weightedTriangle(testTriangle);
+
+    console.time("process");
+    let triangle = new weightedTriangle(TREE);
     
     //triangle.printGraph();
-    triangle.dijkstraAlgorithm("0,0");
-    //console.log("The sum of the digits of 2 to the power of", parsed, "is :", "BLANK");
+    let results = triangle.dijkstraAlgorithm("0,0");
+    console.timeEnd("process");
+    console.log("The maximum total of the triangle is", results.length, "by going to the nodes :", results.path);
     
     rl.close();
 });
@@ -85,8 +88,10 @@ rl.question('Press enter to find the maximum path ', (answer) => {
 class weightedTriangle {
 
     constructor(tree) {
-        this.size = tree.length*(tree.length+1)/2 + tree.length; //Number of point in the grid equals (dimension + 1)^2
+        this.size = tree.length*(tree.length+1)/2 + 1; //Number of point in the grid equals (dimension + 1)^2
         this.adjacencyList = new Map();
+        this.length = tree.length;
+        this.tree = tree;
 
         this._generateVertices(tree.length);
         this._generateEdges(tree, tree.length);
@@ -118,14 +123,10 @@ class weightedTriangle {
     dijkstraAlgorithm(startingNode)
     {
         let visited = {};
-
-        for (let key in this.adjacencyList.keys())
+        for (let key of this.adjacencyList.keys())
         {
-            visited[key] = {};
-            visited.key.dist = Math.pow(2, 40); //BIG NUMBER
-            visited[key].path = undefined;
+            visited[key] = {dist: 0, path:undefined};
         }
-        console.log(visited);
         visited[startingNode].dist = 0;
 
         let queue = new Queue();
@@ -141,17 +142,24 @@ class weightedTriangle {
             for (let neighbour in neighbours)
             {
                 let elem = neighbours[neighbour];
-                if (visited[currentVertex].dist + this.adjacencyList.get(elem).weigh < visited[elem].dist)
+                if (visited[currentVertex].dist + elem.weigh >= visited[elem.vertex].dist)
                 {
-                    visited[elem].path = currentVertex;
-                    if (queue.contains(elem))
+                    visited[elem.vertex].dist = visited[currentVertex].dist + elem.weigh;
+                    visited[elem.vertex].path = currentVertex;
+                    if (queue.contains(elem.vertex))
                     {
-                        queue.enqueue(elem);
+                        queue.enqueue(elem.vertex);
                     }
                 }
             }
 
         }
+
+        console.log(visited);
+        let path = this._computePath(visited);
+        let length = visited.FINAL.dist;
+
+        return {path, length};
     }
 
     _generateVertices(length)
@@ -165,7 +173,9 @@ class weightedTriangle {
         }
 
 
-        this.newVertex(length.toString());
+        this.newVertex(length.toString()+".right");
+        this.newVertex(length.toString()+".left");
+        this.newVertex("FINAL");
     }
 
     _generateEdges(tree, length)
@@ -174,16 +184,33 @@ class weightedTriangle {
         {
             for (let j = 0; j <= i; j++)
             {
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + j.toString(), 1/tree[i][j]);
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j+1).toString(), 1/tree[i][j+1]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + j.toString(), tree[i][j]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j+1).toString(), tree[i][j+1]);
             }
         }
 
         //Needed for the weigh of the path
-        for (let i = 0; i < length; i++) 
+        for (let i = 0; i < length-1; i++) 
         {
-            this.newEdge((length-1).toString() + "," + i.toString(),(length).toString(), 1/tree[length-1][i]);
+            this.newEdge((length-1).toString() + "," + i.toString(),(length).toString()+".right", tree[length-1][i]);
+            this.newEdge((length-1).toString() + "," + i.toString(),(length).toString()+".left", tree[length-1][i+1]);
         }
+        this.newEdge(length.toString()+".right", "FINAL", 0);
+        this.newEdge(length.toString()+".left", "FINAL", 0);
+    }
+
+    _computePath(results)
+    {
+        let endingNode = "FINAL";
+        let path = [];
+
+        while (endingNode != "0,0")
+        {
+            endingNode = results[endingNode].path;
+            path.unshift(endingNode);
+        }
+
+        return path;
     }
 }
 
@@ -230,6 +257,6 @@ class Queue
     }
     contains(item)
     {
-        return (this.collection.find(item) != undefined);
+        return (this.collection.indexOf(item) == -1);
     }
 }
