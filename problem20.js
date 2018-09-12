@@ -22,20 +22,31 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Press enter to find the maximum path ', (answer) => {
+rl.question('Enter a natural number ', (answer) => {
+
+    let parsed = parseInt(answer);
 
     if (isNaN(parsed)) {
         console.log("Please, enter a natural number next time <3");
         rl.close();
     }
 
-    if (parsed < 1) {
+    if (parsed < 0) {
         console.log("Enter a number greater or equals to 0 next time");
         rl.close();
     }
+    let BigArray = [bigInt(1)];
+    for (let i = 2; i <= parsed; i++)
+    {
+        BigArray.push(bigInt(i));
+    }
+    
+    let BigNumber = bigInt(1);
+    for (let i of BigArray)
+    {
+        BigNumber = BigNumber.multiply(i) ;
+    }
 
-    //let bi = bigInt(2).pow(parsed).toArray(10);
-
-    console.log("The sum of the digits of 2 to the power of", parsed, "is :", bi.value.reduce((a,b) => a+b));
+    console.log("The sum of the digits for the factorial of", parsed, "is :", BigNumber.toArray(10).value.reduce((a,b) => a+b));
     rl.close();
 });
