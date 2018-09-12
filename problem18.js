@@ -75,8 +75,8 @@ rl.question('Press enter to find the maximum path ', (answer) => {
 
     let triangle = new weightedTriangle(testTriangle);
     
-    triangle.printGraph();
-
+    //triangle.printGraph();
+    triangle.dijkstraAlgorithm("0,0");
     //console.log("The sum of the digits of 2 to the power of", parsed, "is :", "BLANK");
     
     rl.close();
@@ -115,6 +115,45 @@ class weightedTriangle {
         }
     }
 
+    dijkstraAlgorithm(startingNode)
+    {
+        let visited = {};
+
+        for (let key in this.adjacencyList.keys())
+        {
+            visited[key] = {};
+            visited.key.dist = Math.pow(2, 40); //BIG NUMBER
+            visited[key].path = undefined;
+        }
+        console.log(visited);
+        visited[startingNode].dist = 0;
+
+        let queue = new Queue();
+
+        queue.enqueue(startingNode);
+
+        while (!queue.isEmpty())
+        {
+            let currentVertex = queue.dequeue();
+
+            let neighbours = this.adjacencyList.get(currentVertex);
+    
+            for (let neighbour in neighbours)
+            {
+                let elem = neighbours[neighbour];
+                if (visited[currentVertex].dist + this.adjacencyList.get(elem).weigh < visited[elem].dist)
+                {
+                    visited[elem].path = currentVertex;
+                    if (queue.contains(elem))
+                    {
+                        queue.enqueue(elem);
+                    }
+                }
+            }
+
+        }
+    }
+
     _generateVertices(length)
     {
         for (let i = 0; i < length; i++)
@@ -125,11 +164,8 @@ class weightedTriangle {
             }
         }
 
-        //Needed for the weigh of the path
-        for (let i = 0; i < length - 1; i++) 
-        {
-            this.newVertex(length.toString() + "," + length.toString());
-        }
+
+        this.newVertex(length.toString());
     }
 
     _generateEdges(tree, length)
@@ -138,15 +174,62 @@ class weightedTriangle {
         {
             for (let j = 0; j <= i; j++)
             {
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + j.toString(), tree[i][j]);
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j+1).toString(), tree[i][j+1]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + j.toString(), 1/tree[i][j]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j+1).toString(), 1/tree[i][j+1]);
             }
         }
 
         //Needed for the weigh of the path
         for (let i = 0; i < length; i++) 
         {
-            this.newEdge((length-1).toString() + "," + i.toString(),(length).toString() + "," + i.toString(), tree[length-1][i]);
+            this.newEdge((length-1).toString() + "," + i.toString(),(length).toString(), 1/tree[length-1][i]);
         }
+    }
+}
+
+class Queue
+{
+    constructor()
+    {
+        this.collection = [];
+    }
+
+    print()
+    {
+        console.log(this.collection);
+    }
+
+    enqueue(item)
+    {
+        this.collection.push(item);
+    }
+
+    dequeue()
+    {
+        return this.collection.pop();
+    }
+
+    front()
+    {
+        return this.collection[0];
+    }
+
+    size()
+    {
+        return this.collection.length;
+    }
+
+    isEmpty()
+    {
+        if  (this.collection.length > 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    contains(item)
+    {
+        return (this.collection.find(item) != undefined);
     }
 }
