@@ -10,7 +10,6 @@ Evaluate the sum of all the amicable numbers under 10000.
 
 */
 
-const bigInt = require("big-integer");
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -32,7 +31,48 @@ rl.question('Enter a natural number ', (answer) => {
         rl.close();
     }
 
+    let values = [];
 
-    console.log("The sum of all amicable numbers under", parsed, "is :");
+    for (let i = 1; i <= parsed; i++)
+    {
+        values.push(reduceFactor(i));
+    }
+
+    console.log("The sum of all amicable numbers under", parsed, "is :", findAmicableSum(values));
     rl.close();
 });
+
+function reduceFactor(number)
+{
+    factor = [1];
+    for (let i = 2; i <= number; i++)
+    {
+        if (number%i == 0)
+        {
+            factor.push(i);
+        }
+    }
+
+    return factor.reduce((a,b)=>{return a+b;});
+}
+
+function findAmicableSum(values)
+{
+    let amicables = [];
+
+    for(let i = 0; i < values.length; i++)
+    {
+        console.log(values[i], values[values[i] + 1]);
+        if(values[i] == values[values[i]])
+        {
+            amicables.push(i+1);
+        }
+    }
+
+    if (amicables.length > 0)
+    {
+        return amicables.reduce((a,b) => {return a+b;});
+
+    }
+    return 0;
+}
