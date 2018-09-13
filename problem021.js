@@ -31,13 +31,16 @@ rl.question('Enter a natural number ', (answer) => {
         rl.close();
     }
 
-    let values = [0];
+    let values = {};
 
-    for (let i = 1; i <= parsed; i++)
+    for (let i = 2; i <= parsed; i++)
     {
-        values.push(reduceFactor(i));
+        values[i]= {divisorSum:reduceFactor(i), isAmicable: false};
+        if ( i != values[i].divisorSum &&  reduceFactor(values[i].divisorSum) == i)
+        {
+            values[i].isAmicable = true;
+        }
     }
-
     console.log("The sum of all amicable numbers under", parsed, "is :", findAmicableSum(values));
     rl.close();
 });
@@ -45,33 +48,29 @@ rl.question('Enter a natural number ', (answer) => {
 function reduceFactor(number)
 {
     factor = [1];
-    for (let i = 2; i < number; i++)
+    for (let i = 2; i <= Math.ceil(number/2); i++)
     {
         if (number%i == 0)
         {
             factor.push(i);
         }
     }
-    return factor.reduce((a,b)=>{return a+b;});
-}
 
+    return factor.reduce((a,b) => {return a+b;});
+}
 function findAmicableSum(values)
 {
-    let amicables = [];
-
-    for(let i = 0; i < values.length; i++)
+    let amicables = 0;
+    //console.log(values);
+    for(let i in values)
     {
-        console.log(values[i], values[values[i] + 1]);
-        if(values[i] == values[values[i]] && (i+1) != values[i])
+        //console.log(i, values[i]);
+        if (values[i].isAmicable)
         {
-            amicables.push(i+1);
+            amicables += parseInt(i);
         }
     }
-    console.log(amicables);
-    if (amicables.length > 0)
-    {
-        return amicables.reduce((a,b) => {return a+b;});
 
-    }
-    return 0;
+    return amicables;
+
 }
