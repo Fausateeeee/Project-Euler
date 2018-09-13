@@ -18,9 +18,13 @@ const rl = readline.createInterface({
 });
 
 rl.question('Write the path to a valid input file ', (answer) => {
+    
+    answer = "C:/Projects/P/Project-Euler/Additional-Files/Problem022/p022_names.txt";
+    let textFile = new XMLHttpRequest();
 
-
-
+    textFile.open("GET", answer);
+    let allText = textFile.responseText;
+    console.log(allText);
     console.log("The total score of every name scrores in the file is :", "ANSWER");
     rl.close();
 });
