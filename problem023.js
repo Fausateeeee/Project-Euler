@@ -50,7 +50,7 @@ rl.question('Write a natural number ', (answer) => {
         }
     }
     console.log("The sum of positive integers smaller than", parsed, 
-    "that cannot be written as the sum of two abundant numbers is :", "ANSWER");
+    "that cannot be written as the sum of two abundant numbers is :", nonAbundant);
     rl.close();
 });
 
