@@ -20,6 +20,10 @@ Find the value of d < 1000 for which 1/d contains the longest recurring cycle in
 
 */
 
+/*
+    I know that if the denominator has a prime factorisation of the form (2^n)(5^m), it has a finite cycle. 
+    From group theory, we try to compute the length of a cycle, or more so the order of the cyclic group.
+*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -41,6 +45,46 @@ rl.question('Enter a natural number ', (answer) => {
         rl.close();
     }
 
+    let findCycle = {};
+    for (let i = 1; i < answer; ++i)
+    {
+        findCycle[i] = findCycleLength(i);
+    }
+
+
+    console.log(findCycle);
     console.log("The fraction where the denominator is smaller than", parsed, " that has the longuest recurring cycle is :", "ANSWER");
     rl.close();
 });
+
+function findCycleLength(denominator)
+{
+    if (!coprimeToTen(denominator) || denominator == 1)
+    {   
+        return 0; //No cycle
+    }
+    else
+    {
+        let i = 1;
+        while(true)
+        {
+            for (let j = i - 1; j >= 0; --j)
+            {
+                if ((Math.pow(10, i) - Math.pow(10, j))%denominator == 0)
+                {
+                    return j - 1;
+                }
+            }
+        }
+    }
+}
+
+function coprimeToTen(number)
+{
+    if (number%2==0 || number%5==0)
+    {
+        console.log(number);
+        return false;
+    }
+    return true;
+}
