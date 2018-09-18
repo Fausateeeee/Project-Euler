@@ -46,14 +46,19 @@ rl.question('Enter a natural number ', (answer) => {
     }
 
     let findCycle = {};
+    let max = 1;
     for (let i = 1; i < answer; ++i)
     {
         findCycle[i] = findCycleLength(i);
+        if (findCycle[i] > findCycle[max])
+        {
+            max = i;
+        }
     }
 
 
     console.log(findCycle);
-    console.log("The fraction where the denominator is smaller than", parsed, " that has the longuest recurring cycle is :", "ANSWER");
+    console.log("The fraction where the denominator is smaller than", parsed, " that has the longuest recurring cycle is :", max);
     rl.close();
 });
 
@@ -68,13 +73,16 @@ function findCycleLength(denominator)
         let i = 1;
         while(true)
         {
-            for (let j = i - 1; j >= 0; --j)
+
+            for (let j = i - 1; j >= 0; j--)
             {
                 if ((Math.pow(10, i) - Math.pow(10, j))%denominator == 0)
                 {
-                    return j - 1;
+                    return i - j;
                 }
             }
+            i++;
+
         }
     }
 }
@@ -83,7 +91,6 @@ function coprimeToTen(number)
 {
     if (number%2==0 || number%5==0)
     {
-        console.log(number);
         return false;
     }
     return true;
