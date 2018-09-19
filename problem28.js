@@ -13,7 +13,15 @@ It can be verified that the sum of the numbers on the diagonals is 101.
 
 What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?
 
+
 */
+
+/*
+
+    {1x1} 1 + {3x3}((1 + 2) + (1 + 4) + (1 + 6) + (1 + 8)) + {5x5}((9 + 4) + (9 + 8) + (9 + 12) + (9 + 16)) + 
+    {7x7}((25 + 6) + (25 + 12) + (25 + 18) + (25 + 24)) + ...
+*/
+
 
 const readline = require('readline');
 const bigInt = require("big-integer");
