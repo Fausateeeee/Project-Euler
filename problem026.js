@@ -25,6 +25,7 @@ Find the value of d < 1000 for which 1/d contains the longest recurring cycle in
     From group theory, we try to compute the length of a cycle, or more so the order of the cyclic group.
 */
 const readline = require('readline');
+const bigInt = require("big-integer");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -56,7 +57,7 @@ rl.question('Enter a natural number ', (answer) => {
         }
     }
 
-
+    //console.log(findCycleLength(17));
     console.log(findCycle);
     console.log("The fraction where the denominator is smaller than", parsed, " that has the longuest recurring cycle is :", max);
     rl.close();
@@ -64,10 +65,11 @@ rl.question('Enter a natural number ', (answer) => {
 
 function findCycleLength(denominator)
 {
-    if (!coprimeToTen(denominator) || denominator == 1)
+    if (hasNoCycle(denominator) || denominator == 1)
     {   
         return 0; //No cycle
     }
+
     else
     {
         let i = 1;
@@ -76,7 +78,7 @@ function findCycleLength(denominator)
 
             for (let j = i - 1; j >= 0; j--)
             {
-                if ((Math.pow(10, i) - Math.pow(10, j))%denominator == 0)
+                if (bigInt(10).pow(i).minus(bigInt(10).pow(j)).mod(denominator) == 0)
                 {
                     return i - j;
                 }
@@ -87,11 +89,21 @@ function findCycleLength(denominator)
     }
 }
 
-function coprimeToTen(number)
+function hasNoCycle(number)
 {
-    if (number%2==0 || number%5==0)
+    let temp = number;
+    while (temp%2 == 0)
     {
-        return false;
+        temp /= 2;
     }
-    return true;
+    while (temp%5 == 0)
+    {
+        temp /= 5;
+    }
+    
+    if (temp == 1)
+    {
+        return true;
+    }
+    return false;
 }
