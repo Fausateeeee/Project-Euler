@@ -1,2 +1,2 @@
 # Project-Euler
-My solutions to project euler. Mostly JS.
+My solutions to project euler. Mostly node.js.
