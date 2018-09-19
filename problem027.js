@@ -25,3 +25,62 @@ Find the product of the coefficients, a
 and b, for the quadratic expression that produces the maximum number of primes for consecutive values of n, starting with n=0.
 
 */
+
+const readline = require('readline');
+const bigInt = require("big-integer");
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question('Enter a natural number ', (answer) => {
+
+    const parsed = parseInt(answer);
+
+    if (isNaN(parsed)) {
+        console.log("Please, enter a natural number next time <3");
+        rl.close();
+    }
+
+    if (parsed < 1) {
+        console.log("Enter a number greater than 0 next time");
+        rl.close();
+    }
+
+    let max = {a: undefined, b: undefined, sequence: 0};
+    
+    
+    for (let a = (-1 * answer) + 1 ; a < answer; a++)
+    {
+        for (let b = -1 * answer; b <= answer; b++)
+        {
+            if(bigInt(b).isPrime)
+            {           
+                let primeLength = 0;
+                let n = 0;
+                while(polynomial(a,b,n).isPrime())
+                {
+                    n++;
+                    primeLength++;
+                } 
+                
+                if (max.sequence < primeLength)
+                {
+                    max.a = a;
+                    max.b = b;
+                    max.sequence = primeLength;
+                }
+            }
+        }
+
+    }
+
+    console.log("The two coefficient that produce the most primes are", max.a, "and", max.b, "and their product is :", max.a*max.b);
+    rl.close();
+});
+
+function polynomial(a, b, n)
+{
+    return ((bigInt(n).pow(2)).add(bigInt(a*n))).add(bigInt(b));
+}
