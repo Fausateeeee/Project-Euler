@@ -15,6 +15,16 @@ Find the sum of all the numbers that can be written as the sum of fifth powers o
 
 */
 
+/*
+    Ok, i can set a upper bound  when I test the numbers. Suppose I want to compute to the n-th power. 
+    Then I need to compute 9^n. After that, I check for which integer q and digit() which return the number of digit
+    the following equation is true:
+
+    digit(q*9^n) = q;
+
+    This means that for a number with q digits, 
+    https://math.stackexchange.com/questions/136168/number-equal-to-the-sum-of-powers-of-its-digits
+*/
 
 const readline = require('readline');
 
