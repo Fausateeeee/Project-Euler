@@ -25,7 +25,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Enter an natural number greater than 1', (answer) => {
+rl.question('Enter an natural number greater than 1 : ', (answer) => {
 
     const parsed = parseInt(answer);
 
@@ -41,9 +41,26 @@ rl.question('Enter an natural number greater than 1', (answer) => {
 
     else
     {
-
-        console.log("There are", "ANSWER", "distinct numbers generated for a^b where a,b range from 2 to", parsed);
+        console.log("There are", computePower(parsed).length, "distinct numbers generated for a^b where a,b range from 2 to", parsed);
         rl.close();
     }
 
 });
+
+function computePower(max)
+{
+    let arr = [];
+    for (let a = 2; a <= max; a++)
+    {
+        for (let b = 2; b <= max; b++)
+        {
+            let nbr = bigInt(a).pow(b).toString();
+            if (arr.indexOf(nbr) == -1)
+            {
+                arr.push(nbr);
+            }
+        }
+    }
+    arr.sort();
+    return arr;
+}
