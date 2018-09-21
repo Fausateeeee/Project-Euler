@@ -49,9 +49,64 @@ rl.question('Enter an natural number : ', (answer) => {
 
     else
     {
-        console.log("There are", "NUMBER OF ANSWER", "numbers that can be written as the sum of the", parsed, 
-        "power of their digits. Their sum is : ", "ANSWER");
+        let answers = computePowerOfDigits(findDigitsRequired(parsed), parsed);
+        console.log("There are", answers.length , "numbers that can be written as the sum of the", parsed, 
+        "power of their digits. Their sum is : ", answers.reduce((a,b) => {return a+b;}));
         rl.close();
     }
 
 });
+
+function findDigitsRequired(power)
+{
+    let q = 2;
+    while (nbrOfDigits(q*Math.pow(9,power)) >= q)
+    {
+        q++;
+    }
+    return q;
+}
+
+function nbrOfDigits(nbr)
+{
+    return (nbr < 10 ? 1 :   
+        (nbr < 100 ? 2 :   
+        (nbr < 1000 ? 3 :   
+        (nbr < 10000 ? 4 :   
+        (nbr < 100000 ? 5 :   
+        (nbr < 1000000 ? 6 :   
+        (nbr < 10000000 ? 7 :  
+        (nbr < 100000000 ? 8 :  
+        (nbr < 1000000000 ? 9 :  
+        10)))))))));  
+}
+
+function computePowerOfDigits(max, power)
+{
+    let answers = [];
+    for (let i = 11; i < max*Math.pow(9,power); i++)
+    {
+        let arr = splitDigits(i);
+        let num = 0;
+        for (let j = 0; j < arr.length; j++)
+        {
+            num += Math.pow(arr[j],power);
+        }
+        if (num == i)
+        {
+            answers.push(i);
+        }
+    }
+    return answers;
+}
+
+function splitDigits(number)
+{
+    let str = number.toString();
+    let arr = str.split("");
+    for (let i = 0; i < arr.length; i++)
+    {
+        arr[i] = parseInt(arr[i]);
+    }
+    return arr;
+}
