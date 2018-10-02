@@ -13,6 +13,16 @@ How many different ways can £2 be made using any number of coins?
 
 */
 
+/*
+    Remarks: There is the same number of permutation for 10p and 11p, maybe this is true if the number is congruent 0 or 1 mod 10
+    I should read on dynamic programming to solve this problem
+*/
+
+/*
+    I need to solve the base cases
+    case sol[1] = 1, sol[2] = 2, sol[5] = 4, etc... do I overcomplicate the problem here?
+*/
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -39,13 +49,3 @@ rl.question('Enter the number of pence : ', (answer) => {
     }
 
 });
-
-function findDigitsRequired(power)
-{
-    let q = 2;
-    while (nbrOfDigits(q*Math.pow(9,power)) >= q)
-    {
-        q++;
-    }
-    return q;
-}
