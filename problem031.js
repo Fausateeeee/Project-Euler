@@ -22,6 +22,7 @@ How many different ways can £2 be made using any number of coins?
     I need to solve the base cases
     case sol[1] = 1, sol[2] = 2, sol[5] = 4, etc... do I overcomplicate the problem here?
 */
+const readline = require('readline');
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -44,8 +45,49 @@ rl.question('Enter the number of pence : ', (answer) => {
 
     else
     {
-        console.log("There are", "ANSWER", "ways to make ", parsed, "pences");
+        let coins = [1,2,5,10,20,50,100,200];
+        console.log("There are", coinCount(coins, coins.length, parsed), "ways to make ", parsed, "pences");
         rl.close();
     }
 
+
+
 });
+
+/*
+    This function separate the problem into two parts
+
+    First, we solve the problem
+*/
+function coinCount(coins, coinIndex, coinTotal)
+{
+    /*
+        We are in this branch if coinTotal == coins[coinIndex], there is one way to solve this problem
+    */
+    if (coinTotal == 0)
+    {
+        return 1;
+    }
+
+    /*
+        If coinTotal is less than 0, than we are in a branch where coins[coinIndex] was greater than the rest to count
+    */
+    if (coinTotal < 0)
+    {
+        return 0;
+    }
+
+    /*
+        If coinIndex is 0 and coinTotal is not 0, we haven't finished counting this branch, so no solution is found here
+    */
+    if (coinIndex <= 0 && coinTotal >= 1)
+    {
+        return 0;
+    }
+
+    /*
+        Count the solution including the coin at index coinIndex - 1 and then 
+        count the solution excluding the coin at index coinIndex - 1
+    */
+    return coinCount(coins, coinIndex - 1, coinTotal) + coinCount(coins, coinIndex, coinTotal - coins[coinIndex - 1]);
+}
