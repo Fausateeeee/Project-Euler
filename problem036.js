@@ -11,7 +11,6 @@ Find the sum of all numbers, less than one million, which are palindromic in bas
 */
 
 const readline = require('readline');
-const bigInt = require("big-integer");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -34,8 +33,48 @@ rl.question('Enter an natural number : ', (answer) => {
 
     else
     {
-        console.log("The sum of all palindromic number in base 10 and base 2 bellow", parsed, "is", "ANSWER");
+        console.log(toBinary(3), isPalindrome(toBinary(3)));
+        let i = 1;
+        let ans = [];
+        while (i <= parsed)
+        {
+            if (isPalindrome(i.toString()) && isPalindrome(toBinary(i)))
+            {
+                ans.push(i);
+            }
+            i++;
+        }
+        console.log("The sum of all palindromic number in base 10 and base 2 bellow", parsed, "is", ans.reduce((a,b) => {return a + b;}));
         rl.close();
     }
 
 });
+
+
+function isPalindrome(number)
+{
+    let arr = number.split("");
+
+    let j = arr.length - 1;
+
+    for (let i = 0; i < j; i++, j--)
+    {
+        if (arr[i] != arr[j])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+function toBinary(number)
+{
+    let binary = [];
+    while (number > 0)
+    {
+        binary.unshift((number%2).toString());
+        number = Math.floor(number/2) ;
+    }
+
+    return binary.reduce((a,b) => {return a+b;});
+}
