@@ -40,7 +40,7 @@ rl.question('Enter an natural number between 1 and 11 : ', (answer) => {
         rl.close();
     }
 
-    else if (parsed < 1) {
+    else if (parsed < 1 || parsed > 11) {
         console.log("Enter a number between than 1 and 11 next time");
         rl.close();
     }
