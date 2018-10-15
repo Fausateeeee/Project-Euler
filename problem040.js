@@ -39,10 +39,28 @@ rl.question('Enter a natural number for 10^n : ', (answer) => {
 
     else
     {
+        let champernowneConstant = generateChampernowne(parsed);
+        let arr = [];
+        for (let i = 0; i <= parsed; i++)
+        {
+            arr.push(parseInt(champernowneConstant[Math.pow(10,i) - 1]));
+        }
         console.log("The product of the digits of the Cahmpernowne's constant for each digit in a postion of 10^n from n = 0 to", parsed, 
-        "is", "ANSWER");
+        "is", arr.reduce((a,b) => {return a*b;}));
         rl.close();
     }
 
 });
 
+function generateChampernowne(upperBound)
+{
+    let champernowneConstant = "";
+    let i = 1;
+    while (champernowneConstant.length <= Math.pow(10,upperBound))
+    {
+        
+        champernowneConstant += i.toString();
+        i++;
+    }
+    return champernowneConstant;
+}
