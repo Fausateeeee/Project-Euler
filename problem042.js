@@ -23,6 +23,9 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+const SCORE = {A : 1, B : 2, C : 3, D : 4, E : 5, F : 6, G : 7, H : 8, I : 9, J : 10, K : 11, L : 12, M : 13, N : 14, O : 15,
+    P : 16, Q : 17, R : 18, S : 19, T : 20, U : 21, V : 22, W : 23, X : 24, Y : 25, Z : 26};
+
 rl.question('Write the path to a valid input file  : ', (answer) => {
 
     let allText = fs.readFileSync(answer, 'utf8');
@@ -34,9 +37,49 @@ rl.question('Write the path to a valid input file  : ', (answer) => {
     //Split the names into an array
     let arrNames = allText.split(",");
 
-    console.log("There are", "ANSWER", "triangle words in the linked file.");
-    rl.close();
+    let arrScores = ComputeScore(arrNames);
 
+    let arrTriangular = ComputeTriangular();
+
+    let count = 0;
+    for (let score in arrScores)
+    {
+        if (arrTriangular.indexOf(score) != - 1)
+        {
+            count++;
+        }
+    }
+    console.log("There are", count, "triangle words in the linked file.");
+    rl.close();
 
 });
 
+function ComputeScore(arrNames)
+{
+    let arrScores = [];
+    for (let word of arrNames)
+    {
+        let currentScore = 0;
+        for(let letter of word)
+        {
+            currentScore += SCORE[letter];
+        }
+        arrScores.push(currentScore);
+    }
+
+    return arrScores;
+}
+
+//Longest common word is 45 letters, so only need to compute triangular number up to 1170
+function ComputeTriangular()
+{
+    let t_n = 1;
+    let arrTriangular = [1];
+    for (let n = 2; t_n < 1170; n++)
+    {
+        t_n = n*(n+1)/2;
+        arrTriangular.push(t_n);
+    }
+
+    return arrTriangular;
+}
