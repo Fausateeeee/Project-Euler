@@ -42,7 +42,7 @@ rl.question('Write the path to a valid input file  : ', (answer) => {
     let arrTriangular = ComputeTriangular();
 
     let count = 0;
-    for (let score in arrScores)
+    for (let score of arrScores)
     {
         if (arrTriangular.indexOf(score) != - 1)
         {
