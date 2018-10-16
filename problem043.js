@@ -24,25 +24,94 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Enter a natural number for 10^n : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
-    const parsed = parseInt(answer);
 
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
-    }
+    let digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-    else if (parsed < 0) {
-        console.log("Enter a positive number next time");
-        rl.close();
-    }
+    let allPermuations = [];
 
-    else
+    computePermutation(digits, allPermuations, 0, digits.length - 1);
+
+    allPermuations.sort();
+    allPermuations = allPermuations.filter(elem => {return elem[0] != '0';});
+
+    let solution = [];
+
+    for (let number of allPermuations)
     {
-        console.log("The product of the digits of the Cahmpernowne's constant for each digit in a postion of 10^n from n = 0 to", parsed, 
-        "is", "ANSWER");
-        rl.close();
+        if (isSubstringDivisible(number))
+        {
+            	solution.push(parseInt(number));
+        }
     }
+    console.log("The sum of each numbers that are 0 to 9 pandigital and have the substring divisibilty property are",
+    solution.reduce((a,b) => {return a+b;}));
+    rl.close();
+
 
 });
+
+function computePermutation(arr, permutations, startingIndex, endIndex)
+{
+    if (startingIndex == endIndex)
+    {
+        permutations.push(arr.reduce((a,b) => {return a+b;}));
+    }
+    else
+    {
+        for (let i = startingIndex; i <= endIndex; i++)
+        {
+            swapArrayElements(arr, startingIndex, i);
+            computePermutation(arr, permutations, startingIndex + 1, endIndex);
+            swapArrayElements(arr, startingIndex, i);
+        }
+    }
+}
+
+function swapArrayElements(arr, index1, index2)
+{
+  let temp = arr[index1];
+  arr[index1] = arr[index2];
+  arr[index2] = temp;  
+}
+
+function isSubstringDivisible(number)
+{
+    if (parseInt(number.substring(1,4))%2 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(2,5))%3 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(3,6))%5 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(4,7))%7 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(5,8))%11 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(6,9))%13 != 0)
+    {
+        return false;
+    }
+
+    if (parseInt(number.substring(7))%17 != 0)
+    {
+        return false;
+    }
+
+    return true;
+}
