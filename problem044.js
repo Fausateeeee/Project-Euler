@@ -25,9 +25,44 @@ const rl = readline.createInterface({
 });
 
 rl.question('Press enter to continue : ', (answer) => {
-
-   console.log("The pair of pentagonal numbers for which their sum and difference is pentagonal is", "PAIR OF PENTAGONAL",
-    "and their difference is", "ANSWER");
+   
+    let pair = findSpecialPentagonal(100000);
+   console.log("The pair of pentagonal numbers for which their sum and difference is pentagonal is", pair,
+    "and their difference is", PentagonalDifference(pair[1], pair[0]));
     rl.close();
 
 });
+
+
+function findSpecialPentagonal(upperBound)
+{
+    for (let i = 1; i < upperBound; i++)
+    {
+        for (let j = i + 1; j < upperBound; j++)
+        {
+           if (IsPentagonal(PentagonalDifference(j,i)) && IsPentagonal(PentagonalSum(i,j)))
+           {
+               console.log("Is at least true");
+               return [i,j];
+           }
+        }
+    }
+}
+
+function PentagonalDifference(k,j)
+{
+    //console.log((1/2)*(3*Math.pow(k,2) - 3*Math.pow(j,2) - k + j));
+    return (1/2)*(3*Math.pow(k,2) - 3*Math.pow(j,2) - k + j);
+}
+
+function PentagonalSum(k,j)
+{
+    return  (1/2)*(3*Math.pow(k,2) + 3*Math.pow(j,2) - k - j);
+}
+
+function IsPentagonal(number)
+{
+    let value = (Math.sqrt(24*number + 1) + 1)/6;
+    //console.log(value);
+    return Number.isInteger(value);
+}
