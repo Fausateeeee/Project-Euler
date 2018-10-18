@@ -17,6 +17,7 @@ What is the smallest odd composite that cannot be written as the sum of a prime 
 */
 
 const readline = require('readline');
+const bigInt = require("big-integer");
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -25,7 +26,30 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The smallest odd composite that cannot be written as the sum of a prime and twice a square is", "ANSWER");
+
+    let current = 9;
+    while(true)
+    {
+        if(!bigInt(current).isPrime())
+        {
+            let flag= true;
+            for (let i = 1; current - 2*Math.pow(i,2) >= 3; i++)
+            {
+                if (bigInt(current - 2*Math.pow(i,2)).isPrime())
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                break;
+            }
+        }
+
+        current += 2;
+    }
+    console.log("The smallest odd composite that cannot be written as the sum of a prime and twice a square is", current);
     rl.close();
 
 
