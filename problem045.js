@@ -12,6 +12,11 @@ Find the next triangle number that is also pentagonal and hexagonal.
 
 */
 
+/*
+    It is easy to see that every hexagonal number is a triangular number.
+    So we just need to check if an hexagonal number is pentagonal and call it a day.
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -32,8 +37,32 @@ rl.question('Enter an integer : ', (answer) => {
         rl.close();
     } 
     else {
-        console.log("The", parsed, "-th number that is triangle, pentagonal and hexagonal is:", "ANSWER");
+        let TriPenHex = [];
+        let i = 1;
+        while (TriPenHex.length < parsed)
+        {
+            let hex = HexagonalNumber(i);
+            if (IsPentagonal(hex))
+            {
+                TriPenHex.push(hex);
+            }
+            i++;
+        }
+        console.log("The", parsed, " number(s) that is triangle, pentagonal and hexagonal is:", TriPenHex[TriPenHex.length - 1]);
         rl.close();
     }
 
 });
+
+
+function IsPentagonal(number)
+{
+    let value = (Math.sqrt(24*number + 1) + 1)/6;
+    //console.log(value);
+    return Number.isInteger(value);
+}
+
+function HexagonalNumber(number)
+{
+    return number*(2*number - 1);
+}
