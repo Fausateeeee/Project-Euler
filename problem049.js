@@ -24,8 +24,26 @@ rl.question('Press enter to continue : ', (answer) => {
 
     const parsed = parseInt(answer);
 
-    console.log("The concatanation of the terms of hte other sequence that has the same property is", "ANSWER");
+    console.log("The concatanation of the terms of the other sequence that has the same property is", findOtherSequence());
     rl.close();
 
 });
 
+function findOtherSequence()
+{
+    for (let i = 1000; i < 3340; i++)
+    {
+        if (i != 1487 && bigInt(i).isPrime() && bigInt(i+3330).isPrime() && bigInt(i + 2*3330).isPrime())
+        {
+            let nbr1 = i.toString().split("").sort().toString();
+            let nbr2 = (i + 3330).toString().split("").sort().toString();
+            let nbr3 = (i + 2*3330).toString().split("").sort().toString();
+            console.log(nbr1,nbr2,nbr3);
+            if (nbr1 == nbr2 && nbr1 == nbr3)
+            {
+                return i.toString() + (i + 3330).toString() + (i + 2*3330).toString();
+            }
+        }
+    }
+
+}
