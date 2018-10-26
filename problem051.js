@@ -14,6 +14,12 @@ the same digit, is part of an eight prime value family.
 
 */
 
+/*
+    There are multiple cases to check, if n < 100, then I check for *a.
+    For 100 < n < 1000, I need to check for *ab, a*b, **a.
+    For 1000 < n < 10000, I need to check for *abc, a*bc, ab*c, **ab, *a*b, a**b
+*/
+
 const readline = require('readline');
 const bigInt = require('big-integer');
 
@@ -24,9 +30,15 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    const parsed = parseInt(answer);
-
     console.log("The smallest prime that have the prime digit replacement that is part of an eigth prime value family is", 
     "ANSWER");
     rl.close();
 });
+
+function findPrimeFamily(pr)
+{
+    for (let i = 0; i < 10; i++)
+    {
+        
+    }
+}
