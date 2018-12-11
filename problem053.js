@@ -41,7 +41,6 @@ rl.question('Enter an integer greater or equals to 0: ', (answer) => {
 
     else
     {
-        console.log(combinatorics(23,10), combinatorics(23,13));
         console.log("The number of combination that exceeds", parsed, "with n = 100 is", combinatoricsOverBound(parsed));
         rl.close();
     }
@@ -57,7 +56,6 @@ function combinatoricsOverBound(upperBound)
 
             if (combinatorics(i,j) >= upperBound)
             {
-                console.log("i:",i,"j:", j,"comb:", combinatorics(i,j), "count:",i - 2*j +  1);
                 count += i - 2*j +  1;
                 break;
             }
