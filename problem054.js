@@ -61,29 +61,310 @@ const rl = readline.createInterface({
 });
 
 rl.question('Write the path to a valid input file  : ', (answer) => {
-
-    let allText = fs.readFileSync(answer, 'utf8');
-
-    //Remove  every " " from the file
-    let regex = /"/g;
-    allText = allText.replace(regex,"");
-
+    let allText = fs.readFileSync("C:\\Projects\\P\\Project-Euler\\Additional-Files\\p054_poker.txt", 'utf8');
     //Split the names into an array
-    let arrNames = allText.split(",");
-
-    let arrScores = ComputeScore(arrNames);
-
-    let arrTriangular = ComputeTriangular();
-
-    let count = 0;
-    for (let score of arrScores)
+    let arrAllHands = allText.split("\n");
+    let P1winCount = 0;
+    for (let hands of arrAllHands)
     {
-        if (arrTriangular.indexOf(score) != - 1)
-        {
-            count++;
-        }
+        let player1 = hands.substring(0, 14).split(" ");
+        let player2 = hands.substring(15).split(" ");
+        P1winCount += ComparePokerHand(player1, player2);
     }
-    console.log("There are", count, "triangle words in the linked file.");
+    console.log(HasFullHouse(["2H", "2D", "4C", "4D", "4S",]));
+    console.log("The player 1 wins exactly", P1winCount, "hands.");
     rl.close();
 
 });
+function ComparePokerHand(player1, player2)
+{
+    let P1 = EvaluatePokerHands(player1);
+    let P2 = EvaluatePokerHands(player2);
+
+    return P1[0] > P2[0] ? 1 : (P1[0] == P2[0] ? (P1[1] > P2[1] ? 1 : 0) : 0);
+}
+
+function EvaluatePokerHands(hand)
+{
+    H = {high : GetHighestCard(hand), 
+          pair : HasOnePair(hand), 
+          twopair : HasTwoPair(hand),
+          threekind : HasThreeOfAKind(hand),
+          straight : HasStraight(hand),
+          flush : HasFlush(hand),
+          fullhouse : HasFullHouse(hand),
+          fourkind : HasFourOfAKind(hand)         
+          }; 
+
+    if (H.flush && H.straight)
+    {
+        return [8, H.high];
+    }
+    else if (H.fourkind)
+    {
+        return [7, H.high];
+    }
+    else if (false/*fullhouse*/)
+    {
+        return [6, H.high];
+    }
+    else if (H.flush)
+    {
+        return [5, H.high];
+    }
+    else if (H.straight)
+    {
+        return [4, H.high];
+    }
+    else if (H.threekind)
+    {
+        return [3, H.high];
+    }
+    else if (H.twopair)
+    {
+        return [2, H.high];
+    }
+    else if (H.pair)
+    {
+        return [1, H.high];
+    }
+    else
+    {
+        return [0, H.high];
+    }
+
+}
+//Works
+function HasOnePair(hand)
+{
+    let analysis = {};
+    for (let card of hand)
+    {
+        if (analysis[card[0]])
+        {
+            return true;
+        }
+        else
+        {
+            analysis[card[0]] = true;
+        }
+    }
+    return false;
+}
+//Works
+function HasTwoPair(hand)
+{
+    let analysis = {};
+    let onePair = false;
+    for (let card of hand)
+    {
+        if (analysis[card[0]])
+        {
+            if (onePair)
+            {
+                return true;
+            }
+            onePair = true;
+        }
+        else
+        {
+            analysis[card[0]] = true;
+        }
+    }
+    return false;
+}
+//Works
+function HasThreeOfAKind(hand)
+{
+    let analysis = {};
+    for (let card of hand)
+    {
+        if (analysis[card[0]])
+        {
+            return true;
+        }
+        else
+        {
+            if (analysis[card[0]] === 0)
+            {
+                analysis[card[0]] = true;
+            }
+            else
+            {
+                analysis[card[0]] = 0;
+            }
+        }
+    }
+    return false;
+}
+//Works
+function HasFourOfAKind(hand)
+{
+    let analysis = {};
+    for (let card of hand)
+    {
+        if (analysis[card[0]])
+        {
+            return true;
+        }
+        else
+        {
+            if (analysis[card[0]] === 0)
+            {
+                analysis[card[0]] = true;
+            }
+            else if (analysis[card[0]] === false)
+            {
+                analysis[card[0]] = 0;
+            }
+            else
+            {
+                analysis[card[0]] = false;
+            }
+        }
+    }
+    return false;
+}
+//Works
+function HasStraight(hand)
+{
+    let straight= [];
+    for (let card of hand)
+    {
+        let value = card[0];
+
+        switch(value)
+        {
+            case "A":
+                straight.push(14);
+                break;
+            case "K":
+                straight.push(13);
+                break;
+            case "Q":
+                straight.push(12);
+                break;
+            case "J":
+                straight.push(11);
+                break;
+            case "T":
+                straight.push(11);
+                break;
+            default:
+                straight.push(Number.parseInt(value));
+                break;           
+        }
+    }
+    straight.sort();
+    if (straight[4] == straight[0] + 4 && straight[3] == straight[0] + 3 &&
+        straight[2] == straight[0] + 2 && straight[1] == straight[0] + 1)
+        {
+            return true;
+        }
+    return false;
+}
+//Works
+function HasFlush(hand)
+{
+    let suit = hand[0][1];
+
+    for(let card of hand)
+    {
+        if (suit != card[1])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function HasFullHouse(hand)
+{
+    if (HasThreeOfAKind(hand))
+    {
+        let analysis = {};
+        for (let card of hand)
+        {
+            if(analysis[card[0]])
+            {
+                analysis[card[0]]++;
+            }
+            else
+            {
+                analysis[card[0]] = 1;
+            }
+        }
+
+        if (Object.keys(analysis).length == 2)
+        {
+            pair = false;
+            threeofakind = false;
+            for (let key in Object.keys(analysis))
+            {
+                if (analysis[key] == 2)
+                {
+                    pair = true;
+                }
+                if (analysis[key] == 3)
+                {
+                    threeofakind = true;
+                }
+            }
+            if (pair && threeofakind)
+            {
+                return true;
+            }
+        }
+
+    }
+    return false;
+}
+//Works
+function GetHighestCard(hand)
+{
+    let highest = 0;
+
+    for (let card of hand)
+    {
+        let value = card[0];
+
+        switch(value)
+        {
+            case "A":
+                highest = 14;
+                break;
+            case "K":
+                if (highest < 13)
+                {
+                    highest = 13;
+                }
+                break;
+            case "Q":
+                if (highest < 12)
+                {
+                    highest = 12;
+                }
+                break;
+            case "J":
+                if (highest < 11)
+                {
+                    highest = 11;
+                }
+                break;
+            case "T":
+                if (highest < 10)
+                {
+                    highest = 10;
+                }
+                break;
+            default:
+                if(highest < Number.parseInt(value))
+                {
+                    highest = value;
+                    break;
+                }           
+        }
+    }
+    return highest;
+}
