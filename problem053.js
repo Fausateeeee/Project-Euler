@@ -25,7 +25,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Enter an integer between 6, 7, 8 or 9: ', (answer) => {
+rl.question('Enter an integer greater or equals to 0: ', (answer) => {
 
     let parsed = parseInt(answer);
 
@@ -41,7 +41,43 @@ rl.question('Enter an integer between 6, 7, 8 or 9: ', (answer) => {
 
     else
     {
-        console.log("The number of combination that exceeds", parsed, "with n = 100 is", "ANSWER");
+        console.log(combinatorics(23,10), combinatorics(23,13));
+        console.log("The number of combination that exceeds", parsed, "with n = 100 is", combinatoricsOverBound(parsed));
         rl.close();
     }
 });
+
+function combinatoricsOverBound(upperBound)
+{
+    let count = 0;
+    for (let i = 1; i <= 100; i++)
+    {
+        for (let j = 1; j <= Math.ceil(i/2); j++)
+        {
+
+            if (combinatorics(i,j) >= upperBound)
+            {
+                console.log("i:",i,"j:", j,"comb:", combinatorics(i,j), "count:",i - 2*j +  1);
+                count += i - 2*j +  1;
+                break;
+            }
+        }
+    }
+    return count;
+}
+
+function factorial(n)
+{
+    if (n == 1 || n == 0)
+    {
+        return 1;
+    }
+
+    return n * factorial(n-1);
+}
+
+
+function combinatorics(n,r)
+{
+    return factorial(n)/(factorial(r)*factorial(n-r));
+}
