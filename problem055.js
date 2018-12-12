@@ -49,8 +49,16 @@ rl.question('Enter a positive integer : ', (answer) => {
         rl.close();
     } 
     else {
-        console.log("The", parsed, " number(s) that is triangle, pentagonal and hexagonal is:", TriPenHex[TriPenHex.length - 1]);
+        console.log("There are", "ANSWER", "theoritical Lychrels number's below", parsed);
         rl.close();
     }
 
 });
+
+function ComputeLychrel(number)
+{
+    for (let i = 0; i < 50; ++i)
+    {
+
+    }
+}
