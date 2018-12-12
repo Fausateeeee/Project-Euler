@@ -104,7 +104,7 @@ function EvaluatePokerHands(hand)
     {
         return [7, H.high];
     }
-    else if (false/*fullhouse*/)
+    else if (fullhouse)
     {
         return [6, H.high];
     }
@@ -142,36 +142,49 @@ function HasOnePair(hand)
     {
         if (analysis[card[0]])
         {
-            return true;
+
+            return [true, card[0]];
         }
         else
         {
             analysis[card[0]] = true;
         }
     }
-    return false;
+    return [false];
 }
 //Works
 function HasTwoPair(hand)
 {
     let analysis = {};
-    let onePair = false;
+    let onePair = [false];
     for (let card of hand)
     {
         if (analysis[card[0]])
         {
-            if (onePair)
+            if (onePair[0])
             {
-                return true;
+                let lowestPair;
+                let highestPair;
+                if(onePair[1] < card[0])
+                {
+                    lowestPair = onePair[1]; 
+                    highestPair = card[0];
+                }
+                else
+                {
+                    lowestPair = card[0]; 
+                    highestPair = onePair[1];
+                }
+                return [true, highestPair, lowestPair];
             }
-            onePair = true;
+            onePair = [true, card[0]];
         }
         else
         {
             analysis[card[0]] = true;
         }
     }
-    return false;
+    return [false];
 }
 //Works
 function HasThreeOfAKind(hand)
@@ -181,7 +194,7 @@ function HasThreeOfAKind(hand)
     {
         if (analysis[card[0]])
         {
-            return true;
+            return [true, card[0]];
         }
         else
         {
@@ -205,7 +218,7 @@ function HasFourOfAKind(hand)
     {
         if (analysis[card[0]])
         {
-            return true;
+            return [true, card[0]];
         }
         else
         {
@@ -223,7 +236,7 @@ function HasFourOfAKind(hand)
             }
         }
     }
-    return false;
+    return [false];
 }
 //Works
 function HasStraight(hand)
@@ -298,32 +311,32 @@ function HasFullHouse(hand)
 
         if (Object.keys(analysis).length == 2)
         {
-            pair = false;
-            threeofakind = false;
+            pair = [false];
+            threeofakind = [false];
             for (let key in Object.keys(analysis))
             {
                 if (analysis[key] == 2)
                 {
-                    pair = true;
+                    pair = [true, key];
                 }
                 if (analysis[key] == 3)
                 {
-                    threeofakind = true;
+                    threeofakind = [true, key];
                 }
             }
-            if (pair && threeofakind)
+            if (pair[0] && threeofakind[0])
             {
-                return true;
+                return [true, threeofakind[1], pair[1]];
             }
         }
 
     }
-    return false;
+    return [false];
 }
 //Works
-function GetHighestCard(hand)
+function GetHighestCards(hand)
 {
-    let highest = 0;
+    let highest = [];
 
     for (let card of hand)
     {
@@ -332,39 +345,24 @@ function GetHighestCard(hand)
         switch(value)
         {
             case "A":
-                highest = 14;
+                highest.push(14);
                 break;
             case "K":
-                if (highest < 13)
-                {
-                    highest = 13;
-                }
+                highest.push(13);
                 break;
             case "Q":
-                if (highest < 12)
-                {
-                    highest = 12;
-                }
+                highest.push(12);
                 break;
             case "J":
-                if (highest < 11)
-                {
-                    highest = 11;
-                }
+                highest.push(11);
                 break;
             case "T":
-                if (highest < 10)
-                {
-                    highest = 10;
-                }
+                highest.push(10);
                 break;
             default:
-                if(highest < Number.parseInt(value))
-                {
-                    highest = value;
-                    break;
-                }           
+                highest.push(value);
+                break;         
         }
     }
-    return highest;
+    return highest.sort();
 }
