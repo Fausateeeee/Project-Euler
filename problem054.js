@@ -70,7 +70,6 @@ rl.question('Write the path to a valid input file  : ', (answer) => {
         let player1 = hands.substring(0, 14).split(" ");
         let player2 = hands.substring(15).split(" ");
         P1winCount += ComparePokerHand(player1, player2);
-        console.log(player1, player2, ComparePokerHand(player1, player2));
     }
     console.log("The player 1 wins exactly", P1winCount, "hands.");
     rl.close();
@@ -256,13 +255,11 @@ function ComparePokerHand(player1, player2)
                 //P1 has the highest card
                 if(P1[1][i] > P2[1][i])
                 {
-                    console.log(player1, "--", P1[1], "|||", player2, "--", P2[1], 1);
                     return 1;
                 }
                 //P2 has the highest card
                 else if (P1[1][i] < P2[1][i])
                 {
-                    console.log(player1, "--", P1[1], "|||", player2, "--", P2[1], 0);
                     return 0;
                 }
             } 
