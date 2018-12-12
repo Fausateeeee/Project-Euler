@@ -61,7 +61,7 @@ const rl = readline.createInterface({
 });
 
 rl.question('Write the path to a valid input file  : ', (answer) => {
-    let allText = fs.readFileSync("C:\\Projects\\P\\Project-Euler\\Additional-Files\\p054_poker.txt", 'utf8');
+    let allText = fs.readFileSync(answer, 'utf8');
     //Split the names into an array
     let arrAllHands = allText.split("\n");
     let P1winCount = 0;
