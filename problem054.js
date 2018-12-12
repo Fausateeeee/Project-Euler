@@ -61,7 +61,7 @@ const rl = readline.createInterface({
 });
 
 rl.question('Write the path to a valid input file  : ', (answer) => {
-    let allText = fs.readFileSync("C:\\Projects\\P\\Project-Euler\\Additional-Files\\p054_poker.txt", 'utf8');
+    let allText = fs.readFileSync("/home/fausateeeee/Projects/Project-Euler/Additional-Files/p054_poker.txt", 'utf8');
     //Split the names into an array
     let arrAllHands = allText.split("\n");
     let P1winCount = 0;
@@ -70,8 +70,8 @@ rl.question('Write the path to a valid input file  : ', (answer) => {
         let player1 = hands.substring(0, 14).split(" ");
         let player2 = hands.substring(15).split(" ");
         P1winCount += ComparePokerHand(player1, player2);
+        console.log(player1, EvaluatePokerHands(player1), "|||", player2, EvaluatePokerHands(player2), "---", ComparePokerHand(player1, player2));
     }
-    console.log(HasFullHouse(["2H", "2D", "4C", "4D", "4S",]));
     console.log("The player 1 wins exactly", P1winCount, "hands.");
     rl.close();
 
@@ -80,7 +80,6 @@ function ComparePokerHand(player1, player2)
 {
     let P1 = EvaluatePokerHands(player1);
     let P2 = EvaluatePokerHands(player2);
-
     return P1[0] > P2[0] ? 1 : (P1[0] == P2[0] ? (P1[1] > P2[1] ? 1 : 0) : 0);
 }
 
@@ -104,7 +103,7 @@ function EvaluatePokerHands(hand)
     {
         return [7, H.high];
     }
-    else if (fullhouse)
+    else if (H.fullhouse)
     {
         return [6, H.high];
     }
@@ -308,12 +307,11 @@ function HasFullHouse(hand)
                 analysis[card[0]] = 1;
             }
         }
-
         if (Object.keys(analysis).length == 2)
         {
             pair = [false];
             threeofakind = [false];
-            for (let key in Object.keys(analysis))
+            for (let key of Object.keys(analysis))
             {
                 if (analysis[key] == 2)
                 {
