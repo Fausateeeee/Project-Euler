@@ -86,7 +86,14 @@ function checkFamilies(prime, familySize)
         if(nbrToReplace != lastNbr && nbrChecked.indexOf(nbrToReplace) == -1)
         {
             let digit;
-            arrPrime[i] == firstDigit ? digit = 1 : digit = 0;
+            if (arrPrime[i] == firstDigit)
+            {
+                digit = 1;
+            }
+            else
+            {
+                digit = 0;
+            }
 
             for (; digit < 10; digit++)
             {
