@@ -49,7 +49,12 @@ rl.question('Enter a positive integer : ', (answer) => {
         rl.close();
     } 
     else {
-        console.log("There are", "ANSWER", "theoritical Lychrels number's below", parsed);
+        let LychrelCount = 0;
+        for(let i = 0; i < parsed; i++)
+        {
+            LychrelCount += ComputeLychrel(i);
+        }
+        console.log("There are", LychrelCount, "theoritical Lychrels number's below", parsed);
         rl.close();
     }
 
@@ -59,6 +64,35 @@ function ComputeLychrel(number)
 {
     for (let i = 0; i < 50; ++i)
     {
+        number += reverseNumber(number);
+        if (isPalindrome(number))
+        {
+            return 0;
+        }
 
     }
+    return 1;
+}
+
+function isPalindrome(number)
+{
+    let arr = number.toString().split("");
+
+    let j = arr.length - 1;
+
+    for (let i = 0; i < j; i++, j--)
+    {
+        if (arr[i] != arr[j])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+function reverseNumber(number)
+{
+    let arr = number.toString().split("");
+    arr.reverse();
+    return Number.parseInt(arr.join(""));
 }
