@@ -50,7 +50,7 @@ rl.question('Enter the number of expansions you want to compute : ', (answer) =>
     let numerator = [bigInt(0),bigInt(1),bigInt(1)];
     let denominator = [bigInt(1),bigInt(0),bigInt(1)];
     let total = 0;
-    ComputeFraction(numerator, denominator, answer);
+    ComputeFraction(numerator, denominator, parsed);
     for (let i = 3; i < numerator.length; i++)
     {
         if (NumberOfDigits(numerator[i]) > NumberOfDigits(denominator[i]))
