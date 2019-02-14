@@ -34,17 +34,71 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Write the path to a valid input file  : ', (answer) => {
+rl.question('Enter a password  : ', (answer) => {
 
-    let allText = fs.readFileSync(answer, 'utf8');
+    //xorPass = answer[0].charCodeAt(0) + answer[1].charCodeAt(0) + answer[2].charCodeAt(0);
+    //console.log(answer, xorPass);
+    let allText = fs.readFileSync("Additional-Files\\p059_cipher.txt", 'utf8');
 
-    //Remove  every " " from the file
-
-
-    //Split the names into an array
     let arrNumbers = allText.split(",");
+    let arrLetters = [];
+    let passwordIndex = [97,97,97];
+    let password = "aaa";
+    let str;
+    for (let i = 0; i < arrNumbers.length; ++i)
+    {
+        arrNumbers[i] = parseInt(arrNumbers[i]);
+    }
 
-    console.log("The ASCII sum of the file is", "ANSWER");
+    while(passwordIndex[0]<=122)
+    {    
+        flag = false;
+        for (let i = 0; i < arrNumbers.length; ++i)
+        {
+           //console.log(arrNumbers[i],password[i%3],arrNumbers[i]^password[i%3], String.fromCharCode(arrNumbers[i]^password[i%3]));
+            arrLetters[i] = String.fromCharCode(((arrNumbers[i]^password[0])^password[1])^password[2]);
+        }
+        if (!InvalidCharacter(arrLetters))
+        {
+            str = arrLetters.join("");
+            break;
+        }
+        else
+        {
+            ++passwordIndex[2];
+            if(passwordIndex[2] > 122)
+            {
+                passwordIndex[2] = 97;
+                ++passwordIndex[1];
+                if(passwordIndex[1] > 122)
+                {
+                    ++passwordIndex[0];
+                    passwordIndex[1] = 97;
+                }
+            }
+            password = String.fromCharCode(passwordIndex[0]) + String.fromCharCode(passwordIndex[1]) + String.fromCharCode(passwordIndex[2]);
+
+           // console.log(password);
+        }
+    
+    }
+
+
+    console.log("The ASCII sum of the file is", str, password);
     rl.close();
 
 });
+
+function InvalidCharacter(arrCharacter)
+{
+    for (let i = 0; i < arrCharacter.length; i++)
+    {
+        character = arrCharacter[i];
+        if (character.charCodeAt(0) < 32 || character.charCodeAt(0) > 122)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
