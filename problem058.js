@@ -25,45 +25,62 @@ ratio of primes along both diagonals first falls below 10%?
 
     {1x1} 1 + {3x3}((1 + 2) + (1 + 4) + (1 + 6) + (1 + 8)) + {5x5}((9 + 4) + (9 + 8) + (9 + 12) + (9 + 16)) + 
     {7x7}((25 + 6) + (25 + 12) + (25 + 18) + (25 + 24)) + ...
-    
+
+*/
+
+/*
+    The total number of diagonal number in an odd square is side*2 - 1.
+    We can then compute each new number added by using the method at problem 28.
+    We check if they are prime and compute the ratio.
+
 */
 const readline = require('readline');
-const bigInt = require('big-integer');
+const bigInt = require("big-integer");
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-rl.question('Enter the number of expansions you want to compute : ', (answer) => {
-    const parsed = parseInt(answer);
+rl.question('Enter a percentage : ', (answer) => {
+
+    const parsed = parseFloat(answer);
 
     if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
+        console.log("Please, enter a valid number next time <3");
         rl.close();
     }
 
-    else if (parsed < 1) {
-        console.log("Enter a number greater or equal than 1 next time");
+    else if (parsed > 100 || parsed < 0) {
+        console.log("Enter a valid percentage next time");
         rl.close();
     }
 
     else
     {
-    
-    let numerator = [bigInt(0),bigInt(1),bigInt(1)];
-    let denominator = [bigInt(1),bigInt(0),bigInt(1)];
-    let total = 0;
-    ComputeFraction(numerator, denominator, answer);
-    for (let i = 3; i < numerator.length; i++)
-    {
-        if (NumberOfDigits(numerator[i]) > NumberOfDigits(denominator[i]))
+        let base = 1;
+        let ratio = 100;
+        let primeTotal = 0;
+        let side = 1;
+
+        while (ratio > parsed)
         {
-            ++total;
+            side += 2;
+            for (let j = 1; j <= 4; j++)
+            {
+                if  (bigInt(base + (side - 1)*j).isPrime())
+                {
+                    ++primeTotal;
+                }
+            }
+            base += (side - 1)*4;       
+            ratio = primeTotal/(side*2 - 1) * 100;
+
+            console.log(ratio, side,  primeTotal, side*2 - 1);
         }
+        console.log(base + (side - 1));
+        console.log("The ratio of prime number on the diagonal is below",parsed, "% when the grid has sides of length", side);
+        rl.close();
     }
 
-    console.log("The number of times the numerator has more digits than the denominator is", 
-    total);
-    rl.close();
-    }
 });
