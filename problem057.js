@@ -18,16 +18,66 @@ is the first example where the number of digits in the numerator exceeds the num
 In the first one-thousand expansions, how many fractions contain a numerator with more digits than denominator?
 
 */
-const readline = require('readline');
 
+/*
+
+From the wiki on continued fraction, , there is an algorithm to compute a continued fraction, we will implement it
+
+*/
+const readline = require('readline');
+const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-rl.question('Press enter to continue : ', (answer) => {
+rl.question('Enter the number of expansions you want to compute : ', (answer) => {
+    const parsed = parseInt(answer);
 
-    console.log("The maximum digit sum of number of the form a^b where a,b range from 1 to 100 is", "ANSWER");
+    if (isNaN(parsed)) {
+        console.log("Please, enter a natural number next time <3");
+        rl.close();
+    }
+
+    else if (parsed < 1) {
+        console.log("Enter a number greater or equal than 1 next time");
+        rl.close();
+    }
+
+    else
+    {
+    
+    let numerator = [bigInt(0),bigInt(1),bigInt(1)];
+    let denominator = [bigInt(1),bigInt(0),bigInt(1)];
+    let total = 0;
+    ComputeFraction(numerator, denominator, answer);
+    for (let i = 3; i < numerator.length; i++)
+    {
+        if (NumberOfDigits(numerator[i]) > NumberOfDigits(denominator[i]))
+        {
+            ++total;
+        }
+    }
+
+    console.log("The number of times the numerator has more digits than the denominator is", 
+    total);
     rl.close();
+    }
 });
 
+function ComputeFraction(numerator, denominator, upperBound)
+{
+    ZeroIndex = numerator.length - 2;
+    numerator.push(numerator[ZeroIndex + 1].times(2).plus(numerator[ZeroIndex]));
+    denominator.push(denominator[ZeroIndex + 1].times(2).plus(denominator[ZeroIndex]));
+
+    if(ZeroIndex < upperBound)
+    {
+        ComputeFraction(numerator, denominator, upperBound);
+    }
+}
+
+function NumberOfDigits(number)
+{   
+    return number.toString().length;
+}
