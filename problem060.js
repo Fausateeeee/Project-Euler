@@ -10,7 +10,7 @@ Find the lowest sum for a set of five primes for which any two primes concatenat
 
 */
 const readline = require('readline');
-
+const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -18,7 +18,37 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatena to produce another prime is",
-    "ANSWER");
+    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+    FindPrimeFamily());
     rl.close();
 });
+
+function FindPrimeFamily()
+{
+    let startingFamily = [3,7,109,673]; //This family yields no result
+    let potentialPrime = 675;
+    while (startingFamily.length < 5)
+    {
+        potentialPrime += 2;
+        if (potentialPrime%3 != 0 && potentialPrime%5 != 0 && 
+            bigInt(potentialPrime).isPrime() && CheckConcatenate(potentialPrime, startingFamily))
+            {
+                startingFamily.push(potentialPrime);
+            }
+    }
+    return startingFamily;
+}
+
+function CheckConcatenate(potentialPrime, startingFamily)
+{
+    for (let prime of startingFamily)
+    {
+        let prime1 = parseInt(prime.toString() + potentialPrime.toString());
+        let prime2 = parseInt(potentialPrime.toString() + prime.toString());
+        if (!bigInt(prime1).isPrime() || !bigInt(prime2).isPrime())
+        {
+            return false;
+        }
+    }
+    return true;
+}
