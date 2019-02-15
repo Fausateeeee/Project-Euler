@@ -34,17 +34,16 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Enter a password  : ', (answer) => {
+rl.question('Press enter to decrypt the message : ', (answer) => {
 
-    //xorPass = answer[0].charCodeAt(0) + answer[1].charCodeAt(0) + answer[2].charCodeAt(0);
-    //console.log(answer, xorPass);
     let allText = fs.readFileSync("Additional-Files\\p059_cipher.txt", 'utf8');
 
     let arrNumbers = allText.split(",");
+    let arrDecrypted = [];
     let arrLetters = [];
     let passwordIndex = [97,97,97];
-    let password = "aaa";
-    let str;
+    let asciiSum = 0;
+    let str = "";
     for (let i = 0; i < arrNumbers.length; ++i)
     {
         arrNumbers[i] = parseInt(arrNumbers[i]);
@@ -55,46 +54,45 @@ rl.question('Enter a password  : ', (answer) => {
         flag = false;
         for (let i = 0; i < arrNumbers.length; ++i)
         {
-           //console.log(arrNumbers[i],password[i%3],arrNumbers[i]^password[i%3], String.fromCharCode(arrNumbers[i]^password[i%3]));
-            arrLetters[i] = String.fromCharCode(((arrNumbers[i]^password[0])^password[1])^password[2]);
+           arrDecrypted[i] = arrNumbers[i] ^ passwordIndex[i%3];
         }
-        if (!InvalidCharacter(arrLetters))
+        if (!InvalidCharacter(arrDecrypted))
         {
-            str = arrLetters.join("");
-            break;
-        }
-        else
-        {
-            ++passwordIndex[2];
-            if(passwordIndex[2] > 122)
+            for (let i in arrDecrypted)
             {
-                passwordIndex[2] = 97;
-                ++passwordIndex[1];
-                if(passwordIndex[1] > 122)
-                {
-                    ++passwordIndex[0];
-                    passwordIndex[1] = 97;
-                }
+                arrLetters[i] = String.fromCharCode(arrDecrypted[i]);
             }
-            password = String.fromCharCode(passwordIndex[0]) + String.fromCharCode(passwordIndex[1]) + String.fromCharCode(passwordIndex[2]);
-
-           // console.log(password);
+            str = arrLetters.join("");
+            if (str.includes("the") && str.includes("of") && str.includes("and")
+            && str.includes("is")&& str.includes("be")&& str.includes("to")&& str.includes("for"))
+            {
+                asciiSum = arrDecrypted.reduce((a,b)=>{return a + b;});
+                break;
+            }
         }
-    
+        ++passwordIndex[2];
+        if(passwordIndex[2] > 122)
+        {
+            passwordIndex[2] = 97;
+            ++passwordIndex[1];
+            if(passwordIndex[1] > 122)
+            {
+                ++passwordIndex[0];
+                passwordIndex[1] = 97;
+            }
+        }
     }
 
-
-    console.log("The ASCII sum of the file is", str, password);
+    console.log("The ASCII sum of the file is", asciiSum, ". The message is :", str);
     rl.close();
 
 });
 
 function InvalidCharacter(arrCharacter)
 {
-    for (let i = 0; i < arrCharacter.length; i++)
+    for (let character of arrCharacter)
     {
-        character = arrCharacter[i];
-        if (character.charCodeAt(0) < 32 || character.charCodeAt(0) > 122)
+        if (character < 32 || character > 125)
         {
             return true;
         }
