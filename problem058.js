@@ -60,7 +60,7 @@ rl.question('Enter a percentage : ', (answer) => {
     {
         let base = 1;
         let ratio = 100;
-        let primeTotal = 0;
+        let primeCount = 0;
         let side = 1;
 
         while (ratio > parsed)
@@ -68,19 +68,54 @@ rl.question('Enter a percentage : ', (answer) => {
             side += 2;
             for (let j = 1; j <= 4; j++)
             {
-                if  (bigInt(base + (side - 1)*j).isPrime())
+                diagonal = base + (side - 1)*j;
+                console.log(diagonal, bigInt(diagonal).isPrime());
+                if  (bigInt(diagonal).isPrime())
                 {
-                    ++primeTotal;
+                    ++primeCount;
                 }
             }
             base += (side - 1)*4;       
-            ratio = primeTotal/(side*2 - 1) * 100;
+            ratio = (primeCount/(side*2 - 1))* 100;
 
-            console.log(ratio, side,  primeTotal, side*2 - 1);
+            //console.log(ratio, side,  primeTotal, side*2 - 1);
         }
-        console.log(base + (side - 1));
-        console.log("The ratio of prime number on the diagonal is below",parsed, "% when the grid has sides of length", side);
+        console.log("The ratio of prime number on the diagonal is below",parsed, "% when the grid has sides of length", sideLength);
         rl.close();
     }
 
 });
+
+function probablyPrime(n, k) {
+	if (n === 2 || n === 3)
+		return true;
+	if (n % 2 === 0 || n < 2)
+		return false;
+ 
+	// Write (n - 1) as 2^s * d
+	let s = 0, d = n - 1;
+	while (d % 2 === 0) {
+		d /= 2;
+		++s;
+	}
+ 
+	WitnessLoop: do {
+		// A base between 2 and n - 2
+		let x = Math.pow(2 + Math.floor(Math.random() * (n - 3)), d) % n;
+ 
+		if (x === 1 || x === n - 1)
+			continue;
+ 
+		for (let i = s - 1; i--;) {
+			x = x * x % n;
+			if (x === 1)
+				return false;
+			if (x === n - 1)
+				continue WitnessLoop;
+		}
+ 
+		return false;
+	} while (--k);
+ 
+	return true;
+}
