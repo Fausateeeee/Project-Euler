@@ -19,24 +19,16 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    FindPrimeFamily());
+    GenerateOddPrimeArray(50000));
     rl.close();
 });
 
-function FindPrimeFamily()
+function FindPrimeFamily(primes)
 {
-    let startingFamily = [3,7,109,673]; //This family yields no result
-    let potentialPrime = 675;
-    while (startingFamily.length < 5)
+    for (let candidate1 of primes)
     {
-        potentialPrime += 2;
-        if (potentialPrime%3 != 0 && potentialPrime%5 != 0 && 
-            bigInt(potentialPrime).isPrime() && CheckConcatenate(potentialPrime, startingFamily))
-            {
-                startingFamily.push(potentialPrime);
-            }
+        
     }
-    return startingFamily;
 }
 
 function CheckConcatenate(potentialPrime, startingFamily)
@@ -51,4 +43,17 @@ function CheckConcatenate(potentialPrime, startingFamily)
         }
     }
     return true;
+}
+
+function GenerateOddPrimeArray(upperbound)
+{
+    primes = [3,7,11];
+    for (let p = 13; p < upperbound; p += 2)
+    {
+        if (p%3 != 0 && p%5 != 0 && p%7 != 0 && p%11 !=0 && bigInt(p).isPrime())
+        {
+            primes.push(p);
+        }
+    }
+    return primes;
 }
