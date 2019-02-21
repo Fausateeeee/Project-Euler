@@ -63,8 +63,8 @@ rl.question('Press enter to decrypt the message : ', (answer) => {
                 arrLetters[i] = String.fromCharCode(arrDecrypted[i]);
             }
             str = arrLetters.join("");
-            if (str.includes("the") && str.includes("of") && str.includes("and")
-            && str.includes("is")&& str.includes("be")&& str.includes("to")&& str.includes("for"))
+            if (str.includes("the") && str.includes("of") && str.includes("and") && 
+            str.includes("is")&& str.includes("be")&& str.includes("to")&& str.includes("for"))
             {
                 asciiSum = arrDecrypted.reduce((a,b)=>{return a + b;});
                 break;
