@@ -25,9 +25,24 @@ rl.question('Press enter to continue : ', (answer) => {
 
 function FindPrimeFamily(primes)
 {
-    for (let candidate1 of primes)
+    for (let index1 = 0; index1 < primes.length; ++index1)
     {
-        
+        let prime1 = primes[index1];
+        for (let index2 = index1 + 1; index2 < primes.length; ++index2)
+        {
+            let prime2 = primes[index2];
+            
+            for (let index3 = index2 + 1; index3 < primes.length; ++index3)
+            {
+                for (let index4 = index3 + 1; index4 < primes.length; ++index4)
+                {
+                    for (let index5 = index4 + 1; index5 < primes.length; ++index5)
+                    {
+                        
+                    }
+                }
+            }
+        }
     }
 }
 
