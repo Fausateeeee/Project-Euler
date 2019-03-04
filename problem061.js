@@ -30,13 +30,13 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER", FindCyclicalSet());
-    rl.close();
-});
-
+//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+//     "ANSWER", FindCyclicalSet());
+//     rl.close();
+// });
+FindCyclicalSet();
 function FindCyclicalSet()
 {
     let triangle = GetParts(GenerateTriangleArray(), "triangle");
@@ -46,25 +46,36 @@ function FindCyclicalSet()
     let heptagonal = GetParts(GenerateHeptagonalArray(), "heptagonal");
     let octagonal = GetParts(GenerateOctagonalArray(), "octagonal");
 
-    console.log(octagonal);
-    let cycle = SearchCycle([], [triangle, square, pentagonal, hexagonal, heptagonal, octagonal]);
+    let cycle = SearchCycle(triangle, [square, pentagonal, hexagonal, heptagonal, octagonal], []);
 }
 
-function SearchCycle(startingPoint, otherArrays)
+function SearchCycle(startingPoint, otherArrays, cycle)
 {
-    let potentialCycle = [];
-
-    // for (let b1 of Object.keys(startingPoint[0]))
-    // {
-        
-    // }
-
+    for (let key of Object.keys(startingPoint.First))
+    {
+        let nbr = startingPoint.First[key];
+        cycle.push(nbr);
+        let next = startingPoint.Last[nbr];
+        for(let i in otherArrays)
+        {
+            if (otherArrays[0].First.hasOwnProperty(next))
+            {
+                rest = [...otherArrays];           
+                SearchCycle(rest.shift(), rest, cycle);
+            }
+            else
+            {
+                otherArrays.push(otherArrays.shift());
+            }
+        }
+        cycle.pop();
+    }
 }
 
 
 function GetParts(polyNbr, type)
 {
-    return [GetFirstPart(polyNbr), GetLastPart(polyNbr), type];
+    return {"First":GetFirstPart(polyNbr), "Last":GetLastPart(polyNbr), "type": type};
 }
 
 function GetFirstPart(polyNbr)
