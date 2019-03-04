@@ -39,15 +39,54 @@ rl.question('Press enter to continue : ', (answer) => {
 
 function FindCyclicalSet()
 {
-    let triangle = GenerateTriangleArray();
-    let square = GenerateSquareArray();
-    let pentagonal = GeneratePentagonalArray();
-    let hexagonal = GenerateHexagonalArray();
-    let heptagonal = GenerateHeptagonalArray();
-    let octagonal = GenerateOctagonalArray();
+    let triangle = GetParts(GenerateTriangleArray(), "triangle");
+    let square = GetParts(GenerateSquareArray(), "square");
+    let pentagonal = GetParts(GeneratePentagonalArray(), "pentagonal");
+    let hexagonal = GetParts(GenerateHexagonalArray(), "hexagonal");
+    let heptagonal = GetParts(GenerateHeptagonalArray(), "heptagonal");
+    let octagonal = GetParts(GenerateOctagonalArray(), "octagonal");
 
-    console.log(triangle);
-    cons
+    console.log(octagonal);
+    let cycle = SearchCycle([], [triangle, square, pentagonal, hexagonal, heptagonal, octagonal]);
+}
+
+function SearchCycle(startingPoint, otherArrays)
+{
+    let potentialCycle = [];
+
+    // for (let b1 of Object.keys(startingPoint[0]))
+    // {
+        
+    // }
+
+}
+
+
+function GetParts(polyNbr, type)
+{
+    return [GetFirstPart(polyNbr), GetLastPart(polyNbr), type];
+}
+
+function GetFirstPart(polyNbr)
+{
+    let polyPart = {};
+    for (let nbr of Object.keys(polyNbr))
+    {
+        let key = nbr.substring(0,2);
+        polyPart[key] = nbr;
+    }
+    return polyPart;
+}
+
+function GetLastPart(polyNbr)
+{
+    let polyPart = {};
+    for (let nbr of Object.keys(polyNbr))
+    {
+        let key = nbr.substring(2);
+        polyPart[nbr] = key;
+    }
+    return polyPart;
 }
 
 function GenerateTriangleArray()
