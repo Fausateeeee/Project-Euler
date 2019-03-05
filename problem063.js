@@ -13,9 +13,42 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER");
-    rl.close();
-});
+//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+//     NthPower());
+//     rl.close();
+// });
+console.log(NthPower());
+rl.close();
+function NthPower()
+{
+    flag = true;
+    let exponant = 2;
+    let total = 9;
+    while (flag)
+    {    
+        flag = false;
+        let base = 2;
+        let current = bigInt(base).pow(exponant);
+        while(current.toString(10).length < exponant)
+        {
+            ++base;
+            current = bigInt(base).pow(exponant);
+        }
+        while(base < 10)
+        {
+            flag = true;
+            ++base;
+            ++total;
+        }
+        ++exponant;
+    } 
+
+    return total;
+}
+
+function NumberOfDigits(number)
+{   
+    return number.toString().length;
+}
