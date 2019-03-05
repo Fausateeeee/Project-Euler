@@ -30,12 +30,13 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-// rl.question('Press enter to continue : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
-//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-//     "ANSWER", FindCyclicalSet());
-//     rl.close();
-// });
+    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+    "ANSWER", FindCyclicalSet());
+    rl.close();
+});
+
 FindCyclicalSet();
 function FindCyclicalSet()
 {
@@ -47,6 +48,7 @@ function FindCyclicalSet()
     let octagonal = GetParts(GenerateOctagonalArray(), "octagonal");
 
     let cycle = SearchCycle(triangle, [square, pentagonal, hexagonal, heptagonal, octagonal], []);
+
 }
 
 function SearchCycle(startingPoint, otherArrays, cycle)
@@ -61,7 +63,7 @@ function SearchCycle(startingPoint, otherArrays, cycle)
             if (otherArrays[0].First.hasOwnProperty(next))
             {
                 rest = [...otherArrays];           
-                SearchCycle(rest.shift(), rest, cycle);
+                _SearchCycle(rest.shift(), rest, cycle);
             }
             else
             {
@@ -72,6 +74,10 @@ function SearchCycle(startingPoint, otherArrays, cycle)
     }
 }
 
+function _SearchCycle()
+{
+
+}
 
 function GetParts(polyNbr, type)
 {
@@ -128,7 +134,7 @@ function GenerateSquareArray()
         {
             arr[nbr] = true;
         }
-        nbr = n^2;
+        nbr = Math.pow(n,2);
         ++n;
     }
     return arr;
