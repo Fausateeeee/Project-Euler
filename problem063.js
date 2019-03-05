@@ -7,18 +7,17 @@ How many n-digit positive integers exist which are also an nth power?
 
 */
 const readline = require('readline');
-const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-// rl.question('Press enter to continue : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
-//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-//     NthPower());
-//     rl.close();
-// });
+    console.log("The total number of n-digits positive integers which are also an n-th power is",
+    NthPower());
+    rl.close();
+});
 console.log(NthPower());
 rl.close();
 function NthPower()
@@ -30,11 +29,11 @@ function NthPower()
     {    
         flag = false;
         let base = 2;
-        let current = bigInt(base).pow(exponant);
-        while(current.toString(10).length < exponant)
+        let current = Math.pow(base,exponant);
+        while(current.toString().length < exponant)
         {
             ++base;
-            current = bigInt(base).pow(exponant);
+            current =  Math.pow(base,exponant);
         }
         while(base < 10)
         {
@@ -46,9 +45,4 @@ function NthPower()
     } 
 
     return total;
-}
-
-function NumberOfDigits(number)
-{   
-    return number.toString().length;
 }
