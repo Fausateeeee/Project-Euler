@@ -16,63 +16,51 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The smallest cuve for which there is exactly five permutations is",
-    findCubicPermutation());
+    FindCubicPermutation());
     rl.close();
 });
 
-function findCubicPermutation()
+function FindCubicPermutation()
 {
-    base = 346;
+    let base = 1;
+    let dictionary = {};
+
     while(true)
     {
-        cube = Math.pow(base, 3);
-        arrCube = cube.toString().split("");
-        cubePerms = [];
-        computePermutation(arrCube,cubePerms,0, arrCube.length - 1);
+        current = Math.pow(base, 3);
+        length = NumberLength(current);
+        unperm = Unpermuate(current);
 
-        if (totalCubePerm(cubePerms) == 5)
+        if (dictionary.hasOwnProperty(length))
         {
-            return cube;
+            if (dictionary[length].hasOwnProperty(unperm))
+            {
+                dictionary[length][unperm].push(current);
+                if (dictionary[length][unperm].length == 5)
+                {
+                    return dictionary[length][unperm][0];
+                }
+            }
+            else
+            {
+                dictionary[length][unperm] = [current];
+            }
         }
-        ++cube;
+        else
+        {
+            dictionary[length] = {};
+            dictionary[length][unperm] = [current];
+        }     
+        ++base;
     }
 }
 
-function totalCubePerm(cubePerms)
+function Unpermuate(nbr)
 {
-    let total = 0;
-    for (let perm of cubePerms)
-    {
-        let p_cube = parseInt(perm);
-        let root = Math.round(Math.pow(p_cube,1/3));
-        if (Math.pow(root,3) == p_cube)
-        {
-            ++total;
-        }
-    }
-    return total;
+    return nbr.toString().split("").sort().reduce((a,b) => {return a + b;});
 }
 
-function computePermutation(arr, permutations, startingIndex, endIndex)
+function NumberLength(nbr)
 {
-    if (startingIndex == endIndex)
-    {
-        permutations.push(arr.reduce((a,b) => {return a+b;}));
-    }
-    else
-    {
-        for (let i = startingIndex; i <= endIndex; i++)
-        {
-            swapArrayElements(arr, startingIndex, i);
-            computePermutation(arr, permutations, startingIndex + 1, endIndex);
-            swapArrayElements(arr, startingIndex, i);
-        }
-    }
-}
-
-function swapArrayElements(arr, index1, index2)
-{
-  let temp = arr[index1];
-  arr[index1] = arr[index2];
-  arr[index2] = temp;  
+    return nbr.toString().length;
 }
