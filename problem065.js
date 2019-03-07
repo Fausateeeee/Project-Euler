@@ -33,15 +33,51 @@ Find the sum of digits in the numerator of the 100th convergent of the continued
 
 */
 const readline = require('readline');
-
+const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER");
+    let numerator = [bigInt(0),bigInt(1)];
+    let denominator = [bigInt(1),bigInt(0)];
+
+    ComputeConvergent(numerator, denominator, ComputePeriod(100), 0, 100);
+
+    console.log("The sum of digits in the numerator of the 100th convergent of e is",
+    numerator[101].toArray(10));
     rl.close();
-});
+// });
+
+function ComputePeriod(upperBound)
+{
+    let period = [2];
+    let k = 1;
+    for(let i = 1; i < upperBound; i++)
+    {
+        if (i%3 < 2)
+        {
+            period.push(1);
+        }
+        else
+        {
+            period.push(2*k);
+            ++k;
+        }
+    }
+
+    return period;
+}
+
+function ComputeConvergent(numerator, denominator, period, index, upperBound)
+{
+    numerator.push(numerator[index + 1].times(period[index]).plus(numerator[index]));
+    // denominator.push(denominator[index + 1].times(period[index]).plus(denominator[index]));
+
+    if(index < upperBound)
+    {
+        ComputeConvergent(numerator, denominator, period, ++index, upperBound);
+    }
+}
