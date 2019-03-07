@@ -46,7 +46,7 @@ How many continued fractions for N≤10000 have an odd period?
 
 */
 const readline = require('readline');
-const bigInt = require('big-integer');
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -58,3 +58,12 @@ rl.question('Press enter to continue : ', (answer) => {
     "ANSWER");
     rl.close();
 });
+
+function ComputePeriod(upperbound)
+{
+    for (let radical = 2; radical <= upperbound; ++radical)
+    {
+        let root = Math.sqrt(radical);
+        let integer_part = Math.floor(root);
+    }
+}
