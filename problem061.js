@@ -40,12 +40,12 @@ rl.question('Press enter to continue : ', (answer) => {
 FindCyclicalSet();
 function FindCyclicalSet()
 {
-    let triangle = GetParts(GenerateTriangleArray(), "triangle");
-    let square = GetParts(GenerateSquareArray(), "square");
-    let pentagonal = GetParts(GeneratePentagonalArray(), "pentagonal");
-    let hexagonal = GetParts(GenerateHexagonalArray(), "hexagonal");
-    let heptagonal = GetParts(GenerateHeptagonalArray(), "heptagonal");
-    let octagonal = GetParts(GenerateOctagonalArray(), "octagonal");
+    let triangle = GenerateTriangleArray();
+    let square = GenerateSquareArray();
+    let pentagonal = GeneratePentagonalArray();
+    let hexagonal = GenerateHexagonalArray();
+    let heptagonal = GenerateHeptagonalArray();
+    let octagonal = GenerateOctagonalArray();
 
     let cycle = SearchCycle(triangle, [square, pentagonal, hexagonal, heptagonal, octagonal], []);
 
@@ -53,13 +53,32 @@ function FindCyclicalSet()
 
 function SearchCycle(startingPoint, otherArrays, cycle)
 {
-    for (let key of Object.keys(startingPoint.First))
+
+    for (let key of startingPoint)
     {
-        let nbr = startingPoint.First[key];
         cycle.push(nbr);
-        let next = startingPoint.Last[nbr];
         for(let i in otherArrays)
         {
+            for (let comp of otherArrays[0])
+            {
+                if (nbr[2] + nbr[3] < comp[0] + comp[1])
+                {
+                    continue;
+                }
+                else if (nbr[2] + nbr[3] == comp[0] + comp[1])
+                {
+                    cycle.push(comp);   
+                }
+                else if (i < otherArrays.length)
+                {
+                    otherArrays.push(otherArrays.shift());
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
             if (otherArrays[0].First.hasOwnProperty(next))
             {
                 rest = [...otherArrays];           
@@ -67,7 +86,7 @@ function SearchCycle(startingPoint, otherArrays, cycle)
             }
             else
             {
-                otherArrays.push(otherArrays.shift());
+                
             }
         }
         cycle.pop();
@@ -79,43 +98,17 @@ function _SearchCycle()
 
 }
 
-function GetParts(polyNbr, type)
-{
-    return {"First":GetFirstPart(polyNbr), "Last":GetLastPart(polyNbr), "type": type};
-}
-
-function GetFirstPart(polyNbr)
-{
-    let polyPart = {};
-    for (let nbr of Object.keys(polyNbr))
-    {
-        let key = nbr.substring(0,2);
-        polyPart[key] = nbr;
-    }
-    return polyPart;
-}
-
-function GetLastPart(polyNbr)
-{
-    let polyPart = {};
-    for (let nbr of Object.keys(polyNbr))
-    {
-        let key = nbr.substring(2);
-        polyPart[nbr] = key;
-    }
-    return polyPart;
-}
 
 function GenerateTriangleArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = (n*(n+1))/2;
         ++n;
@@ -132,7 +125,7 @@ function GenerateSquareArray()
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = Math.pow(n,2);
         ++n;
@@ -149,7 +142,7 @@ function GeneratePentagonalArray()
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = (n*(3*n-1))/2 ;
         ++n;
@@ -166,7 +159,7 @@ function GenerateHexagonalArray()
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = n*(2*n-1);
         ++n;
@@ -183,7 +176,7 @@ function GenerateHeptagonalArray()
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = (n*(5*n-3))/2;
         ++n;
@@ -200,7 +193,7 @@ function GenerateOctagonalArray()
     {       
         if (nbr > 999)
         {
-            arr[nbr] = true;
+            arr.push(nbr.toString());
         }
         nbr = n*(3*n-2);
         ++n;
