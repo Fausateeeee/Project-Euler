@@ -24,7 +24,7 @@ heptagonal, and octagonal, is represented by a different number in the set.
 
 */
 const readline = require('readline');
-const bigInt = require('big-integer');
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -32,12 +32,14 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER", FindCyclicalSet());
+    console.time("time");
+    console.log("The sum of the only ordered set of six cyclic numbers of different polygonal type is   ", 
+    FindCyclicalSet().reduce((a,b) => {return parseInt(a) + parseInt(b);}));
+    console.log(console.timeEnd("time"));
     rl.close();
 });
 
-FindCyclicalSet();
+// FindCyclicalSet();
 function FindCyclicalSet()
 {
     let triangle = GenerateTriangleArray();
@@ -47,55 +49,80 @@ function FindCyclicalSet()
     let heptagonal = GenerateHeptagonalArray();
     let octagonal = GenerateOctagonalArray();
 
-    let cycle = SearchCycle(triangle, [square, pentagonal, hexagonal, heptagonal, octagonal], []);
+    let cycle = SearchCycle(triangle, [square, pentagonal, hexagonal, heptagonal, octagonal]);
 
+    return cycle;
 }
 
-function SearchCycle(startingPoint, otherArrays, cycle)
+function SearchCycle(startingPoint, otherArrays)
 {
-
-    for (let key of startingPoint)
+    let cycle = [];
+    for (let nbr of startingPoint)
     {
         cycle.push(nbr);
         for(let i in otherArrays)
         {
             for (let comp of otherArrays[0])
             {
-                if (nbr[2] + nbr[3] < comp[0] + comp[1])
+                if (nbr[2] + nbr[3] > comp[0] + comp[1])
                 {
                     continue;
                 }
                 else if (nbr[2] + nbr[3] == comp[0] + comp[1])
                 {
-                    cycle.push(comp);   
+                    cycle.push(comp);
+                    rest = [...otherArrays];
+                    rest.shift();
+                    _SearchCycle(comp, rest, cycle);
+                    if (cycle.length == 6)
+                    {
+                        return cycle;
+                    }
                 }
-                else if (i < otherArrays.length)
+                else
                 {
                     otherArrays.push(otherArrays.shift());
                     break;
                 }
-                else
-                {
-                    break;
-                }
-            }
-            if (otherArrays[0].First.hasOwnProperty(next))
-            {
-                rest = [...otherArrays];           
-                _SearchCycle(rest.shift(), rest, cycle);
-            }
-            else
-            {
-                
             }
         }
         cycle.pop();
     }
 }
 
-function _SearchCycle()
+function _SearchCycle(currentNumber, otherArrays, cycle)
 {
-
+    for(let i in otherArrays)
+    {
+        for (let comp of otherArrays[0])
+        {
+            if (currentNumber[2] + currentNumber[3] > comp[0] + comp[1])
+            {
+                continue;
+            }
+            else if (currentNumber[2] + currentNumber[3] == comp[0] + comp[1])
+            {
+                cycle.push(comp);
+                rest = [...otherArrays];
+                rest.shift();
+                _SearchCycle(comp, rest, cycle);
+                if (cycle.length == 6)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                otherArrays.push(otherArrays.shift());
+                break;
+            }
+        }
+    }
+    if (cycle.length == 6 && cycle[0][0] + cycle[0][1] == cycle[5][2] + cycle[5][3])
+    {
+        return;
+    }
+    cycle.pop();
 }
 
 
@@ -120,7 +147,7 @@ function GenerateSquareArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
@@ -137,7 +164,7 @@ function GeneratePentagonalArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
@@ -154,7 +181,7 @@ function GenerateHexagonalArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
@@ -171,7 +198,7 @@ function GenerateHeptagonalArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
@@ -188,7 +215,7 @@ function GenerateOctagonalArray()
 {
     let n = 1;
     let nbr = 0;
-    let arr = {};
+    let arr = [];
     while(nbr < 10000)
     {       
         if (nbr > 999)
