@@ -47,23 +47,50 @@ How many continued fractions for N≤10000 have an odd period?
 */
 const readline = require('readline');
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER");
-    rl.close();
-});
+//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+//     "ANSWER");
+//     rl.close();
+// });
 
+ComputePeriod(100);
 function ComputePeriod(upperbound)
 {
-    for (let radical = 2; radical <= upperbound; ++radical)
+    for (let radical = 23; radical <= upperbound; ++radical)
     {
         let root = Math.sqrt(radical);
-        let integer_part = Math.floor(root);
+        if (Number.isInteger(root))
+        {
+            continue;
+        }
+        let int_part = Math.floor(root);
+
+        _ComputePeriod([int_part], [1], [-1*int_part], radical, root, []);
+        
+
+    }
+}
+
+function _ComputePeriod(period, numerator, denominator, radical, root, has_looped)
+{
+    let index = numerator.length - 1;
+    denominator.push((radical - Math.pow(denominator[index], 2))/numerator[index]);
+    period.push(Math.floor((root - denominator[index])/denominator[index + 1]));
+    numerator.push(-1*denominator[index] - (period[index + 1] * denominator[index + 1]));
+    let loop = [numerator[index + 1], denominator[index + 1]];
+    if (has_looped.indexOf(loop) != -1)
+    {
+        return period;
+    }
+    else
+    {
+        has_looped.push(loop);
+        _ComputePeriod(period, numerator, denominator, radical, root, has_looped);
     }
 }
