@@ -47,22 +47,23 @@ How many continued fractions for N≤10000 have an odd period?
 */
 const readline = require('readline');
 
-// const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout
-// });
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-// rl.question('Press enter to continue : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
-//     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-//     "ANSWER");
-//     rl.close();
-// });
+    console.log("The number of continued fractions under 10 000 that have an odd period is",
+    ComputePeriod(10000));
+    rl.close();
+});
 
-ComputePeriod(100);
+
 function ComputePeriod(upperbound)
 {
-    for (let radical = 23; radical <= upperbound; ++radical)
+    let total = 0;
+    for (let radical = 2; radical <= upperbound; ++radical)
     {
         let root = Math.sqrt(radical);
         if (Number.isInteger(root))
@@ -70,27 +71,44 @@ function ComputePeriod(upperbound)
             continue;
         }
         let int_part = Math.floor(root);
+        let period = [int_part];
+        let numerator = [1];
+        let denominator = [-1*int_part];
 
-        _ComputePeriod([int_part], [1], [-1*int_part], radical, root, []);
-        
-
+        denominator.push((radical - Math.pow(denominator[0], 2))/numerator[0]);
+        period.push(Math.floor((root - denominator[0])/denominator[1]));
+        numerator.push(-1*denominator[0] - (period[1] * denominator[1]));
+        let has_looped = {};
+        has_looped[numerator[1]] = [denominator[1]];
+        total += _ComputePeriod(period, numerator, denominator, radical, root, has_looped);       
     }
+    return total;
 }
 
 function _ComputePeriod(period, numerator, denominator, radical, root, has_looped)
 {
-    let index = numerator.length - 1;
-    denominator.push((radical - Math.pow(denominator[index], 2))/numerator[index]);
-    period.push(Math.floor((root - denominator[index])/denominator[index + 1]));
-    numerator.push(-1*denominator[index] - (period[index + 1] * denominator[index + 1]));
-    let loop = [numerator[index + 1], denominator[index + 1]];
-    if (has_looped.indexOf(loop) != -1)
+    while (true)
     {
-        return period;
+        let index = numerator.length - 1;
+        denominator.push((radical - Math.pow(numerator[index], 2))/denominator[index]);
+        period.push(Math.floor((root - numerator[index])/denominator[index + 1]));
+        numerator.push((-1 * period[index + 1] * denominator[index + 1]) - numerator[index]);
+    
+        if (has_looped.hasOwnProperty([numerator[index + 1]]))
+        {
+            if (has_looped[numerator[index + 1]].indexOf(denominator[index + 1]) != -1)
+            {
+                return period.length%2;
+            }
+            else
+            {
+                has_looped[numerator[index + 1]].push(denominator[index + 1]);
+            }
+        }
+        else
+        {
+            has_looped[numerator[index + 1]] = [denominator[index + 1]];
+        }
     }
-    else
-    {
-        has_looped.push(loop);
-        _ComputePeriod(period, numerator, denominator, radical, root, has_looped);
-    }
+
 }
