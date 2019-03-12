@@ -46,6 +46,14 @@ What is the maximum 16-digit string for a "magic" 5-gon ring?
         *
 
 */
+
+/*
+
+    The possible arrangement space is 10^10 which is way too big to brute force.
+    I will need to find a way to approach a solution. 
+    I have an intuition that it is close to a magic square.
+    
+*/
 const readline = require('readline');
 
 const rl = readline.createInterface({
