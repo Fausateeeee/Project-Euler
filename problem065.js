@@ -39,7 +39,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-// rl.question('Press enter to continue : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
     let numerator = [bigInt(0),bigInt(1)];
     let denominator = [bigInt(1),bigInt(0)];
@@ -47,9 +47,9 @@ const rl = readline.createInterface({
     ComputeConvergent(numerator, denominator, ComputePeriod(100), 0, 100);
 
     console.log("The sum of digits in the numerator of the 100th convergent of e is",
-    numerator[101].toArray(10));
+    numerator[101].toArray(10).value.reduce((a,b) => {return parseInt(a) + parseInt(b);}));
     rl.close();
-// });
+});
 
 function ComputePeriod(upperBound)
 {
@@ -73,11 +73,9 @@ function ComputePeriod(upperBound)
 
 function ComputeConvergent(numerator, denominator, period, index, upperBound)
 {
-    numerator.push(numerator[index + 1].times(period[index]).plus(numerator[index]));
-    // denominator.push(denominator[index + 1].times(period[index]).plus(denominator[index]));
-
-    if(index < upperBound)
+    while (index < upperBound)
     {
-        ComputeConvergent(numerator, denominator, period, ++index, upperBound);
+        numerator.push(numerator[index + 1].times(period[index]).plus(numerator[index]));
+        ++index;
     }
 }
