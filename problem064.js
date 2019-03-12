@@ -80,7 +80,8 @@ function ComputePeriod(upperbound)
         numerator.push(-1*denominator[0] - (period[1] * denominator[1]));
         let has_looped = {};
         has_looped[numerator[1]] = [denominator[1]];
-        total += _ComputePeriod(period, numerator, denominator, radical, root, has_looped);       
+        total += _ComputePeriod(period, numerator, denominator, radical, root, has_looped);
+        console.log(period, radical);       
     }
     return total;
 }
