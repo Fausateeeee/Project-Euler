@@ -33,17 +33,17 @@ Using the numbers 1 to 10, and depending on arrangements,
 it is possible to form 16- and 17-digit strings. 
 What is the maximum 16-digit string for a "magic" 5-gon ring?
 
-   * 
-    \         *
-     * \     /
+   A 
+    \         B
+     a \     /
     /    \  /
-  *        *
+  e        b
  / \      /
-*   \    /
-     * -* -- *
+E   \    /
+     d -c -- C
       \
        \
-        *
+        D
 
 */
 
@@ -53,6 +53,38 @@ What is the maximum 16-digit string for a "magic" 5-gon ring?
     I will need to find a way to approach a solution. 
     I have an intuition that it is close to a magic square.
     
+
+    Since we want a 16 digit string, 10 must be in the outer nodes.
+
+    We have the 5  default equations
+    A + a + b = R;
+    B + b + c = R;
+    C + c + d = R;
+    D + d + e = R;
+    E + e + a = R;
+
+    We can deduce 5 more equations
+    A + a = B + c;
+    B + b = C + d;
+    C + c = D + e;
+    D + d = E + a;
+    E + e = A + b;
+
+    Without lost of generality, we can set A = 10;
+    Then a + b = R - 10 and a + 10 = B + c;
+    Meaning that R > 10, and we can set a better lower bound since a + b >= 3, so R >= 13; 
+
+    We can deduce the possible values of a,b with fixed values of R
+    R = 13 => (1,2);
+    R = 14 => (1,3);
+    R = 15 => (1,4), (2,3);
+    R = 16 => (1,5), (2,4);
+    R = 17 => (1,6), (2,5), (3,4);
+    R = 18 => (1,7), (2,6), (3,5);
+    R = 19 => (1,8)*, (2,7)*, (3,6)*, (4,5);
+    R = 20 => (1,9)*, (2,8)*, (3,7)*, (4,6)*; 
+
+ Asterix marked possible values are impossible to use since they'll cause a contradiction
 */
 const readline = require('readline');
 
@@ -67,3 +99,15 @@ rl.question('Press enter to continue : ', (answer) => {
     "ANSWER");
     rl.close();
 });
+
+function SolveEquations()
+{
+  let a, b, c, d, e, A, B, C, D, E = 0;
+  let possibleValues = {1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true};
+  A = 10;
+  let eqn1 = [A, a, b];
+  let eqn2 = [B, b, c];
+  let eqn3 = [C, c, d];
+  let eqn4 = [D, d, e];
+  let eqn5 = [E, e, a];
+}
