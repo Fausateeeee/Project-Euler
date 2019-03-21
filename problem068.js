@@ -85,6 +85,8 @@ E   \    /
     R = 20 => (1,9)*, (2,8)*, (3,7)*, (4,6)*; 
 
  Asterix marked possible values are impossible to use since they'll cause a contradiction
+
+ When we test for specific values, the solution space drops below 7! which is far easier to brute force.
 */
 const readline = require('readline');
 
