@@ -30,9 +30,13 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    ComputeMaximumRatio(1000000));
+    // ComputeMaximumRatio(1000000)
+    //GeneratePrimeArray(1000000)
+    GeneratePrimeFactorisation(1000000, GeneratePrimeArray(1000000))
+    );
     rl.close();
 });
+// GeneratePrimeFactorisation(20, GeneratePrimeArray(20));
 
 function ComputeMaximumRatio(upperbound)
 {
@@ -82,25 +86,6 @@ function EulerTotient(number, primes)
     }
 }
 
-function _EulerTotient(primeFactorisation)
-{
-    let totient = 1;
-    for (let key of Object.keys(primeFactorisation))
-    {
-        prime = parseInt(key);
-        if (primeFactorisation[key] == 1)
-        {
-            totient *= prime - 1;
-        }
-        else
-        {
-            totient *= Math.pow(prime,primeFactorisation[key] - 1)*(prime - 1);
-        }
-    }
-
-    return totient;
-}
-
 function GeneratePrimeArray(upperbound)
 {
     let primes = [2, 3, 5, 7, 11];
@@ -113,4 +98,73 @@ function GeneratePrimeArray(upperbound)
     }
 
     return primes;
+}
+
+function GeneratePrimeFactorisation(upperbound, primes)
+{
+    let factorisation = {};
+    for (let i = 2; i <= upperbound; ++i)
+    {
+        if (primes.indexOf(i) != -1)
+        {
+            factorisation[i] = {};
+            factorisation[i][i] = 1;
+        }
+        else
+        {
+            let number = i;
+            let tempFactorisation = {};
+            
+            for (let prime of primes)
+            {
+                while (number%prime === 0)
+                {
+                    number /= prime;
+                    if (tempFactorisation.hasOwnProperty(prime))
+                    {
+                        tempFactorisation[prime] += 1;
+                    }
+                    else
+                    {
+                        tempFactorisation[prime] = 1;
+                    }
+                }
+                
+                if (factorisation.hasOwnProperty(number))
+                {
+                    factorisation[i] = MergeFactor(factorisation[number], tempFactorisation, i);
+                    break;
+                }
+                else if (number == 1)
+                {
+                    factorisation[i] = tempFactorisation;
+                }
+            }
+
+        }
+    }
+    return factorisation;
+}
+
+function MergeFactor(factorisation, tempFactorisation, number)
+{
+    let finalFactorisation = {};
+    for (let key of Object.keys(factorisation))
+    {
+        finalFactorisation[key] = factorisation[key];
+    }
+
+    for (let key of Object.keys(tempFactorisation))
+    {
+        if (finalFactorisation.hasOwnProperty(key))
+        {
+            finalFactorisation[key] += tempFactorisation[key];
+        }
+        else
+        {
+            finalFactorisation[key] = tempFactorisation[key];
+        }
+    }
+
+    return finalFactorisation;
 }
