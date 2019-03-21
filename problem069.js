@@ -30,7 +30,7 @@ const rl = readline.createInterface({
 //ComputeMaximumRatio(1000000);
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
+    console.log("The number that produces the maximum ratio with its totient is",
     ComputeMaximumRatio(1000000)
     );
     rl.close();
