@@ -75,7 +75,7 @@ E   \    /
     Meaning that R > 10, and we can set a better lower bound since a + b >= 3, so R >= 13; 
 
     We can deduce the possible values of a,b with fixed values of R
-    R = 13 => (1,2);
+    R = 13 => (1,2)*;
     R = 14 => (1,3);
     R = 15 => (1,4), (2,3);
     R = 16 => (1,5), (2,4);
@@ -112,4 +112,14 @@ function SolveEquations()
   let eqn3 = [C, c, d];
   let eqn4 = [D, d, e];
   let eqn5 = [E, e, a];
+}
+
+function AssignPermutation()
+{
+
+}
+
+function CheckContradiction()
+{
+
 }
