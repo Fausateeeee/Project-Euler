@@ -75,7 +75,7 @@ E   \    /
     Meaning that R > 10, and we can set a better lower bound since a + b >= 3, so R >= 13; 
 
     We can deduce the possible values of a,b with fixed values of R
-    R = 13 => (1,2);
+    R = 13 => (1,2)*;
     R = 14 => (1,3);
     R = 15 => (1,4), (2,3);
     R = 16 => (1,5), (2,4);
@@ -85,6 +85,8 @@ E   \    /
     R = 20 => (1,9)*, (2,8)*, (3,7)*, (4,6)*; 
 
  Asterix marked possible values are impossible to use since they'll cause a contradiction
+
+ When we test for specific values, the solution space drops below 7! which is far easier to brute force.
 */
 const readline = require('readline');
 
