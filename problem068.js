@@ -94,20 +94,101 @@ const rl = readline.createInterface({
 });
 
 rl.question('Press enter to continue : ', (answer) => {
+    let solutions = SolveEquations();
 
     console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER");
+    FormatSolution(solutions));
     rl.close();
 });
 
+function FormatSolution(solutions)
+{
+  let formatedSolution = [];
+  for (let sol of solutions)
+  {
+    for (let nbr in sol)
+    {
+      sol[nbr] = sol[nbr].toString();
+    }
+    let currentSol = sol[9] + sol[4] + sol[0] + sol[5] + sol[0] + sol[1] + sol[6] + sol[1] + sol[2] + sol[7] + sol[2] + sol[3] + sol[8] + sol[3] + sol[4];
+    formatedSolution.push(currentSol);
+  }
+  formatedSolution.sort();
+  return formatedSolution.pop();
+}
 function SolveEquations()
 {
-  let a, b, c, d, e, A, B, C, D, E = 0;
-  let possibleValues = {1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true, 9: true};
-  A = 10;
-  let eqn1 = [A, a, b];
-  let eqn2 = [B, b, c];
-  let eqn3 = [C, c, d];
-  let eqn4 = [D, d, e];
-  let eqn5 = [E, e, a];
+
+  let A = 10;
+  let B = 9;
+  let C = 8;
+  let D = 7;
+  let E = 6;
+  let solution = [];
+  // let eqn1 = [A, a, b];
+  // let eqn2 = [B, b, c];
+  // let eqn3 = [C, c, d];
+  // let eqn4 = [D, d, e];
+  // let eqn5 = [E, e, a];
+  let innerNodes = [1,2,3,4,5];
+  do
+  {
+    //console.log(innerNodes);
+    let a = innerNodes[0];
+    let b = innerNodes[1];
+    let c = innerNodes[2];
+    let d = innerNodes[3];
+    let e = innerNodes[4];
+
+    let eqn1 = A + a + b;
+    let eqn2 = B + b + c;
+    let eqn3 = C + c + d;
+    let eqn4 = D + d + e;
+    let eqn5 = E + e + a;
+    //console.log(eqn1, eqn2, eqn3, eqn4, eqn5);
+    if (eqn1 == eqn2 && eqn2 == eqn3 && eqn3 == eqn4 && eqn4 == eqn5)
+    {
+      //console.log("A SOLUTION");
+      solution.push([a,b,c,d,e,A,B,C,D,E]);
+    }
+  }
+  while(NextNodePermuation(innerNodes))
+  return solution;
+}
+
+function  NextNodePermuation(values)
+{
+  let i = values.length - 1;
+  while (i > 0 && values[i-1] >= values[i])
+  {
+    --i;
+  }
+
+  if (i <= 0)
+  {
+    return false;
+  }
+
+  let j = values.length - 1;
+  while (values[j] <= values[i-1])
+  {
+    --j;
+  }
+
+  let temp = values[i - 1];
+  values[i-1] = values[j];
+  values[j] = temp;
+
+  j = values.length - 1;
+
+  while(i < j)
+  {
+    temp = values[i];
+    values[i] = values[j];
+    values[j] = temp;
+    ++i;
+    --j;
+  }
+
+  return true;
 }
