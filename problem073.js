@@ -20,7 +20,84 @@ const rl = readline.createInterface({
 });
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The numerator of the fraction immediately to the left of 3/7 with an upper bound of 1 000 000 on the denominator is",
-    "ANSWER");
+    console.log("The numerator of reduced fractions between 1/3 and 1/2 with an upper bound on the denominator of 12 000 is",
+    NumberOfReducedFractionsInARange(12000));
     rl.close();
 });
+
+function NumberOfReducedFractionsInARange(upperbound)
+{
+    let total = 0;
+    for (let i = 5; i <= upperbound; i++)
+    {
+        total += GetBoundaries(i);
+    }
+
+    return total;
+}
+function GetBoundaries(denom)
+{
+    let NumMin = 0;
+    let NumMax = 0;
+    let i = Math.floor(0.3*denom);
+    while (3*i <= denom)
+    {
+        ++i;
+    }
+
+    NumMin = i;
+
+    while (2*i < denom)
+    {
+        ++i;
+    }
+
+    NumMax = i;
+
+    if (bigInt(denom).isPrime())
+    {
+        //console.log("Case prime : ", denom, NumMax, NumMin, "Total added :", NumMax - NumMin);
+        return NumMax - NumMin;
+    }
+    else
+    {
+        
+        let nbrOfFraction = 0;
+        for (let num = NumMin; num < NumMax; ++num)
+        {
+            if(CheckCoprimality(num,denom))
+            {
+                nbrOfFraction++;
+            }
+        }
+        //console.log("Case not prime : ", denom, NumMax, NumMin, "Total added :", nbrOfFraction);
+        return nbrOfFraction;
+    }
+}
+
+function CheckCoprimality(num1, num2)
+{
+    let a = num1;
+    let b = num2;
+    return gcd(a, b) == 1;
+}
+
+function gcd(a, b)
+{
+    if (a == 0 || b == 0)
+    {
+        return 0;
+    }
+
+    if (a == b)
+    {
+        return a;
+    }
+
+    if (a > b)
+    {
+        return gcd(a - b, b);
+    }
+
+    return gcd(a, b - a);
+}
