@@ -12,6 +12,7 @@ Find the value of n, 1 < n < 10^7, for which φ(n) is a permutation of n and the
 
 */
 const readline = require('readline');
+const bigInt = require('big-integer');
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -19,32 +20,40 @@ const rl = readline.createInterface({
 });
 
 rl.question('Press enter to continue : ', (answer) => {
-
-    console.log("The lowest sum for a set of five primes for which any two primes concatenate to produce another prime is",
-    "ANSWER");
+    console.log("The number that produces the minimum ratio with its totient and that its totient is a permutation is",
+    ComputeMinimumRatio(10000000));
     rl.close();
 });
 
 
-function ComputeMaximumRatio(upperbound)
+function ComputeMinimumRatio(upperbound)
 {
     let primes = GeneratePrimeArray(upperbound);
-    let max = {number : 0, ratio : 0, totient : 999999999999};
+    let min = {number : 0, ratio : 999999999999, totient : 999999999999};
     for (let i = upperbound; i >= 2; --i)
     {
         let totient = EulerTotient(GeneratePrimeFactorisation(i, primes));
-        if (i/totient > max.ratio)
+        
+        if (IsAPermutation(i, totient))
         {
-            max.number = i;
-            max.ratio = i/totient;
-            max.totient = totient;
+            if (i/totient < min.ratio)
+            {
+                min.number = i;
+                min.ratio = i/totient;
+                min.totient = totient;
+            }
         }
-        if (totient.max == 2)
-        {
-            return max.number;
-        }
+
     }
-    return max.number;
+    return min.number;
+}
+
+function IsAPermutation(number, totient)
+{
+    strNbr = number.toString().split("").sort().concat().toString();
+    strTot = totient.toString().split("").sort().concat().toString();
+
+    return strNbr==strTot;
 }
 
 function EulerTotient(factorisation)
