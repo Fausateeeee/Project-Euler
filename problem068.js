@@ -154,7 +154,7 @@ function SolveEquations()
       solution.push([a,b,c,d,e,A,B,C,D,E]);
     }
   }
-  while(NextNodePermuation(innerNodes))
+  while(NextNodePermuation(innerNodes));
   return solution;
 }
 
