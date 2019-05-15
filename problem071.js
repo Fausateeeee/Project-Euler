@@ -24,6 +24,46 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The numerator of the fraction immediately to the left of 3/7 with an upper bound of 1 000 000 on the denominator is",
-    "ANSWER");
+    FindMaxInDictionary(MakeDictionary()));
     rl.close();
 });
+
+function MakeDictionary()
+{
+    let dict = [];
+    for (let denom = 0; denom <= 1000000; denom++)
+    {
+        dict[denom] = UpperNumerator(denom);
+    }
+
+    return dict;
+}
+
+function UpperNumerator(denominator)
+{
+    for (let i = Math.floor(denominator*0.42); i < denominator; i++)
+    {
+        if (7*i >= 3*denominator)
+        {
+            return i - 1;
+        }
+    }
+    return 0;
+}
+
+function FindMaxInDictionary(dict)
+{
+    let maxNum = dict[3];
+    let maxDenom = 3;
+    for (let i = 4; i < dict.length; i++)
+    {
+        let previousNum = maxNum * i;
+        let nextNum = maxDenom * dict[i];
+        if (nextNum > previousNum)
+        {
+            maxNum = dict[i];
+            maxDenom = i;
+        }
+    }
+    return maxNum.toString() + "/" + maxDenom.toString();
+}
