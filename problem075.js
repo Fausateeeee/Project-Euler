@@ -22,17 +22,72 @@ for how many values of L ≤ 1,500,000 can exactly one integer sided right angle
 
 */
 
+/*
+    We already know from problem 9 that the length of the wire must be odd.
+*/
 const readline = require('readline');
 const bigInt = require('big-integer');
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("There are exactly",
-    "ANSWER",
-    "right angle triangles that can be formed with a given length of wire in a unique way.");
-    rl.close();
-});
+//     console.log("There are exactly",
+//     TestLength(120),
+//     "right angle triangles that can be formed with a given length of wire in a unique way.");
+//     rl.close();
+// });
+
+console.log(TestLength(20), TestLength(24), TestLength(120));
+
+function TestLength(number)
+{
+    const K = number/2;
+    let factor = findFactor(K);
+
+    let m_sol = 0;
+    let n_sol = 0;
+
+    for(let i = 0; i < factor.length; i++)
+    {
+        let m = factor[i];
+        let n = K/m - m;
+
+        if (n > 0 && Number.isInteger(n) && m > n)
+        {
+            if (m_sol != 0 && n_sol != 0)
+            {
+                return false;
+            }
+            m_sol = m;
+            n_sol = n;
+        }
+        if (n < 0)
+        {
+            break;
+        }
+    }
+
+    if (m_sol == 0 && n_sol == 0)
+    {
+        return false;
+    }
+
+    return true;
+}
+function findFactor(number)
+{
+    factor = [];
+    for (let i = 2; i <= number/2; i++)
+    {
+        if (number%i == 0)
+        {
+            factor.push(i);
+        }
+    }
+    factor.push(number);
+
+    return factor;
+}
