@@ -77,7 +77,7 @@ function ComputePrimeFamily(index, primes)
 
 function GenerateOddPrimeArray(upperbound)
 {
-    let primes = ["3","7","11"];
+    let primes = ["3","5","7","11"];
     for (let p = 13; p < upperbound; p += 2)
     {
         if (p%3 != 0 && p%5 != 0 && p%7 != 0 && p%11 !=0 && bigInt(p).isPrime())
