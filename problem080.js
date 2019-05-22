@@ -12,7 +12,6 @@ find the total of the digital sums of the first one hundred decimal digits for a
 */
 
 const readline = require('readline');
-const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
