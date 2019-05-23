@@ -12,6 +12,7 @@ find the total of the digital sums of the first one hundred decimal digits for a
 */
 
 const readline = require('readline');
+const bigInt = require('big-integer');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -20,6 +21,49 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The first value which can be written as the sum of primes in over five thousand different ways is", 
-    "ANSWER");
+    computeSquareRoot(2, 20));
     rl.close();
 });
+
+function computeSquareRoot(number, precision)
+{
+    let start = 0;
+    let end = number;
+    let mid = 0;
+    let ans = 0;
+
+    while (start <= end)
+    {
+        mid = (start + end)/2;
+        if (mid*mid == number)
+        {
+            return 0;
+        }
+
+        if (mid*mid < number)
+        {
+            start = mid + 1;
+            ans = bigInt(mid);
+        }
+        else
+        {
+            end = mid - 1;
+        }
+    }
+
+    let increment = bigInt(0.1);
+
+    for (let i = 0; i < precision; i++)
+    {
+        
+        while(ans.times(ans).lt(number))
+        {
+            ans.plus(increment);
+        }
+
+        ans = ans.minus(increment);
+        increment.divide(10);
+    }
+
+    return ans;
+}
