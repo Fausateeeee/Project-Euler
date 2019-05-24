@@ -25,7 +25,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The first value which can be written as the sum of primes in over five thousand different ways is", 
+    console.log("The minimum path in this matrix is", 
     FindPath());
     rl.close();
 });
@@ -33,7 +33,7 @@ rl.question('Press enter to continue : ', (answer) => {
 function FindPath()
 {
     let matrix = new weightedMatrix(FormatFile());
-    matrix.printGraph();
+    //matrix.printGraph();
     let results = matrix.dijkstraAlgorithm("0,0");
 
     return results;
@@ -41,18 +41,19 @@ function FindPath()
 
 function FormatFile()
 {
-    let allText = fs.readFileSync("Additional-Files\\p081_matrix.txt", 'utf8');
+    let allText = fs.readFileSync("Additional-Files\\p081_matrix_small.txt", 'utf8');
     let allRows = allText.split("\n");
     let matrix = [];
     for (let row of allRows)
     {
         row = row.split(",");
+
         for (let index in row)
         {
             row[index] = parseInt(row[index]);
         }
-
         matrix.push(row);
+
     }
     return matrix;
 }
@@ -97,7 +98,7 @@ class weightedMatrix {
         let visited = {};
         for (let key of this.adjacencyList.keys())
         {
-            visited[key] = {dist: 0, path:undefined};
+            visited[key] = {dist: 99999999999, path:undefined};
         }
         visited[startingNode].dist = 0;
 
@@ -114,7 +115,7 @@ class weightedMatrix {
             for (let neighbour in neighbours)
             {
                 let elem = neighbours[neighbour];
-                if (visited[currentVertex].dist + elem.weigh >= visited[elem.vertex].dist)
+                if (visited[currentVertex].dist + elem.weigh < visited[elem.vertex].dist)
                 {
                     visited[elem.vertex].dist = visited[currentVertex].dist + elem.weigh;
                     visited[elem.vertex].path = currentVertex;
@@ -144,10 +145,7 @@ class weightedMatrix {
             }
         }
 
-
-        // this.newVertex(length.toString()+".right");
-        // this.newVertex(length.toString()+".left");
-        // this.newVertex("FINAL");
+        this.newVertex("FINAL");
     }
 
     _generateEdges(tree, length)
@@ -157,32 +155,29 @@ class weightedMatrix {
             for (let j = 0; j < length - 1; j++)
             {
                 this.newEdge(i.toString() + "," + j.toString(), (i).toString() + "," + (j+1).toString(), tree[i][j]);
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j).toString(), tree[i][j+1]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j).toString(), tree[i][j]);
             }
         }
 
         for (let j = 0; j < length - 1; j++)
         {
             this.newEdge((length - 1).toString() + "," + j.toString(), (length - 1).toString() + "," + (j+1).toString(), tree[length - 1][j]);
+            this.newEdge(j.toString() + "," + (length - 1).toString(), (j+1).toString() + "," + (length - 1).toString(), tree[j][(length - 1)]);
         }
 
-        // //Needed for the weigh of the path
-        // for (let i = 0; i < length-1; i++) 
-        // {
-        //     this.newEdge((length-1).toString() + "," + i.toString(),(length).toString()+".right", tree[length-1][i]);
-        //     this.newEdge((length-1).toString() + "," + i.toString(),(length).toString()+".left", tree[length-1][i+1]);
-        // }
-        // this.newEdge(length.toString()+".right", "FINAL", 0);
-        // this.newEdge(length.toString()+".left", "FINAL", 0);
+        this.newEdge((length - 1).toString() + "," + (length - 1).toString(), "FINAL", tree[length - 1][length - 1]);
+
+
     }
 
     _computePath(results)
     {
-        let endingNode = (length - 1).toString() + "," + (length - 1).toString();
+        let endingNode = "FINAL";
         let path = [];
 
         while (endingNode != "0,0")
         {
+            console.log(results[endingNode]);
             endingNode = results[endingNode].path;
             path.unshift(endingNode);
         }
