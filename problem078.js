@@ -86,46 +86,50 @@ rl.question('Press enter to continue : ', (answer) => {
     rl.close();
 });
 
-findPile();
+//findPile();
 
 function findPile()
 {
-    let coins = [1];
-    let totalPile = 1;
-    let lastCoin = 1;
 
-    while (true)
+    //console.time("p78");
+    let totalPile = pileCount(60000);
+    // console.timeEnd("p78");
+    // console.log(totalPile);
+    let b = bigInt(0);
+
+    for (let i in totalPile)
     {
-        totalPile = pileCount(coins, lastCoin);
-        if (totalPile)
+        if (totalPile[i].isDivisibleBy(1000000))
         {
-            return lastCoin;
+            return i;
         }
-        //console.log(lastCoin, totalPile);
-        if (lastCoin%100==0)
-        {
-            console.log(lastCoin);
-        }
-        coins.push(++lastCoin);
     }
+    return 0;
 }
 
 
-function pileCount(coins, coinTotal)
+function pileCount(coinTotal)
 {
     let memoization = [bigInt(1)];
+    let coins = [];
+    
     for (let k = 1; k <= coinTotal; k++)
     {
         memoization[k] = bigInt(0);
+        coins[k-1] = k;
     }
-
     for (let i = 0; i < coins.length; ++i)
     {
         for (let j = coins[i]; j <= coinTotal; ++j)
         {
-            memoization[j] = memoization[j].plus(memoization[j - coins[i]]);
+            memoization[j] = memoization[j].plus(memoization[j - coins[i]]);              
         }
+
+    //     if (i%1000 == 0)
+    //         console.log(i);
     }
+  
     
-    return memoization[coinTotal].isDivisibleBy(1000000);
+    return memoization;
+
 }
