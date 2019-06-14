@@ -20,7 +20,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The first value which can be written as the sum of primes in over five thousand different ways is", 
+    console.log("The total of the digital sums of the first one hundred decimal digits for all the irrational square roots under 100 is", 
     ComputeTotalDecimalSum());
     rl.close();
 });
