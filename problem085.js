@@ -10,7 +10,20 @@ find the area of the grid with the nearest solution.
 
 */
 
+/*
 
+    Define n, m, j, k be integers, j < n, k < m and n x m be a rectangular, then
+    1 x 1 = n x m;
+    n x 1 = m;
+    1 x m = n;
+    j x 1 = m(n - k + 1);
+    1 x k = n(m - j + 1);
+
+    In fact, we have the more general equation
+
+    j x k = (n - j + 1)(m - k + 1);
+
+*/
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
