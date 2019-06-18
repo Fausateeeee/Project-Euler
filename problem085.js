@@ -56,11 +56,6 @@ function FindClosestRectangle()
     while (total < TOTAL)
     {
         total = TotalOfSubrectangle(n,m);
-        if (n%10 == 0)
-        {
-            console.log(n,m);
-        }
-        total = TotalOfSubrectangle(n,m);
         if (Math.abs(TOTAL - total) < difference)
         {
             n_f = n;
