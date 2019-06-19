@@ -63,6 +63,12 @@ If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-d
 
 */
 
+/*
+
+    The odds of rolling a double with 2 four-sided dice is 1/4. The odds of rolling three consicutive doubles
+    is 1/64.
+
+*/
 
 const readline = require('readline');
 const rl = readline.createInterface({
