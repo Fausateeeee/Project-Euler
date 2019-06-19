@@ -17,8 +17,8 @@ a 31K text file containing a 80 by 80 matrix, from the left column to the right 
 
 */
 
-const readline = require('readline');
 const fs = require('fs');
+const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -31,33 +31,8 @@ rl.question('Press enter to continue : ', (answer) => {
     rl.close();
 });
 
-function FindPath()
-{
-    let matrix = new weightedMatrix(FormatFile());
-    //matrix.printGraph();
-    let results = matrix.dijkstraAlgorithm("0,0");
 
-    return results;
-}
 
-function FormatFile()
-{
-    let allText = fs.readFileSync("Additional-Files\\p083_matrix.txt", 'utf8');
-    let allRows = allText.split("\n");
-    let matrix = [];
-    for (let row of allRows)
-    {
-        row = row.split(",");
-
-        for (let index in row)
-        {
-            row[index] = parseInt(row[index]);
-        }
-        matrix.push(row);
-
-    }
-    return matrix;
-}
 
 class weightedMatrix {
 
@@ -110,7 +85,7 @@ class weightedMatrix {
         while (!queue.isEmpty())
         {
             let currentVertex = queue.dequeue();
-
+            //console.log("Current vertex", currentVertex);
             let neighbours = this.adjacencyList.get(currentVertex);
     
             for (let neighbour in neighbours)
@@ -120,6 +95,7 @@ class weightedMatrix {
                 {
                     visited[elem.vertex].dist = visited[currentVertex].dist + elem.weigh;
                     visited[elem.vertex].path = currentVertex;
+                    visited[currentVertex].visited = true;
                     if (queue.contains(elem.vertex))
                     {
                         queue.enqueue(elem.vertex);
@@ -234,4 +210,32 @@ class Queue
     {
         return (this.collection.indexOf(item) == -1);
     }
+}
+
+function FindPath()
+{
+    let matrix = new weightedMatrix(FormatFile());
+    //matrix.printGraph();
+    let results = matrix.dijkstraAlgorithm("0,0");
+
+    return results;
+}
+
+function FormatFile()
+{
+    let allText = fs.readFileSync("Additional-Files\\p083_matrix.txt", 'utf8');
+    let allRows = allText.split("\n");
+    let matrix = [];
+    for (let row of allRows)
+    {
+        row = row.split(",");
+
+        for (let index in row)
+        {
+            row[index] = parseInt(row[index]);
+        }
+        matrix.push(row);
+
+    }
+    return matrix;
 }
