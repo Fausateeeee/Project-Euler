@@ -53,21 +53,26 @@
     M, C, and X cannot be equalled or exceeded by smaller denominations.
     D, L, and V can each only appear once.
 
-    For example, the number sixteen could be written as XVI or XIIIIII, with the first being the preferred form as it uses the least number of numerals. 
-    We could not write IIIIIIIIIIIIIIII because we are making X (ten) from smaller denominations, nor could we write VVVI because the second and third rule are being broken.
+    For example, the number sixteen could be written as XVI or XIIIIII, with the first being the preferred form 
+    as it uses the least number of numerals. 
+    We could not write IIIIIIIIIIIIIIII because we are making X (ten) from smaller denominations, 
+    nor could we write VVVI because the second and third rule are being broken.
 
     The "descending size" rule was introduced to allow the use of subtractive combinations. 
     For example, four can be written IV because it is one before five. 
-    As the rule requires that the numerals be arranged in order of size it should be clear to a reader that the presence of a smaller numeral out of place, 
+    As the rule requires that the numerals be arranged in order of size it should 
+    be clear to a reader that the presence of a smaller numeral out of place, 
     so to speak, was unambiguously to be subtracted from the following numeral rather than added.
 
     For example, nineteen could be written XIX = X (ten) + IX (nine). Note also how the rule requires X (ten) be placed before IX (nine), 
-    and IXX would not be an acceptable configuration (descending size rule). Similarly, XVIV would be invalid because V can only appear once in a number.
+    and IXX would not be an acceptable configuration (descending size rule). 
+    Similarly, XVIV would be invalid because V can only appear once in a number.
 
     Generally the Romans tried to use as few numerals as possible when displaying numbers. 
     For this reason, XIX would be the preferred form of nineteen over other valid combinations, like XIIIIIIIII or XVIIII.
 
-    By mediaeval times it had become standard practice to avoid more than three consecutive identical numerals by taking advantage of the more compact subtractive combinations. 
+    By mediaeval times it had become standard practice to avoid more than 
+    three consecutive identical numerals by taking advantage of the more compact subtractive combinations. 
     That is, IV would be written instead of IIII, IX would be used instead of IIIIIIIII or VIIII, and so on.
 
     In addition to the three rules given above, if subtractive combinations are used then the following four rules must be followed.
