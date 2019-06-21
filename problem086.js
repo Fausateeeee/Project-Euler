@@ -18,6 +18,26 @@
 
 */
 
+/*
+
+    The problem can be thought as follow:
+
+    The shortest path will always touch 2 sides. Suppose we have a cuboid of side A,B and C. 
+    Then the shortest path will be the minimal solution between:
+
+    sqrt(A^2 + (B + C)^2);
+    sqrt(B^2 + (A + C)^2);
+    sqrt(C^2 + (A + B)^2);
+
+    We can see this by deconstructing the faces of the cuboid and  sticking them in a plane
+    Since the shortest path will be the diagonal of the rectangle formed by 2 of the 3 faces,
+    one of these combination will be the shortest path.
+
+    We search the lower bound of M, where A, B, C <= M such that the number of pythagorean triple
+    exceeds one million.
+
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -27,7 +47,45 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The total of the digital sums of the first one hundred decimal digits for all the irrational square roots under 100 is", 
-    "ANSWER");
+    console.log("The least value of M such that the number of solutions first exceeds one million is", 
+    LoopUntilLowerBound(1000000));
     rl.close();
 });
+
+function LoopUntilLowerBound(lowerbound)
+{
+    let total = 0;
+    let upperbound = 0;
+    
+    while (total < lowerbound)
+    {
+        //console.log(total, upperbound);
+        total += FindPythagoreanTriple(++upperbound);
+    }
+
+    return upperbound;
+}
+function FindPythagoreanTriple(upperbound)
+{
+    let total = 0;
+    for (let A = 1; A <= upperbound; ++A)
+    {
+        for (let B = A; B <= upperbound; ++B)
+        {
+            //console.log(A,B,upperbound);
+            let T1 = Math.sqrt(Math.pow(A, 2) + Math.pow(B + upperbound, 2));
+            let T2 = Math.sqrt(Math.pow(B, 2) + Math.pow(A + upperbound, 2));
+            let T3 = Math.sqrt(Math.pow(upperbound, 2) + Math.pow(A + B, 2));
+
+            let min = Math.min(T1, T2, T3);
+            //console.log(T1,T2,T3, min);
+            if (Number.isInteger(min))
+            {
+                ++total;
+            }
+
+        }
+    }
+
+    return total;
+}
