@@ -31,6 +31,36 @@
 
 */
 
+/*
+
+    Basic deduction gives us:
+
+    7 is the only number that is not mandatory
+    
+    1)0 and {1, 4, (6,9)} must be on two different die at least
+    2)1 and {8, (6,9)} must be on two different die at least
+    3)2 and 5 must be on two different die at least
+    4)3 and (6,9) must be on two different die at least
+    5)4 and (6,9) must be on two different die at least
+
+    Combining 1) and 2), we get that (6,9) must be present on each die
+    So far, we have the minimum set {(6,9), *, *, *, *, *} {(6,9), *, * , *, *, *}
+
+    Without loss of generality, place 0 in the first set, we get
+    {(6,9), 0, 8, *, *, *} {(6,9), 1, 4, *, *, *}
+
+    We have two last choice to add to respect the rules and is the fact that [2,5] must be on 2 seperate die and
+    3 must be somewhere on any of the dice
+    {(6,9), 0, 8, [2,5], [3,*], *} {(6,9), 1, 4, [2,5], [3,*] , *}
+
+    We then have 4 flexible slots and for every combination, we have a total of 8 when we consider every swap of 
+    6 and 9 and the swapping between dice of 2 and 5.
+
+    Proceding this way, we see that we have 10^4 * 8 possibilities but we sometimes counted the same arrangement.
+    If (*, *) in the first die is the same as the second die, we do not have 8 different swap but 6 instead. 
+    We need to subtract 2*100 to the total.
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
