@@ -95,7 +95,7 @@
     So if we believe the adage, "when in Rome do as the Romans do," and we see how the Romans write numerals, then it clearly gives us much more freedom than many would care to admit.
 
 */
-
+const fs = require('fs');
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -103,9 +103,122 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+const ROMAN_NUM = {
+    M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1
+};
+
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The total of the digital sums of the first one hundred decimal digits for all the irrational square roots under 100 is", 
-    "ANSWER");
+    console.log("The number of characters saved by writing each roman numeral in their minimal form is", 
+    ReadFile());
     rl.close();
 });
+
+function ReadFile()
+{
+    let total = 0;
+    let allText = fs.readFileSync("Additional-Files\\p089_roman.txt", 'utf8');
+    let allRows = allText.split("\r\n");
+
+    for (let roman of allRows)
+    {
+        //console.log("Origial",roman);
+        let number = ComputeRomanNumeral(roman);
+        //console.log("Number",number);
+        let minimal_roman = WriteMinimalRomanNumeral(number);
+        //console.log("Minimal", minimal_roman);
+        total += roman.length - minimal_roman.length;
+        //console.log("Original:",roman, "Minimal:", minimal_roman, "Total:",total);
+    }
+    return total;
+}
+
+function ComputeRomanNumeral(roman)
+{
+    let letter = roman.split("");
+    //console.log(letter);
+    let total = 0;
+
+    for(let i = 0; i < letter.length; i++)
+    {
+        let temp_total = ROMAN_NUM[letter[i]];
+        if (i + 1 < letter.length && ROMAN_NUM[letter[i+1]] > temp_total)
+        {
+            temp_total = ROMAN_NUM[letter[i+1]] - ROMAN_NUM[letter[i]];
+            i++;
+        }
+        total += temp_total;
+    }
+    return total;
+}
+
+function WriteMinimalRomanNumeral(number)
+{
+    let roman = "";
+    while (number >= 1000)
+    {
+        roman += 'M';
+        number -= 1000;
+    }
+    if (number >= 900)
+    {
+        roman += "CM";
+        number -= 900;
+    }
+    if (number >= 500)
+    {
+        roman += 'D';
+        number -= 500;
+    }
+    if (number >= 400)
+    {
+        roman += "CD";
+        number -= 400;
+    }
+    while (number >= 100)
+    {
+        roman += 'C';
+        number -= 100;
+    }
+    if (number >= 90)
+    {
+        roman += "XC";
+        number -= 90;
+    }
+    if (number >= 50)
+    {
+        roman += 'L';
+        number -= 50;
+    }
+    if (number >= 40)
+    {
+        roman += "XL";
+        number -= 40;
+    }
+    while (number >= 10)
+    {
+        roman += "X";
+        number -= 10;
+    }
+    if (number >= 9)
+    {
+        roman += "IX";
+        number -= 9;
+    }
+    if (number >= 5)
+    {
+        roman += 'V';
+        number -= 5;
+    }
+    if (number >= 4)
+    {
+        roman += "IV";
+        number -= 4;
+    }
+    while (number > 0)
+    {
+        roman += "I";
+        number--;
+    }
+    return roman;
+}
