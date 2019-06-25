@@ -33,7 +33,57 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The total of the digital sums of the first one hundred decimal digits for all the irrational square roots under 100 is", 
-    "ANSWER");
+    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
+   CheckProductSum({'1':1, '2':2, '3':1}));
     rl.close();
 });
+
+function LoopMinimalProductSum()
+{
+    let total = 0;
+    for (let i = 2; i <= 5; i++)
+    {
+        let result = FindMinimalProductSum(i);
+        total += result.product;
+        console.log(i, result.set);
+    }
+    return total;
+}
+
+function FindMinimalProductSum(number)
+{
+    let set = {1 : number - 1};
+    set[number] = 1;
+    let result = CheckProductSum(set);
+    while (result.product != result.sum)
+    {
+        if (result.product < result.sum)
+        {
+            set[1]--;
+            if (!set[2])
+            {
+                set[2] = 1;
+            }
+        }
+        else
+        {
+
+        }
+        result = CheckProductSum(set);
+    }
+
+    return result.product;
+}
+
+function CheckProductSum(set)
+{
+    let product = 1;
+    let sum = 0;
+    for(let prop of Object.keys(set))
+    {
+        product *= (set[prop] * Number.parseInt(prop));
+        sum += (set[prop] * Number.parseInt(prop));
+    }
+    let obj = { product : product, sum : sum};
+    return obj;
+}
