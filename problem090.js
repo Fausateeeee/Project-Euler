@@ -56,13 +56,11 @@
     We then have 4 flexible slots and for every combination, we have a total of 8 when we consider every swap of 
     6 and 9 and the swapping between dice of 2 and 5.
 
-    Proceding this way, we see that we have 10^4 * 8 possibilities but we sometimes counted the same arrangement.
-    If (*, *) in the first die is the same as the second die, we do not have 8 different swap but 6 instead. 
-    We need to subtract 2*100 to the total.
+  
 */
 
 const readline = require('readline');
-
+const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -70,7 +68,112 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The total of the digital sums of the first one hundred decimal digits for all the irrational square roots under 100 is", 
-    "ANSWER");
+    console.log("There are", GenerateDice(), 
+    "distinct arrangements of the two cubes that allow for all of the square numbers to be displayed.");
     rl.close();
 });
+
+function GenerateDice()
+{
+    let die1 = ['6', '0', '8', '2', '3', '*'];
+    let die2 = ['6', '1', '4', '5', '*', '*'];
+    let dict = {};
+
+    for (let i = 0; i < 10; ++i)
+    {
+        for (let j = 0; j < 10; ++j)
+        {
+            for (let k = 0; k < 10; ++k)
+            {
+                die1[5] = i.toString();
+                die2[4] = j.toString();
+                die2[5] = k.toString();
+                AddToDictionary(die1, die2, dict);
+                GenerateOtherPermutation(die1, die2, dict);
+            }
+        }
+    }
+    fs.writeFileSync("keys.txt", Object.keys(dict).toString());
+    return Object.keys(dict);
+}
+
+function GenerateOtherPermutation(die1, die2, dict)
+{
+    for(let i = 0; i < 4; i++)
+    {
+        SwapPosition(die1, die2, 5);
+        AddToDictionary(die1, die2, dict);
+        
+        SwapPosition(die1, die2, 5);
+        SwapPosition(die1, die2, 4);
+        AddToDictionary(die1, die2, dict);
+    
+        SwapPosition(die1, die2, 5);
+        AddToDictionary(die1, die2, dict);
+    
+        SwapPosition(die1, die2, 4);
+        SwapPosition(die1, die2, 5);
+        SwapPosition(die1, die2, 0);
+        AddToDictionary(die1, die2, dict);
+    }
+}
+
+function SwapPosition(die1, die2, position)
+{
+    if (position == 0)
+    {
+        if (die1[0] == die2[0])
+        {
+            if (die1[0] == '6')
+            {
+                die1[0] = '9';
+            }
+            else
+            {
+                die1[0] = '6';
+            }
+        }
+        else
+        {
+            if (die1[0] == '6')
+            {
+                die2[0] = '6';
+            }
+            else
+            {
+                die2[0] = '9';
+            }
+        }
+    }
+    else
+    {
+        let temp = die1[position];
+        die1[position] = die2[position];
+        die2[position] = temp;
+    }
+
+}
+
+function AddToDictionary(die1, die2, dict)
+{
+    let extended_set1 = [...die1].sort();
+    let extended_set2 = [...die2].sort();
+    let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
+    let key2 = extended_set2.reduce((a,b) => {return a + b;}) + extended_set1.reduce((a,b) => {return a + b;});
+    if(!dict[key1] || !dict[key2])
+    {
+        dict[key1] = true;
+    }
+}
+
+Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+};
