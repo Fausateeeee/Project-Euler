@@ -19,14 +19,46 @@
 
 const readline = require('readline');
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 
-rl.question('Press enter to continue : ', (answer) => {
+// rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
-    rl.close();
-});
+//     console.log("There are", LoopChain(), "starting numbers below ten million that will arrive at 89.");
+//     rl.close();
+// });
+
+ComputeChain(136);
+
+function LoopChain()
+{
+    let total = 0;
+    for(let i = 1; i < 10000000; ++i)
+    {
+
+        console.log(i);
+
+        if(ComputeChain(i))
+        {
+            ++total;
+        }
+    }
+
+    return total;
+}
+
+function ComputeChain(number)
+{
+    let nbr = number.toString();
+    while ((nbr != "1") && (nbr != "89"))
+    {
+        if(nbr.length == 1)
+        {
+            nbr = nbr.padStart(2,"0");
+        }
+        nbr = nbr.split("").reduce((a,b) => {return Math.pow(Number.parseInt(a),2) + Math.pow(Number.parseInt(b),2);}).toString();
+    }
+    return nbr == "89";
+}
