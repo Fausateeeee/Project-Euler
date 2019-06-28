@@ -2,8 +2,8 @@
 /*
 
     A natural number, N, that can be written as the sum and product of a given set of 
-    at least two natural numbers, {a1, a2, ... , ak} is called a product-sum number: 
-    N = a1 + a2 + ... + ak = a1 × a2 × ... × ak.
+    at least two natural numbers, {a_1, a_2, ... , a_k} is called a product-sum number: 
+    N = a_1 + a_2 + ... + a_k = a_1 × a_2 × ... × a_k.
 
     For example, 6 = 1 + 2 + 3 = 1 × 2 × 3.
 
@@ -24,6 +24,19 @@
 
 */
 
+/*
+
+    It is obvious that the minimal bound of a set of size k is k since the minimal addition is k*1.
+    I need to find an upper bound and I suppose this is given by the multiplication side.
+
+    The upperbound is always 2k since we can use the set {k, 2, 1, ..., 1}.
+    On the multiplication side, we will have 2*k*1*...*1 = 2k.
+    On the addition side, we will have k + 2 + (k-2)*1 = 2k.
+
+    So the minimal product-sum number N is always k <= N <= 2k. (It is probably k < N <= 2k in reality.)
+
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -40,11 +53,14 @@ rl.question('Press enter to continue : ', (answer) => {
 
 function LoopMinimalProductSum()
 {
-    let total = 0;
-    for (let i = 2; i <= 5; i++)
+    let total = {};
+    for (let i = 2; i <= 6; i++)
     {
         let result = FindMinimalProductSum(i);
-        total += result.product;
+        if( !total[result.product])
+        {
+            total[result.product] = true;
+        }
         console.log(i, result.set);
     }
     return total;
