@@ -43,7 +43,7 @@ function LoopArea()
 {
     //1000000000
     let total = 0;
-    for (let side = 1; 3*side + 1 < 1000000000; ++side)
+    for (let side = 3; 3*side - 1 <= 1000000000; ++side)
     {
         total += AreaIsInteger(side);
     }
@@ -53,17 +53,18 @@ function LoopArea()
 function AreaIsInteger(side)
 {
     let test_plus1 = Math.sqrt((side - 1)*(3*side + 1));
-    let test_minus1 = Math.sqrt((side + 1)*(3*side - 1));
+    let test_minus1 = Math.sqrt((side - 1)*(side - 1)*(side + 1)*(3*side - 1));
     let total_perimeter = 0;
+    //console.log("TEST", test_plus1, test_minus1);
     if (Number.isInteger(test_plus1))
     {
         total_perimeter += 3*side + 1;
     }
-    if (Number.isInteger(test_minus1) && side > 1)
+    if (Number.isInteger(test_minus1))
     {
         total_perimeter += 3*side - 1;
     }
-
+    //console.log(side, total_perimeter);
     return total_perimeter;
 
 }
