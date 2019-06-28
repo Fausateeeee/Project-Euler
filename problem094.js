@@ -12,6 +12,18 @@
 
 */
 
+/*
+
+    Using Heron's formula, we have the area A = sqrt(s(s - a)(s - b)(s - c))
+    where s is the semiperimiter s = (a + b + c)/2.
+
+    Knowing that a = b and c = a + 1 or c = a - 1, we simplify the equation to
+    (a + 1)/4 * sqrt((a - 1)(3a + 1)) if c = a + 1 or (a - 1)/4 * sqrt((a + 1)(3a - 1))
+
+    The area will be an integer if and only if (a - 1)(3a + 1) or (a + 1)(3a - 1) is a square.
+
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -21,7 +33,37 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
+    console.log("The sum of the perimeters of all almost equilateral triangles with integral", 
+     "side lengths and area and whose perimeters do not exceed one billion is", 
+    LoopArea());
     rl.close();
 });
+
+function LoopArea()
+{
+    //1000000000
+    let total = 0;
+    for (let side = 1; 3*side + 1 < 1000000000; ++side)
+    {
+        total += AreaIsInteger(side);
+    }
+
+    return total;
+}
+function AreaIsInteger(side)
+{
+    let test_plus1 = Math.sqrt((side - 1)*(3*side + 1));
+    let test_minus1 = Math.sqrt((side + 1)*(3*side - 1));
+    let total_perimeter = 0;
+    if (Number.isInteger(test_plus1))
+    {
+        total_perimeter += 3*side + 1;
+    }
+    if (Number.isInteger(test_minus1) && side > 1)
+    {
+        total_perimeter += 3*side - 1;
+    }
+
+    return total_perimeter;
+
+}
