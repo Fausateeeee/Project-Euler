@@ -19,18 +19,16 @@
 
 const readline = require('readline');
 
-// const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout
-// });
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-// rl.question('Press enter to continue : ', (answer) => {
+rl.question('Press enter to continue : ', (answer) => {
 
-//     console.log("There are", LoopChain(), "starting numbers below ten million that will arrive at 89.");
-//     rl.close();
-// });
-
-ComputeChain(136);
+    console.log("There are", LoopChain(), "starting numbers below ten million that will arrive at 89.");
+    rl.close();
+});
 
 function LoopChain()
 {
@@ -38,7 +36,7 @@ function LoopChain()
     for(let i = 1; i < 10000000; ++i)
     {
 
-        console.log(i);
+        //console.log(i);
 
         if(ComputeChain(i))
         {
@@ -58,7 +56,13 @@ function ComputeChain(number)
         {
             nbr = nbr.padStart(2,"0");
         }
-        nbr = nbr.split("").reduce((a,b) => {return Math.pow(Number.parseInt(a),2) + Math.pow(Number.parseInt(b),2);}).toString();
+        nbr = nbr.split("");
+        let total = 0;
+        for (let i = 0; i < nbr.length; ++i)
+        {
+            total += Math.pow(Number.parseInt(nbr[i]),2);
+        }
+        nbr = total.toString();
     }
     return nbr == "89";
 }
