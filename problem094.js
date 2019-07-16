@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 7 */
 /*
 
     It is easily proved that no equilateral triangle exists with integral length sides 
@@ -43,28 +43,57 @@ function LoopArea()
 {
     //1000000000
     let total = 0;
-    for (let side = 3; 3*side - 1 <= 1000000000; ++side)
-    {
-        total += AreaIsInteger(side);
+    for (let side = 3; 3*side - 1 <= 30; side += 2)
+    {       
+        total += IsHeronianTriangle(side);
     }
 
     return total;
 }
-function AreaIsInteger(side)
-{
-    let test_plus1 = Math.sqrt((side - 1)*(3*side + 1));
-    let test_minus1 = Math.sqrt((side - 1)*(side - 1)*(side + 1)*(3*side - 1));
-    let total_perimeter = 0;
-    //console.log("TEST", test_plus1, test_minus1);
-    if (Number.isInteger(test_plus1))
-    {
-        total_perimeter += 3*side + 1;
-    }
-    if (Number.isInteger(test_minus1))
-    {
-        total_perimeter += 3*side - 1;
-    }
-    //console.log(side, total_perimeter);
-    return total_perimeter;
 
+function IsHeronianTriangle(side)
+{
+    let b_side = BigInt(side);
+    let b_other_side = BigInt(side + 1);
+    
+
+    let test_area = sqrt((4*b_side**2) - b_other_side**2);
+	let total_perimeter = 0;
+
+    console.log(test_area);
+    if (Number.isInteger(test_area))
+    {
+		//console.log(side, other_side);
+        total_perimeter += 2*side + other_side;
+	}
+	
+    other_side = side - 1; 
+    test_area = sqrt(4*(BigInt(side)**2) - BigInt(other_side)**2);
+
+    if (Number.isInteger(test_area))
+    {
+		//console.log(side, other_side);
+        total_perimeter += 2*side + other_side;
+    }
+    return total_perimeter;
+}
+
+function sqrt(value) {
+    if (value < 0n) {
+        throw 'square root of negative numbers is not supported'
+    }
+
+    if (value < 2n) {
+        return value;
+    }
+
+    function newtonIteration(n, x0) {
+        const x1 = ((n / x0) + x0) >> 1n;
+        if (x0 === x1 || x0 === (x1 - 1n)) {
+            return x0;
+        }
+        return newtonIteration(n, x1);
+    }
+
+    return newtonIteration(value, 1n);
 }
