@@ -45,7 +45,11 @@ function LoopArea()
     let total = 0;
     for (let side = 5; 3*side - 1 <= 1000000000; side += 2)
     {  
-        console.log(side);
+        if (side%10000 == 1)
+        {
+            console.log(side);
+        }
+
         total += IsHeronianTriangle(side);
     }
 
@@ -57,40 +61,7 @@ function IsHeronianTriangle(side)
 
     let b_side = BigInt(side);
     let b_other_side = BigInt(side + 1);
-    let divisor = 2n;
-
-    if (side >= 100)
-    {
-        divisor = 10n;
-    }
-    else if (side >= 1000)
-    {
-        divisor = 30n;
-    }
-    else if (side >= 10000)
-    {
-        divisor = 100n;
-    }
-    else if (side >= 100000)
-    {
-        divisor = 310n;
-    }
-    else if (side >= 1000000)
-    {
-        divisor = 1000n;
-    }
-    else if (side >= 10000000)
-    {
-        divisor = 3160n;
-    }
-    else if (side >= 100000000)
-    {
-        divisor = 10000n;
-    }
-    else
-    {
-        divisor = 31620n;
-    }
+    let divisor = BigInt(Math.floor(Math.sqrt(side)))
 
     let test_area = 4n*(b_side**2n) - (b_other_side**2n);
     //let test_area = b_side**2n;
