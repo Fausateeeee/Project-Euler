@@ -43,8 +43,9 @@ function LoopArea()
 {
     //1000000000
     let total = 0;
-    for (let side = 3; 3*side - 1 <= 30; side += 2)
-    {       
+    for (let side = 5; 3*side - 1 <= 1000000000; side += 2)
+    {  
+        console.log(side);
         total += IsHeronianTriangle(side);
     }
 
@@ -53,47 +54,65 @@ function LoopArea()
 
 function IsHeronianTriangle(side)
 {
+
     let b_side = BigInt(side);
     let b_other_side = BigInt(side + 1);
-    
+    let divisor = 2n;
 
-    let test_area = sqrt((4*b_side**2) - b_other_side**2);
-	let total_perimeter = 0;
-
-    console.log(test_area);
-    if (Number.isInteger(test_area))
+    if (side >= 100)
     {
-		//console.log(side, other_side);
-        total_perimeter += 2*side + other_side;
+        divisor = 10n;
+    }
+    else if (side >= 1000)
+    {
+        divisor = 30n;
+    }
+    else if (side >= 10000)
+    {
+        divisor = 100n;
+    }
+    else if (side >= 100000)
+    {
+        divisor = 310n;
+    }
+    else if (side >= 1000000)
+    {
+        divisor = 1000n;
+    }
+    else if (side >= 10000000)
+    {
+        divisor = 3160n;
+    }
+    else if (side >= 100000000)
+    {
+        divisor = 10000n;
+    }
+    else
+    {
+        divisor = 31620n;
+    }
+
+    let test_area = 4n*(b_side**2n) - (b_other_side**2n);
+    //let test_area = b_side**2n;
+	let total_perimeter = 0;
+    let potential_root = test_area/divisor;
+    
+    while(potential_root**2n > test_area)
+    {
+        --potential_root;
+    }
+    if (potential_root**2n === test_area)
+    {
+        total_perimeter += 3*side + 1;
 	}
 	
-    other_side = side - 1; 
-    test_area = sqrt(4*(BigInt(side)**2) - BigInt(other_side)**2);
+    b_other_side = BigInt(side - 1); 
+    test_area = 4n*(b_side**2n) - (b_other_side**2n);
+    potential_root = test_area/2n;
 
-    if (Number.isInteger(test_area))
+    if (potential_root**2n === test_area)
     {
-		//console.log(side, other_side);
-        total_perimeter += 2*side + other_side;
+        total_perimeter += 3*side - 1;
     }
     return total_perimeter;
-}
-
-function sqrt(value) {
-    if (value < 0n) {
-        throw 'square root of negative numbers is not supported'
-    }
-
-    if (value < 2n) {
-        return value;
-    }
-
-    function newtonIteration(n, x0) {
-        const x1 = ((n / x0) + x0) >> 1n;
-        if (x0 === x1 || x0 === (x1 - 1n)) {
-            return x0;
-        }
-        return newtonIteration(n, x1);
-    }
-
-    return newtonIteration(value, 1n);
 }
