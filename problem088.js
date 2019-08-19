@@ -38,6 +38,27 @@
     I should factorize each number up to 24000 and find every way to write it.
     Per example, 12 = 2 * 2 * 3 = 4 * 3 = 2 * 6.
 
+    With a slower solution, I computed the answers for up to 20 for tests purposes:
+    2  [ 2, 2 ] = 4
+    3  [ 1, 2, 3 ] = 6
+    4  [ 1, 1, 2, 4 ] = 8
+    5  [ 1, 1, 2, 2, 2 ] = 8
+    6  [ 1, 1, 1, 1, 2, 6 ] = 12
+    7  [ 1, 1, 1, 1, 1, 3, 4 ] = 14
+    8  [ 1, 1, 1, 1, 1, 2, 2, 3 ] = 12
+    9  [ 1, 1, 1, 1, 1, 1, 1, 3, 5 ] = 15
+    10 [ 1, 1, 1, 1, 1, 1, 1, 1, 4, 4 ] = 16
+    11 [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 4 ] = 16
+    12 [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2 ] = 16
+    13 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3 ] = 18
+    14 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 5 ] = 20
+    15 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 8 ] = 24
+    16 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 6 ] = 24
+    17 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5 ] = 25
+    18 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4 ] = 24
+    19 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3 ] = 24
+    20 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 7 ] = 28
+
 */
 
 const readline = require('readline');
@@ -57,10 +78,43 @@ rl.question('Press enter to continue : ', (answer) => {
 
 function LoopMinimalProductSum()
 {
-    let upperbound = 12000;
-    let factorization = FactorizeNumber(GeneratePrimeArray(upperbound), upperbound);
-    return factorization.max;
+    let upperbound = 100;
+    let factorization = FactorizeNumber(GeneratePrimeArray(2*upperbound), 2*upperbound);
+    return GetMinimalProductSum(factorization, upperbound);
 }
+
+function GetMinimalProductSum(factorization, upperbound)
+{
+    let SumProduct = {};
+    for (let k = 2; k <= upperbound; ++k)
+    {
+        let solution = 2*k;
+
+        for (let potentialMinimalSolution = 2*k - 1; potentialMinimalSolution > k; --potentialMinimalSolution)
+        {
+            factors = factorization[potentialMinimalSolution];
+            set = [...factors];
+
+            while(set.length < k)
+            {
+                set.push(1);
+            }
+            if (IsSumProduct(set))
+            {
+                continue;
+            }
+            else
+            {
+                SumProduct[k] = potentialMinimalSolution + 1;
+                break;
+            }
+
+        }
+    }
+
+    return SumProduct;
+}
+
 
 function GeneratePrimeArray(upperbound)
 {
@@ -104,4 +158,32 @@ function FactorizeNumber(primes, upperbound)
         }
     }
     return obj;
+}
+
+//Get every possible way to write a number in a product form
+//Example : 8 = 2*2*2 and 8 = 2*4
+function GetEveryProductFromFactorization(factorization, upperbound)
+{
+    for (let k = 2; k <= upperbound; ++k)
+    {
+        factors = [...factorization[k]];
+        for (let index = factors.length - 1; index > 1; --index)
+        {
+            let fixedElements = factors.length - index;
+            
+        }
+    }
+}
+
+function IsSumProduct(set)
+{   
+    let product = 1;
+    let sum = 0;
+    for (let nbr of set)
+    {
+        product *= nbr;
+        sum += nbr;
+    }
+
+    return (product == sum);
 }
