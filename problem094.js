@@ -45,7 +45,7 @@ function LoopArea()
     let total = 0;
     for (let side = 5; 3*side - 1 <= 1000000000; side += 2)
     {  
-        if (side%10000 == 1)
+        if (side%10000 < 10)
         {
             console.log(side);
         }
