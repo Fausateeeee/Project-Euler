@@ -35,10 +35,34 @@
 
     So the minimal product-sum number N is always k <= N <= 2k. (It is probably k < N <= 2k in reality.)
 
+    I should factorize each number up to 24000 and find every way to write it.
+    Per example, 12 = 2 * 2 * 3 = 4 * 3 = 2 * 6.
+
+    With a slower solution, I computed the answers for up to 20 for tests purposes:
+    2  [ 2, 2 ] = 4
+    3  [ 1, 2, 3 ] = 6
+    4  [ 1, 1, 2, 4 ] = 8
+    5  [ 1, 1, 2, 2, 2 ] = 8
+    6  [ 1, 1, 1, 1, 2, 6 ] = 12
+    7  [ 1, 1, 1, 1, 1, 3, 4 ] = 14
+    8  [ 1, 1, 1, 1, 1, 2, 2, 3 ] = 12
+    9  [ 1, 1, 1, 1, 1, 1, 1, 3, 5 ] = 15
+    10 [ 1, 1, 1, 1, 1, 1, 1, 1, 4, 4 ] = 16
+    11 [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 4 ] = 16
+    12 [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2 ] = 16
+    13 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3 ] = 18
+    14 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 5 ] = 20
+    15 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 8 ] = 24
+    16 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 6 ] = 24
+    17 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5 ] = 25
+    18 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4 ] = 24
+    19 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3 ] = 24
+    20 [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 7 ] = 28
+
 */
 
 const readline = require('readline');
-
+const bigInt = require('big-integer')
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -47,59 +71,119 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-   CheckProductSum({'1':1, '2':2, '3':1}));
+        LoopMinimalProductSum());
     rl.close();
 });
 
+
 function LoopMinimalProductSum()
 {
-    let total = {};
-    for (let i = 2; i <= 6; i++)
-    {
-        let result = FindMinimalProductSum(i);
-        if( !total[result.product])
-        {
-            total[result.product] = true;
-        }
-        console.log(i, result.set);
-    }
-    return total;
+    let upperbound = 100;
+    let factorization = FactorizeNumber(GeneratePrimeArray(2*upperbound), 2*upperbound);
+    return GetMinimalProductSum(factorization, upperbound);
 }
 
-function FindMinimalProductSum(number)
+function GetMinimalProductSum(factorization, upperbound)
 {
-    let set = {1 : number - 1};
-    set[number] = 1;
-    let result = CheckProductSum(set);
-    while (result.product != result.sum)
+    let SumProduct = {};
+    for (let k = 2; k <= upperbound; ++k)
     {
-        if (result.product < result.sum)
+        let solution = 2*k;
+
+        for (let potentialMinimalSolution = 2*k - 1; potentialMinimalSolution > k; --potentialMinimalSolution)
         {
-            set[1]--;
-            if (!set[2])
+            factors = factorization[potentialMinimalSolution];
+            set = [...factors];
+
+            while(set.length < k)
             {
-                set[2] = 1;
+                set.push(1);
             }
+            if (IsSumProduct(set))
+            {
+                continue;
+            }
+            else
+            {
+                SumProduct[k] = potentialMinimalSolution + 1;
+                break;
+            }
+
+        }
+    }
+
+    return SumProduct;
+}
+
+
+function GeneratePrimeArray(upperbound)
+{
+    let primes = [2,3, 5, 7,11];
+    for (let p = 13; primes.length <= upperbound; p += 2)
+    {
+        if (p%3 != 0 && p%5 != 0 && p%7 != 0 && p%11 !=0 && bigInt(p).isPrime())
+        {
+            primes.push(p);
+        }
+    }
+    return primes;
+}
+
+function FactorizeNumber(primes, upperbound)
+{
+    let obj = {};
+    for (let i = 2; i <= upperbound; ++i)
+    {
+        if (primes.includes(i))
+        {
+            obj[i] = [i];
         }
         else
         {
-
+            let reminder = i;
+            let factorization = [];
+            for (let prime of primes)
+            {
+                while (reminder%prime == 0)
+                {
+                    reminder /= prime;
+                    factorization.push(prime);
+                }
+                if (reminder == 1)
+                {
+                    obj[i] = factorization;
+                    break;
+                }
+            }
         }
-        result = CheckProductSum(set);
     }
-
-    return result.product;
+    return obj;
 }
 
-function CheckProductSum(set)
+//Get every possible way to write a number in a product form
+//Example : 8 = 2*2*2 and 8 = 2*4
+function GetEveryProductFromFactorization(factorization, upperbound)
 {
+    for (let k = 2; k <= upperbound; ++k)
+    {
+        factors = [...factorization[k]];
+        for (let index = factors.length - 1; index > 1; --index)
+        {
+            let fixedElements = factors.length - index;
+            
+        }
+    }
+}
+
+function IsSumProduct(set)
+{   
     let product = 1;
     let sum = 0;
-    for(let prop of Object.keys(set))
+    for (let nbr of set)
     {
-        product *= (set[prop] * Number.parseInt(prop));
-        sum += (set[prop] * Number.parseInt(prop));
+        product *= nbr;
+        sum += nbr;
     }
-    let obj = { product : product, sum : sum};
-    return obj;
+
+    return (product == sum);
 }

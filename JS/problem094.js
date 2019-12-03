@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 7 */
 /*
 
     It is easily proved that no equilateral triangle exists with integral length sides 
@@ -43,27 +43,47 @@ function LoopArea()
 {
     //1000000000
     let total = 0;
-    for (let side = 1; 3*side + 1 < 1000000000; ++side)
-    {
-        total += AreaIsInteger(side);
+    for (let side = 5; 3*side - 1 <= 1000000000; side += 2)
+    {  
+        if (side%10000 < 10)
+        {
+            console.log(side);
+        }
+
+        total += IsHeronianTriangle(side);
     }
 
     return total;
 }
-function AreaIsInteger(side)
+
+function IsHeronianTriangle(side)
 {
-    let test_plus1 = Math.sqrt((side - 1)*(3*side + 1));
-    let test_minus1 = Math.sqrt((side + 1)*(3*side - 1));
-    let total_perimeter = 0;
-    if (Number.isInteger(test_plus1))
+
+    let b_side = BigInt(side);
+    let b_other_side = BigInt(side + 1);
+    let divisor = BigInt(Math.floor(Math.sqrt(side)))
+
+    let test_area = 4n*(b_side**2n) - (b_other_side**2n);
+    //let test_area = b_side**2n;
+	let total_perimeter = 0;
+    let potential_root = test_area/divisor;
+    
+    while(potential_root**2n > test_area)
+    {
+        --potential_root;
+    }
+    if (potential_root**2n === test_area)
     {
         total_perimeter += 3*side + 1;
-    }
-    if (Number.isInteger(test_minus1) && side > 1)
+	}
+	
+    b_other_side = BigInt(side - 1); 
+    test_area = 4n*(b_side**2n) - (b_other_side**2n);
+    potential_root = test_area/2n;
+
+    if (potential_root**2n === test_area)
     {
         total_perimeter += 3*side - 1;
     }
-
     return total_perimeter;
-
 }
