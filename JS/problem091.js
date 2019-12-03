@@ -27,7 +27,7 @@ rl.question('Press enter to continue : ', (answer) => {
 function GeneratePoint()
 {
     let total = 0;
-    let upperbound = 3;
+    let upperbound = 50;
     let dict = {};
     for (let x = 0; x <= upperbound; ++x)
     {
@@ -79,7 +79,7 @@ function IsRectangle(point1, point2, dict)
             {
                 dict[point_str1] = true;
                 dict[point_str2] = true;
-                console.log(point1, point2);
+                //console.log(point1, point2);
                 return 1;
             }
         }
