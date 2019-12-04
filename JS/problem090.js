@@ -68,7 +68,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("There are", GenerateDice(), 
+    console.log("There are", GenerateDice().length, 
     "distinct arrangements of the two cubes that allow for all of the square numbers to be displayed.");
     rl.close();
 });
@@ -160,8 +160,12 @@ function AddToDictionary(die1, die2, dict)
     let extended_set2 = [...die2].sort();
     let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
     let key2 = extended_set2.reduce((a,b) => {return a + b;}) + extended_set1.reduce((a,b) => {return a + b;});
-    if(!dict[key1] || !dict[key2])
+
+    if(key1 in dict || key2 in dict)
     {
+        console.log(key1, key2);
+    }
+    else{
         dict[key1] = true;
     }
 }
