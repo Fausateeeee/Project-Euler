@@ -62,7 +62,7 @@
 */
 
 const readline = require('readline');
-const bigInt = require('big-integer')
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -70,80 +70,45 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-        LoopMinimalProductSum());
+    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", LoopMinimalProductSum(12000));
     rl.close();
 });
 
-function LoopMinimalProductSum()
-{
-    let upperbound = 12000; 
-    PSF_dict = ComputeProductCombination(upperbound);
-    return FindMinimalProductSum(upperbound, PSF_dict);
-}
+function LoopMinimalProductSum(upperbound){
 
-function ComputeProductCombination(upperbound){
     let maximalProductSum = 2*upperbound;
     let maximalFactorNumber = Math.floor(Math.log2(maximalProductSum));
-    let PSF_dict = {};
-    for (let i = 2; i <= maximalProductSum; ++i)
-    {
-        PSF_dict[i] = [];
-    }
-    for(let i = 2; i <= maximalFactorNumber; ++i){
-        console.log(i, maximalFactorNumber);
-        const PSF = new ProductSumFinder(i);
-        while(PSF.value != -1){
-            //console.log(PSF.value, maximalProductSum, i, PSF.product);
-            if (PSF.value <= maximalProductSum && PSF.value > i){
-                product_copy = [...PSF.product];
-                //console.log
-                product_copy.sort();
-                if (!PSF_dict[PSF.value].includes(product_copy))
-                {
-                    PSF_dict[PSF.value].push(product_copy);
-                }
+    let minimalSet = [];
 
-            }
-            else if(PSF.value > maximalProductSum){
-                PSF.skip();
-            }
-            PSF.advanceOne();
-        }
-    }
-    return PSF_dict;
-}
-
-function FindMinimalProductSum(upperbound, PSF_dict){
-    let minimalSet= [];
-    let productSet = [];
     for (let i = 0; i <= upperbound; ++i){
         minimalSet[i] = 0;
     }
-    for (let i = 2; i <= upperbound; ++i){
-        if(i%100 == 0){
-            console.log(i);
-        }
-        for (let j = i; j <= 2*i; ++j){
-            for (let prod_arr of PSF_dict[j]){
 
-                let product = j;
-                let addition = prod_arr.reduce((a,b) => {return a + b;});
-                shift = product - addition;
-                //console.log("Product",j,"Addition", addition,"Shift", shift,"arr", prod_arr);
-                if(shift < 0 || shift > i){
+    for(let i = 2; i <= maximalFactorNumber; ++i){
+        console.log(i, maximalFactorNumber);
+        const PSF = new ProductSumFinder(i, 2*upperbound);
+
+        while(PSF.unfinished){
+            if (PSF.product <= maximalProductSum){
+
+                if(PSF.shift < 0){
+
                 }
-                else if ((minimalSet[prod_arr.length + shift] == 0 || minimalSet[prod_arr.length + shift] > product))
+                else if ((minimalSet[PSF.length + PSF.shift] == 0 || minimalSet[PSF.length + PSF.shift] > PSF.product))
                 {
-    
-                    minimalSet[prod_arr.length+shift] = product;
-                    productSet[prod_arr.length+shift] = prod_arr;
+                    minimalSet[PSF.length + PSF.shift] = PSF.product;
                 }
-    
+                //console.log("Shift", PSF.shift, "Product", PSF.product, "Sum", PSF.sum, "Factors", PSF.factors, "MinimalSet", minimalSet);
             }
+            else if(PSF.product > maximalProductSum){
+                PSF.skip();
+            }
+            //console.log(PSF);
+            PSF.advanceOne();
         }
-
     }
+    console.log(minimalSet);
+
     uniqueMinimalSet = [];
     for (let min of minimalSet){
         if(!uniqueMinimalSet.includes(min)){
@@ -154,38 +119,56 @@ function FindMinimalProductSum(upperbound, PSF_dict){
 }
 
 class ProductSumFinder{
-    constructor(length){
+    constructor(length, upperbound){
         this.length = length;
-        this.product = [];
+        this.upperbound = upperbound;
+        this.factors = [];
         for (let i = 0; i < this.length; ++i){
-            this.product[i] = 2;
+            this.factors[i] = 2;
         }
-        this.value = this.product.reduce((a,b) => {return a * b;});
+        this.product = this.factors.reduce((a,b) => {return a * b;});
+        this.sum = this.factors.reduce((a,b) => {return a + b;});
+        this.shift = this.product - this.sum;
+        this.unfinished = true;
     }
 
     advanceOne(){
-        this.product[this.length - 1]++;
-        for (let index = this.length - 1; index > 0; --index){
-            if(this.product[index] > 9){
-                this.product[index] = 1;
-                this.product[index - 1]++;
-            }
-            else{
-                break;
-            }
-        }
+        this.factors[this.length - 1]++;
 
-        if(this.product[0] > 9){
-            this.value = -1;
+        this.product =  this.factors.reduce((a,b) => {return a * b;});
+        if(this.product > this.upperbound){
+            this.skip();
         }
         else{
-            this.value =  this.product.reduce((a,b) => {return a * b;});    
+            this.sum = this.factors.reduce((a,b) => {return a + b;});
+            this.shift = this.product - this.sum;
         }
-
     }
+
     skip(){
-        this.product[this.length - 1] = 9;
-        this.advanceOne();
+        this.factors[this.length - 1] = 2;
+        this.factors[this.length - 2]++;
+        this.product =  this.factors.reduce((a,b) => {return a * b;});
+
+        while (this.product > this.upperbound && this.unfinished){
+
+            let maxIndex = this.factors.indexOf(Math.max(...this.factors));
+            if(maxIndex > 0){
+                this.factors[maxIndex - 1]++;
+                for(let i = maxIndex; i < this.length; i++){
+                    this.factors[i] = 2;
+                }
+                this.factors[this.length - 1] = 1;
+                this.product = this.factors.reduce((a,b) => {return a * b;});
+            }
+            else{
+                this.unfinished = false;
+            }
+        }
+        this.sum = this.factors.reduce((a,b) => {return a + b;});
+        this.shift = this.product - this.sum;
+
+
     }
     
 }
