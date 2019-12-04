@@ -85,7 +85,7 @@ function LoopMinimalProductSum(upperbound){
     }
 
     for(let i = 2; i <= maximalFactorNumber; ++i){
-        console.log(i, maximalFactorNumber);
+
         const PSF = new ProductSumFinder(i, 2*upperbound);
 
         while(PSF.unfinished){
@@ -107,7 +107,6 @@ function LoopMinimalProductSum(upperbound){
             PSF.advanceOne();
         }
     }
-    console.log(minimalSet);
 
     uniqueMinimalSet = [];
     for (let min of minimalSet){
