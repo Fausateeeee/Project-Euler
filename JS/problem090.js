@@ -68,7 +68,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("There are", GenerateDice().length, 
+    console.log("There are", GenerateDice(), 
     "distinct arrangements of the two cubes that allow for all of the square numbers to be displayed.");
     rl.close();
 });
@@ -77,7 +77,7 @@ function GenerateDice()
 {
     let die1 = ['6', '0', '8', '2', '3', '*'];
     let die2 = ['6', '1', '4', '5', '*', '*'];
-    let dict = {};
+    let mem = [];
 
     for (let i = 0; i < 10; ++i)
     {
@@ -88,33 +88,33 @@ function GenerateDice()
                 die1[5] = i.toString();
                 die2[4] = j.toString();
                 die2[5] = k.toString();
-                AddToDictionary(die1, die2, dict);
-                GenerateOtherPermutation(die1, die2, dict);
+                AddToMemory(die1, die2, mem);
+                GenerateOtherPermutation(die1, die2, mem);
             }
         }
     }
-    fs.writeFileSync("keys.txt", Object.keys(dict).toString());
-    return Object.keys(dict);
+    //fs.writeFileSync("keys.txt", Object.keys(dict).toString());
+    return mem.length;
 }
 
-function GenerateOtherPermutation(die1, die2, dict)
+function GenerateOtherPermutation(die1, die2, mem)
 {
     for(let i = 0; i < 4; i++)
     {
         SwapPosition(die1, die2, 5);
-        AddToDictionary(die1, die2, dict);
+        AddToMemory(die1, die2, mem);
         
         SwapPosition(die1, die2, 5);
         SwapPosition(die1, die2, 4);
-        AddToDictionary(die1, die2, dict);
+        AddToMemory(die1, die2, mem);
     
         SwapPosition(die1, die2, 5);
-        AddToDictionary(die1, die2, dict);
+        AddToMemory(die1, die2, mem);
     
         SwapPosition(die1, die2, 4);
         SwapPosition(die1, die2, 5);
         SwapPosition(die1, die2, 0);
-        AddToDictionary(die1, die2, dict);
+        AddToMemory(die1, die2, mem);
     }
 }
 
@@ -154,19 +154,18 @@ function SwapPosition(die1, die2, position)
 
 }
 
-function AddToDictionary(die1, die2, dict)
+function AddToMemory(die1, die2, mem)
 {
     let extended_set1 = [...die1].sort();
     let extended_set2 = [...die2].sort();
     let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
     let key2 = extended_set2.reduce((a,b) => {return a + b;}) + extended_set1.reduce((a,b) => {return a + b;});
 
-    if(key1 in dict || key2 in dict)
+    if(mem.includes(key1) || mem.includes(key2))
     {
-        console.log(key1, key2);
     }
     else{
-        dict[key1] = true;
+        mem.push(key1);
     }
 }
 
