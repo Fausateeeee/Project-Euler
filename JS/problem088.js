@@ -44,7 +44,7 @@
     4  [ 1, 1, 2, 4 ] = 8
     5  [ 1, 1, 2, 2, 2 ] = 8
     6  [ 1, 1, 1, 1, 2, 6 ] = 12
-    7  [ 1, 1, 1, 1, 1, 3, 4 ] = 14
+    7  [ 1, 1, 1, 1, 1, 3, 4 ] = 12
     8  [ 1, 1, 1, 1, 1, 2, 2, 3 ] = 12
     9  [ 1, 1, 1, 1, 1, 1, 1, 3, 5 ] = 15
     10 [ 1, 1, 1, 1, 1, 1, 1, 1, 4, 4 ] = 16
@@ -75,115 +75,117 @@ rl.question('Press enter to continue : ', (answer) => {
     rl.close();
 });
 
-
 function LoopMinimalProductSum()
 {
-    let upperbound = 100;
-    let factorization = FactorizeNumber(GeneratePrimeArray(2*upperbound), 2*upperbound);
-    return GetMinimalProductSum(factorization, upperbound);
+    let upperbound = 12000; 
+    PSF_dict = ComputeProductCombination(upperbound);
+    return FindMinimalProductSum(upperbound, PSF_dict);
 }
 
-function GetMinimalProductSum(factorization, upperbound)
-{
-    let SumProduct = {};
-    for (let k = 2; k <= upperbound; ++k)
+function ComputeProductCombination(upperbound){
+    let maximalProductSum = 2*upperbound;
+    let maximalFactorNumber = Math.floor(Math.log2(maximalProductSum));
+    let PSF_dict = {};
+    for (let i = 2; i <= maximalProductSum; ++i)
     {
-        let solution = 2*k;
+        PSF_dict[i] = [];
+    }
+    for(let i = 2; i <= maximalFactorNumber; ++i){
+        console.log(i, maximalFactorNumber);
+        const PSF = new ProductSumFinder(i);
+        while(PSF.value != -1){
+            //console.log(PSF.value, maximalProductSum, i, PSF.product);
+            if (PSF.value <= maximalProductSum && PSF.value > i){
+                product_copy = [...PSF.product];
+                //console.log
+                product_copy.sort();
+                if (!PSF_dict[PSF.value].includes(product_copy))
+                {
+                    PSF_dict[PSF.value].push(product_copy);
+                }
 
-        for (let potentialMinimalSolution = 2*k - 1; potentialMinimalSolution > k; --potentialMinimalSolution)
-        {
-            factors = factorization[potentialMinimalSolution];
-            set = [...factors];
+            }
+            else if(PSF.value > maximalProductSum){
+                PSF.skip();
+            }
+            PSF.advanceOne();
+        }
+    }
+    return PSF_dict;
+}
 
-            while(set.length < k)
-            {
-                set.push(1);
+function FindMinimalProductSum(upperbound, PSF_dict){
+    let minimalSet= [];
+    let productSet = [];
+    for (let i = 0; i <= upperbound; ++i){
+        minimalSet[i] = 0;
+    }
+    for (let i = 2; i <= upperbound; ++i){
+        if(i%100 == 0){
+            console.log(i);
+        }
+        for (let j = i; j <= 2*i; ++j){
+            for (let prod_arr of PSF_dict[j]){
+
+                let product = j;
+                let addition = prod_arr.reduce((a,b) => {return a + b;});
+                shift = product - addition;
+                //console.log("Product",j,"Addition", addition,"Shift", shift,"arr", prod_arr);
+                if(shift < 0 || shift > i){
+                }
+                else if ((minimalSet[prod_arr.length + shift] == 0 || minimalSet[prod_arr.length + shift] > product))
+                {
+    
+                    minimalSet[prod_arr.length+shift] = product;
+                    productSet[prod_arr.length+shift] = prod_arr;
+                }
+    
             }
-            if (IsSumProduct(set))
-            {
-                continue;
+        }
+
+    }
+    uniqueMinimalSet = [];
+    for (let min of minimalSet){
+        if(!uniqueMinimalSet.includes(min)){
+            uniqueMinimalSet.push(min);
+        }
+    }
+    return uniqueMinimalSet.reduce((a,b) => {return a + b;});
+}
+
+class ProductSumFinder{
+    constructor(length){
+        this.length = length;
+        this.product = [];
+        for (let i = 0; i < this.length; ++i){
+            this.product[i] = 2;
+        }
+        this.value = this.product.reduce((a,b) => {return a * b;});
+    }
+
+    advanceOne(){
+        this.product[this.length - 1]++;
+        for (let index = this.length - 1; index > 0; --index){
+            if(this.product[index] > 9){
+                this.product[index] = 1;
+                this.product[index - 1]++;
             }
-            else
-            {
-                SumProduct[k] = potentialMinimalSolution + 1;
+            else{
                 break;
             }
-
         }
-    }
 
-    return SumProduct;
-}
-
-
-function GeneratePrimeArray(upperbound)
-{
-    let primes = [2,3, 5, 7,11];
-    for (let p = 13; primes.length <= upperbound; p += 2)
-    {
-        if (p%3 != 0 && p%5 != 0 && p%7 != 0 && p%11 !=0 && bigInt(p).isPrime())
-        {
-            primes.push(p);
+        if(this.product[0] > 9){
+            this.value = -1;
         }
-    }
-    return primes;
-}
-
-function FactorizeNumber(primes, upperbound)
-{
-    let obj = {};
-    for (let i = 2; i <= upperbound; ++i)
-    {
-        if (primes.includes(i))
-        {
-            obj[i] = [i];
+        else{
+            this.value =  this.product.reduce((a,b) => {return a * b;});    
         }
-        else
-        {
-            let reminder = i;
-            let factorization = [];
-            for (let prime of primes)
-            {
-                while (reminder%prime == 0)
-                {
-                    reminder /= prime;
-                    factorization.push(prime);
-                }
-                if (reminder == 1)
-                {
-                    obj[i] = factorization;
-                    break;
-                }
-            }
-        }
-    }
-    return obj;
-}
 
-//Get every possible way to write a number in a product form
-//Example : 8 = 2*2*2 and 8 = 2*4
-function GetEveryProductFromFactorization(factorization, upperbound)
-{
-    for (let k = 2; k <= upperbound; ++k)
-    {
-        factors = [...factorization[k]];
-        for (let index = factors.length - 1; index > 1; --index)
-        {
-            let fixedElements = factors.length - index;
-            
-        }
     }
-}
-
-function IsSumProduct(set)
-{   
-    let product = 1;
-    let sum = 0;
-    for (let nbr of set)
-    {
-        product *= nbr;
-        sum += nbr;
+    skip(){
+        this.product[this.length - 1] = 9;
+        this.advanceOne();
     }
-
-    return (product == sum);
+    
 }
