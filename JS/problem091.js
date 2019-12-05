@@ -55,7 +55,8 @@ function GeneratePoint()
             }
         }
     }
-    return total;
+    //Return total/2 since each triangle was counted twice.
+    return total/2;
 }
 
 function IsRectangle(point1, point2, dict)
@@ -67,22 +68,10 @@ function IsRectangle(point1, point2, dict)
     let AdotB = DotProduct(A,B);
     let BdotC = DotProduct(B,C);
     let AdotC = DotProduct(A,C);
-
+    //console.log(AdotB, BdotC, AdotC);
     if(AdotB == 0 || AdotC == 0 || BdotC == 0)
     {
-        let point_str1 = point1[0].toString() + point1[1].toString() + point2[0].toString() + point2[1].toString();
-        let point_str2 = point2[0].toString() + point2[1].toString() + point1[0].toString() + point1[1].toString();
-
-        if (!dict[point_str1])
-        {
-            if (!dict[point_str2])
-            {
-                dict[point_str1] = true;
-                dict[point_str2] = true;
-                //console.log(point1, point2);
-                return 1;
-            }
-        }
+        return 1;
     }
 
     return 0;
