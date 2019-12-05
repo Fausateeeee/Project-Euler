@@ -46,7 +46,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
+    console.log("The set of four distinct digits, a < b < c < d, for which the longest set of consecutive positive integers, 1 to n, can be obtained", 
     mainLoop());
     rl.close();
 });
