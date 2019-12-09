@@ -55,6 +55,6 @@ class BaseExponent{
         this.base = base;
         this.exponent = exponent;
         this.row = row;
-        this.length = Math.floor(Math.log2(base) * exponent);
+        this.length = Math.ceil(Math.log2(base) * exponent);
     }
 }
