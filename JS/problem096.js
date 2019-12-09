@@ -51,7 +51,7 @@
 */
 
 const readline = require('readline');
-
+const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -60,7 +60,109 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
+    SudokuReader());
     rl.close();
 });
 
+function SudokuReader(){
+    let allSudokus = fs.readFileSync("..\\Additional-Files\\p096_sudoku_test.txt", 'utf8');
+
+    let allRows = allSudokus.split("\n");
+    let sudokus = [];
+    let sudoku;
+    for (let row = 0; row < allRows.length; ++row){
+        if (row%10 == 0){
+            sudoku = new Sudoku();
+            sudokus.push(sudoku);
+        }else{
+            sudoku.addRow(allRows[row], row%10);
+        }
+    }
+    for(let s of sudokus){
+        s.update();
+        s.update_unknown();
+    }
+    return sudoku;
+}
+
+class Sudoku{
+    constructor(){
+     this.rows = {};
+     this.columns = {};
+     this.squares = {};
+
+     this.rows_unknown = [0,0,0,0,0,0,0,0,0];
+     this.columns_unknown = [0,0,0,0,0,0,0,0,0];
+     this.squares_unknown = [0,0,0,0,0,0,0,0,0];
+
+     for(let i = 1; i < 10; ++i){
+         this.rows[i] = [0,0,0,0,0,0,0,0,0];
+         this.columns[i] = [0,0,0,0,0,0,0,0,0];
+         this.squares[i] = [0,0,0,0,0,0,0,0,0];
+     } 
+    }
+    addRow(row, index){
+        for(let i = 0; i < 9; ++i){
+            this.rows[index][i] = row[i];
+        }
+    }
+
+    update(){
+        for(let x = 1; x < 10; ++x){
+            for (let y = 1; y < 10; ++y){
+                this.columns[y][x - 1] = this.rows[x][y-1];
+                if (x < 4){
+                    if (y < 4){
+                        this.squares[1][3*(x-1) + y - 1] = this.rows[x][y-1];
+                    }
+                    else if (y < 7){
+                        this.squares[2][3*(x-1) + y - 4] = this.rows[x][y-1];
+                    }
+                    else{
+                        this.squares[3][3*(x-1) + y - 7] = this.rows[x][y-1];
+                    }
+                }
+                else if (x < 7){
+                    if (y < 4){
+                        this.squares[4][3*(x-4) + y - 1] = this.rows[x][y-1];
+                    }
+                    else if (y < 7){
+                        this.squares[5][3*(x-4) + y - 4] = this.rows[x][y-1];
+                    }
+                    else{
+                        this.squares[6][3*(x-4) + y - 7] = this.rows[x][y-1];
+                    }
+                }
+                else{
+                    if (y < 4){
+                        this.squares[7][3*(x-7) + y - 1] = this.rows[x][y-1];
+                    }
+                    else if (y < 7){
+                        this.squares[8][3*(x-7) + y - 4] = this.rows[x][y-1];
+                    }
+                    else{
+                        this.squares[9][3*(x-7) + y - 7] = this.rows[x][y-1];
+                    }
+                }
+            }
+        }
+    }
+    update_unknown(){
+        for(let i = 1; i < 10; i++){
+            this.rows_unknown[i-1] = this.rows[i].NumberOfZeros()
+            this.columns_unknown[i-1] = this.columns[i].NumberOfZeros()
+            this.squares_unknown[i-1] = this.squares[i].NumberOfZeros()
+        }
+    }
+}
+
+Array.prototype.NumberOfZeros = function() {
+    let zeros = 0;
+    for(let i=0; i<this.length; ++i) {
+        if (this[i] == 0){
+            zeros++;
+        }
+    }
+
+    return zeros;
+};
