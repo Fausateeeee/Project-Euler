@@ -13,11 +13,10 @@
 
     NOTE: The first two lines in the file represent the numbers in the example given above.
 
-
 */
 
 const readline = require('readline');
-
+const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -25,8 +24,37 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
+    console.log("The line that contains the biggest number is", 
+    ReadFile());
     rl.close();
 });
 
+function ReadFile(){
+    let NbrArr = [];
+    let allNumbers = fs.readFileSync("..\\Additional-Files\\p099_base_exp.txt", 'utf8');
+
+    let allRows = allNumbers.split("\n");
+    let rowNbr = 0;
+    for (let row of allRows){
+        split = row.split(',');
+        NbrArr.push(new BaseExponent(Number.parseInt(split[0]), Number.parseInt(split[1]), ++rowNbr));
+    }
+    let max = 0;
+    let row = 0;
+    for (let nbr of NbrArr){
+        if(nbr.length > max){
+            max = nbr.length;
+            row = nbr.row;
+        }
+    }
+    return row;
+}
+
+class BaseExponent{
+    constructor(base, exponent, row){
+        this.base = base;
+        this.exponent = exponent;
+        this.row = row;
+        this.length = Math.floor(Math.log2(base) * exponent);
+    }
+}
