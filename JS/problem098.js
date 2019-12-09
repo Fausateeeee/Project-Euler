@@ -18,7 +18,7 @@
 */
 
 const readline = require('readline');
-
+const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -27,7 +27,91 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
+    p98());
     rl.close();
 });
+
+function p98(){
+    let wordDict = ReadFile();
+    let anagramDict = GetAnagramPair(wordDict);
+    let squares = GenerateSquares(anagramDict);
+    return squares;
+}
+
+function ReadFile(){
+    let allText = fs.readFileSync("..\\Additional-Files\\p098_words.txt", 'utf8');
+
+    let allWords = allText.split(",");
+
+    let wordDict = {};
+    for (let word of allWords){
+        split = word.split("\"");
+        wordObj = new Word(split[1]);
+        if(wordObj.anagram in wordDict){
+            wordDict[wordObj.anagram].push(wordObj);
+        }
+        else{
+            wordDict[wordObj.anagram] = [wordObj];
+        }
+    }
+
+    return wordDict;
+}
+
+function GetAnagramPair(wordDict){
+    anagramPair = {};
+    for (let key of Object.keys(wordDict)){
+        if(wordDict[key].length > 1){
+            anagramPair[key] = wordDict[key];
+        }
+    }
+
+    return anagramPair;
+}
+
+function GenerateSquares(anagramDict){
+    let max = 0;
+    for (let key of Object.keys(anagramDict)){
+        if (key.length > max){
+            max = key.length;
+        }
+    }
+    return new Squares(max);
+}
+class Word{
+    constructor(word){
+        this.word = word;
+        this.uniqueletters = word.split("").unique();
+        this.anagram = this.word.split("").sort().reduce((a,b) => {return a + b;});
+    }
+}
+
+class Squares{
+    constructor(length){
+        let current = 1;
+        this.squares = {};
+        for(let i = 1; i <= length; ++i){
+            this.squares[i] = [];
+        }
+        let i = 1;
+        let currentLength = 1;
+        while (currentLength <= length){
+            this.squares[currentLength].push(current); 
+            current = Math.pow(++i,2);
+            currentLength = current.toString().length;
+        }
+
+    }
+}
+Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+};
 
