@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 7 */
 /*
 
     If a box contains twenty-one coloured discs, composed of fifteen blue discs and six red discs, 
@@ -33,21 +33,30 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    p100(Math.pow(10,12)), p100(22));
+    p100(Math.pow(10,12)));
     rl.close();
 });
 
 function p100(lowerbound){
     let i = lowerbound;
-    while(!root(i)){
-        i++;
-    }
-    let p = i*(i - 1)/2;
-    console.log(i, p, Math.sqrt(4*p + 1));
-    return (1 + Math.sqrt(4*p + 1))/2;
+    root(i);
+    // while(!root(i)){
+    //     i++;
+    // }
+
+    return i;
 }
 
-function root(nbr){
-    let p = nbr*(nbr - 1)/2;
-    return Number.isInteger(Math.sqrt(4*p + 1));
+function root(nbr){    
+    let p = (BigInt(nbr) * BigInt(nbr - 1) * BigInt(2)) + BigInt(1);
+    let p_root = BigInt(Math.floor(Math.sqrt(2-0.000000000001)*nbr));
+    console.log(p, p_root, p - p_root**BigInt(2));
+    // while(p - BigInt(p_root)**BigInt(2) > 0){
+    //     p_root = p_root + BigInt(1);
+    // }
+    // if (p - p_root == 0){
+    //     console.log((BigInt(1) + p_root)/BigInt(2));
+    //     return true;
+    // }
+    return false;
 }

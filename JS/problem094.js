@@ -35,7 +35,7 @@ rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of the perimeters of all almost equilateral triangles with integral", 
      "side lengths and area and whose perimeters do not exceed one billion is", 
-    LoopArea());
+    GenerateHeronianTriangle(60));
     rl.close();
 });
 
@@ -56,9 +56,59 @@ function LoopArea()
     return total;
 }
 
+function GenerateHeronianTriangle(upperbound){
+    let a = 0;
+    let b = 0;
+    let c = 0;
+    let m = 0;
+    let total_perimeter = 0;
+    let perimeter = 0;
+    while(perimeter < upperbound){
+        m++;
+        for(let n = 1; n <= m; n++){
+            for(let k = 1; k**2 < n*m; k++){
+                if(gcd(m,gcd(n,k)) == 1){
+                    a = n*(m**2 + k**2);
+                    b = m*(n**2 + k**2);
+                    c = (m + n)*(m*n - k**2);
+                    console.log(a,b,c);
+                    perimeter = a + b + c;
+                }
+                if(AlmostEquilateral(a,b,c)){
+                    total_perimeter += perimeter;
+                }
+            }
+        }
+    }
+
+    return total_perimeter;
+}
+
+function AlmostEquilateral(a,b,c){
+    if(a == b && Math.abs(a - c) == 1){
+        return true;
+    }
+    if(a == c && Math.abs(a - b) == 1){
+        return true;
+    }
+    if(b == c && Math.abs(b - a) == 1){
+        return true;
+    }
+    return false;
+}
+function gcd(x,y){
+    while(y) {
+        var t = y;
+        y = x % y;
+        x = t;
+      }
+      return x;
+}
+
 function IsHeronianTriangle(side)
 {
     let total_perimeter = 0;
+    console.log((side-1)*(3*side + 1));
     let test_plus1 = Math.sqrt((side - 1)*(3*side + 1));
     let test_minus1 = Math.sqrt((side + 1)*(3*side - 1));
 
