@@ -118,7 +118,7 @@ function IsHeronianTriangle(side)
 
 
     if(Number.isInteger(test_minus1)   && (side - 1)*test_minus1 %4 == 0){
-        total_perimeter += 3*side + 1;
+        total_perimeter += 3*side - 1;
     }
     return total_perimeter;
 }
