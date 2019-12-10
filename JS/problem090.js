@@ -60,7 +60,6 @@
 */
 
 const readline = require('readline');
-const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -85,6 +84,7 @@ function GenerateDice()
         {
             for (let k = 0; k < 10; ++k)
             {
+
                 die1[5] = i.toString();
                 die2[4] = j.toString();
                 die2[5] = k.toString();
@@ -93,7 +93,7 @@ function GenerateDice()
             }
         }
     }
-    //fs.writeFileSync("keys.txt", Object.keys(dict).toString());
+
     return mem.length;
 }
 
@@ -101,18 +101,18 @@ function GenerateOtherPermutation(die1, die2, mem)
 {
     for(let i = 0; i < 4; i++)
     {
-        SwapPosition(die1, die2, 5);
+        SwapPosition(die1, die2, 4);
         AddToMemory(die1, die2, mem);
         
-        SwapPosition(die1, die2, 5);
         SwapPosition(die1, die2, 4);
-        AddToMemory(die1, die2, mem);
-    
-        SwapPosition(die1, die2, 5);
+        SwapPosition(die1, die2, 3);
         AddToMemory(die1, die2, mem);
     
         SwapPosition(die1, die2, 4);
-        SwapPosition(die1, die2, 5);
+        AddToMemory(die1, die2, mem);
+    
+        SwapPosition(die1, die2, 3);
+        SwapPosition(die1, die2, 4);
         SwapPosition(die1, die2, 0);
         AddToMemory(die1, die2, mem);
     }
@@ -156,27 +156,30 @@ function SwapPosition(die1, die2, position)
 
 function AddToMemory(die1, die2, mem)
 {
-    let extended_set1 = [...die1].sort();
-    let extended_set2 = [...die2].sort();
-    let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
-    let key2 = extended_set2.reduce((a,b) => {return a + b;}) + extended_set1.reduce((a,b) => {return a + b;});
-
-    if(mem.includes(key1) || mem.includes(key2))
-    {
-    }
-    else{
-        mem.push(key1);
-    }
-}
-
-Array.prototype.unique = function() {
-    var a = this.concat();
-    for(var i=0; i<a.length; ++i) {
-        for(var j=i+1; j<a.length; ++j) {
-            if(a[i] === a[j])
-                a.splice(j--, 1);
+    if(die1.unique() && die2.unique()){
+        let extended_set1 = [...die1].sort();
+        let extended_set2 = [...die2].sort();
+        let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
+    
+        if(mem.includes(key1)){
+    
+        }
+        else{
+                mem.push(key1);
+    
         }
     }
 
-    return a;
+}
+
+Array.prototype.unique = function() {
+    let copy = [...this];
+    copy = copy.sort();
+    for(let i=1; i<copy.length; ++i) {
+        if (copy[i-1] == copy[i]){
+            return false;
+        }
+    }
+
+    return true;
 };
