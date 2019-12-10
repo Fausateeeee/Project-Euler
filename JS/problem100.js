@@ -13,6 +13,16 @@
 
 */
 
+/*
+
+    Suppose k is the number of blue discs and n the total number of discs.
+    We have k(k-1)/n(n-1) = 0.5 iff k(k-1) = n(n-1)/2. The last part is a constant. 
+    We have the quadratic equation k^2 - k - p where p is (n(n-1)/2).
+    This quadratic equation has roots at 1/2(1 - sqrt(4p + 1)) and 1/2(1 + sqrt(4p + 1)).
+    We need to find the first number over 10^12 where both roots are integers
+
+*/
+
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -23,7 +33,21 @@ const rl = readline.createInterface({
 rl.question('Press enter to continue : ', (answer) => {
 
     console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
-    "ANSWER");
+    p100(Math.pow(10,12)), p100(22));
     rl.close();
 });
 
+function p100(lowerbound){
+    let i = lowerbound;
+    while(!root(i)){
+        i++;
+    }
+    let p = i*(i - 1)/2;
+    console.log(i, p, Math.sqrt(4*p + 1));
+    return (1 + Math.sqrt(4*p + 1))/2;
+}
+
+function root(nbr){
+    let p = nbr*(nbr - 1)/2;
+    return Number.isInteger(Math.sqrt(4*p + 1));
+}
