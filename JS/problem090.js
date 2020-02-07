@@ -56,6 +56,12 @@
     We then have 4 flexible slots and for every combination, we have a total of 8 when we consider every swap of 
     6 and 9 and the swapping between dice of 2 and 5.
 
+
+
+
+    
+    The previous methods doesn't seem to yield the solution. I decided to generate each
+    combination of 6 number on the die and check if this is a valid solution.
   
 */
 
@@ -66,120 +72,111 @@ const rl = readline.createInterface({
 });
 
 rl.question('Press enter to continue : ', (answer) => {
-
-    console.log("There are", GenerateDice(), 
+    let dices = LexicographicCombination();
+    console.log(dices);
+    console.log("There are", FindValidDiceSolution(),
     "distinct arrangements of the two cubes that allow for all of the square numbers to be displayed.");
     rl.close();
 });
 
-function GenerateDice()
-{
-    let die1 = ['6', '0', '8', '2', '3', '*'];
-    let die2 = ['6', '1', '4', '5', '*', '*'];
-    let mem = [];
+function FindValidDiceSolution(){
+    let combination = LexicographicCombination()
+    let total = 0;
 
-    for (let i = 0; i < 10; ++i)
-    {
-        for (let j = 0; j < 10; ++j)
-        {
-            for (let k = 0; k < 10; ++k)
-            {
-
-                die1[5] = i.toString();
-                die2[4] = j.toString();
-                die2[5] = k.toString();
-                AddToMemory(die1, die2, mem);
-                GenerateOtherPermutation(die1, die2, mem);
+    for (let dice1 = 0; dice1 < combination.length - 1; dice1++){
+        for (let dice2 = 1; dice2 < combination.length; dice2++){
+            let found = [false, false, false, false, false, false, false, false, false];
+            for (let n of combination[dice1]){
+                let num1 = n.toString();
+                for (let m of combination[dice2]){
+                    let num2 = m.toString();
+                    FindCombination(found, num1, num2);         
+                }
+            }
+            if (!(false in found)){
+                total++;
             }
         }
     }
-
-    return mem.length;
+    return total;
 }
 
-function GenerateOtherPermutation(die1, die2, mem)
-{
-    for(let i = 0; i < 4; i++)
-    {
-        SwapPosition(die1, die2, 4);
-        AddToMemory(die1, die2, mem);
-        
-        SwapPosition(die1, die2, 4);
-        SwapPosition(die1, die2, 3);
-        AddToMemory(die1, die2, mem);
-    
-        SwapPosition(die1, die2, 4);
-        AddToMemory(die1, die2, mem);
-    
-        SwapPosition(die1, die2, 3);
-        SwapPosition(die1, die2, 4);
-        SwapPosition(die1, die2, 0);
-        AddToMemory(die1, die2, mem);
+function FindCombination(found, num1, num2){
+    let cubes = ["01", "04", "09", "16", "25", "36", "49", "64", "81"];
+    let comp1 = num1 + num2;
+    let comp2 = num2 + num1;
+
+    if (comp1 in cubes){
+        found[cubes.indexOf(comp1)] = true;
+    }
+    if (comp2 in cubes){
+        found[cubes.indexOf(comp2)] = true;
+    }
+
+    if (num1 == "6"){
+        comp1 = "9" + num2;
+        comp2 = num2 + "9";
+
+        if (comp1 in cubes){
+            found[cubes.indexOf(comp1)] = true;
+        }
+        if (comp2 in cubes){
+            found[cubes.indexOf(comp2)] = true;
+        }
+    }
+
+    if (num1 == "9"){
+        comp1 = "6" + num2;
+        comp2 = num2 + "6";
+
+        if (comp1 in cubes){
+            found[cubes.indexOf(comp1)] = true;
+        }
+        if (comp2 in cubes){
+            found[cubes.indexOf(comp2)] = true;
+        }
+    }
+
+    if (num2 == "6"){
+        comp1 = "9" + num1;
+        comp2 = num1 + "9";
+
+        if (comp1 in cubes){
+            found[cubes.indexOf(comp1)] = true;
+        }
+        if (comp2 in cubes){
+            found[cubes.indexOf(comp2)] = true;
+        }
+    }
+
+    if (num2 == "9"){
+        comp1 = "6" + num1;
+        comp2 = num1 + "6";
+
+        if (comp1 in cubes){
+            found[cubes.indexOf(comp1)] = true;
+        }
+        if (comp2 in cubes){
+            found[cubes.indexOf(comp2)] = true;
+        }
     }
 }
 
-function SwapPosition(die1, die2, position)
-{
-    if (position == 0)
-    {
-        if (die1[0] == die2[0])
-        {
-            if (die1[0] == '6')
-            {
-                die1[0] = '9';
-            }
-            else
-            {
-                die1[0] = '6';
-            }
-        }
-        else
-        {
-            if (die1[0] == '6')
-            {
-                die2[0] = '6';
-            }
-            else
-            {
-                die2[0] = '9';
+function LexicographicCombination(){
+    let dices = [];
+    for (let f_6 = 5; f_6 < 10; f_6++){
+        for (let f_5 = 4; f_5 < f_6; f_5++){
+            for (let f_4 = 3; f_4 < f_5; f_4++){
+                for (let f_3 = 2; f_3 < f_4; f_3++){
+                    for (let f_2 = 1; f_2 < f_3; f_2++){
+                        for (let f_1 = 0; f_1 < f_2; f_1++){
+                            dices.push([f_1, f_2, f_3, f_4, f_5, f_6]);
+                        }
+                    }
+                }
             }
         }
-    }
-    else
-    {
-        let temp = die1[position];
-        die1[position] = die2[position];
-        die2[position] = temp;
     }
 
+    return dices;
 }
-
-function AddToMemory(die1, die2, mem)
-{
-    if(die1.unique() && die2.unique()){
-        let extended_set1 = [...die1].sort();
-        let extended_set2 = [...die2].sort();
-        let key1 = extended_set1.reduce((a,b) => {return a + b;}) + extended_set2.reduce((a,b) => {return a + b;});
-    
-        if(mem.includes(key1)){
-    
-        }
-        else{
-                mem.push(key1);
-    
-        }
-    }
-
-}
-
-Array.prototype.unique = function() {
-    let copy = [...this];
-    copy = copy.sort();
-    for(let i=1; i<copy.length; ++i) {
-        if (copy[i-1] == copy[i]){
-            return false;
-        }
-    }
-
-    return true;
-};
