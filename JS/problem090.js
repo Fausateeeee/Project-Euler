@@ -73,7 +73,6 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
     let dices = LexicographicCombination();
-    console.log(dices);
     console.log("There are", FindValidDiceSolution(),
     "distinct arrangements of the two cubes that allow for all of the square numbers to be displayed.");
     rl.close();
@@ -84,7 +83,7 @@ function FindValidDiceSolution(){
     let total = 0;
 
     for (let dice1 = 0; dice1 < combination.length - 1; dice1++){
-        for (let dice2 = 1; dice2 < combination.length; dice2++){
+        for (let dice2 = dice1 + 1; dice2 < combination.length; dice2++){
             let found = [false, false, false, false, false, false, false, false, false];
             for (let n of combination[dice1]){
                 let num1 = n.toString();
@@ -93,9 +92,12 @@ function FindValidDiceSolution(){
                     FindCombination(found, num1, num2);         
                 }
             }
-            if (!(false in found)){
+            if (!(found.includes(false))){
                 total++;
             }
+            // else{
+            //     console.log(found);
+            // }
         }
     }
     return total;
@@ -105,11 +107,11 @@ function FindCombination(found, num1, num2){
     let cubes = ["01", "04", "09", "16", "25", "36", "49", "64", "81"];
     let comp1 = num1 + num2;
     let comp2 = num2 + num1;
-
-    if (comp1 in cubes){
+    
+    if (cubes.includes(comp1)){
         found[cubes.indexOf(comp1)] = true;
     }
-    if (comp2 in cubes){
+    if (cubes.includes(comp2)){
         found[cubes.indexOf(comp2)] = true;
     }
 
@@ -117,10 +119,10 @@ function FindCombination(found, num1, num2){
         comp1 = "9" + num2;
         comp2 = num2 + "9";
 
-        if (comp1 in cubes){
+        if (cubes.includes(comp1)){
             found[cubes.indexOf(comp1)] = true;
         }
-        if (comp2 in cubes){
+        if (cubes.includes(comp2)){
             found[cubes.indexOf(comp2)] = true;
         }
     }
@@ -129,10 +131,10 @@ function FindCombination(found, num1, num2){
         comp1 = "6" + num2;
         comp2 = num2 + "6";
 
-        if (comp1 in cubes){
+        if (cubes.includes(comp1)){
             found[cubes.indexOf(comp1)] = true;
         }
-        if (comp2 in cubes){
+        if (cubes.includes(comp2)){
             found[cubes.indexOf(comp2)] = true;
         }
     }
@@ -141,10 +143,10 @@ function FindCombination(found, num1, num2){
         comp1 = "9" + num1;
         comp2 = num1 + "9";
 
-        if (comp1 in cubes){
+        if (cubes.includes(comp1)){
             found[cubes.indexOf(comp1)] = true;
         }
-        if (comp2 in cubes){
+        if (cubes.includes(comp2)){
             found[cubes.indexOf(comp2)] = true;
         }
     }
@@ -153,10 +155,10 @@ function FindCombination(found, num1, num2){
         comp1 = "6" + num1;
         comp2 = num1 + "6";
 
-        if (comp1 in cubes){
+        if (cubes.includes(comp1)){
             found[cubes.indexOf(comp1)] = true;
         }
-        if (comp2 in cubes){
+        if (cubes.includes(comp2)){
             found[cubes.indexOf(comp2)] = true;
         }
     }
