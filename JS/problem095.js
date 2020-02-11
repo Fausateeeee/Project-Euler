@@ -36,13 +36,10 @@ rl.question('Press enter to continue : ', (answer) => {
 function p95(upperbound){
     let dict = {};
     for (let i = 1; i <= upperbound; i++){
-        if (i%1000 ==0){
-            console.log(i);
-        }
+
         dict[i] = {'next':FindProperDivisorSum(i), chain:false};
     }
-    //console.log(dict);
-    return FindChainLength(dict);
+    return FindChainLength(dict, upperbound);
 }
 function FindProperDivisorSum(nbr){
     let sum = 1;
@@ -58,34 +55,32 @@ function FindProperDivisorSum(nbr){
     }
     return sum;
 }
-function FindChainLength(dict){
+function FindChainLength(dict, upperbound){
     let max = 0;
     let nbr = 0;
     for(let start of Object.keys(dict)){
-        //console.log(start);
         chain_flag = false;
-        if(start%10000 == 0){
-            console.log(start);
-        }
-       let next = dict[start].next;
 
-       let chain = 1;
-       while(next != 1){
-        console.log(start,next);
-            if(next > 1000000){
+        let next = dict[start].next;
+        let numberInChain = [];
+        let chain = 1;
+        if(next > upperbound || next == start){
+            next = 1;
+        }
+        while(next != 1){
+            numberInChain.push(next);
+            next = dict[next].next;
+
+            chain++;
+            if (next > upperbound){
                 next = 1;
             }
-            else{
-                next = dict[next].next;
-                chain++;
-
-                if(next == start){
-                    next = 1;
-                    chain_flag = true;
-                }
-                else if (next > 1000000 || next == dict[next].next || dict[next].chain){
-                    next = 1;
-                }
+            else if(next == start){
+                next = 1;
+                chain_flag = true;
+            }
+            else if (numberInChain.includes(next) || dict[next].chain){
+                next = 1;
             }
 
        }
@@ -98,5 +93,6 @@ function FindChainLength(dict){
        }
 
     }
+    console.log(dict[nbr]);
     return nbr;
 }
