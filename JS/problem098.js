@@ -35,11 +35,11 @@ function p98(){
     let wordDict = ReadFile();
     let anagramDict = GetAnagramPair(wordDict);
     let squares = GenerateSquares(anagramDict);
-    return squares;
+    return 0;
 }
 
 function ReadFile(){
-    let allText = fs.readFileSync("..\\Additional-Files\\p098_words.txt", 'utf8');
+    let allText = fs.readFileSync("../Additional-Files/p098_words.txt", 'utf8');
 
     let allWords = allText.split(",");
 
@@ -70,13 +70,19 @@ function GetAnagramPair(wordDict){
 }
 
 function GenerateSquares(anagramDict){
-    let max = 0;
+    let SquareAnagrams = [];
     for (let key of Object.keys(anagramDict)){
-        if (key.length > max){
-            max = key.length;
+        //console.log(anagramDict[key]);
+        for (let i = 0; i < anagramDict[key].length - 1; ++i){
+            for (let j = i+1; j < anagramDict[key].length; ++j){
+                //console.log(anagramDict[key][i], anagramDict[key][j]);
+                if(new SquareAnagram(anagramDict[key][i], anagramDict[key][j]).isSquareAnagram()){
+
+                }
+            }
         }
+
     }
-    return new Squares(max);
 }
 class Word{
     constructor(word){
@@ -86,23 +92,18 @@ class Word{
     }
 }
 
-class Squares{
-    constructor(length){
-        let current = 1;
-        this.squares = {};
-        for(let i = 1; i <= length; ++i){
-            this.squares[i] = [];
-        }
-        let i = 1;
-        let currentLength = 1;
-        while (currentLength <= length){
-            this.squares[currentLength].push(current); 
-            current = Math.pow(++i,2);
-            currentLength = current.toString().length;
-        }
+class SquareAnagram{
+    constructor(firstword, secondword){
+        this.w1 = firstword;
+        this.w2 = secondword;
+    }
 
+    isSquareAnagram() {
+        return false;
+        
     }
 }
+
 Array.prototype.unique = function() {
     var a = this.concat();
     for(var i=0; i<a.length; ++i) {
