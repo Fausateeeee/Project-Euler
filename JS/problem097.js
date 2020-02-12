@@ -26,31 +26,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The last ten digits of 28433×2^7830457 + 1 are", 
-    p97(7830457));
+    console.log("The last ten digits of 28433×2^7830457 + 1 are", (BigInt(28433)*(BigInt(2)**BigInt(7830457)) + BigInt(1))%BigInt(10000000000));
     rl.close();
 });
-
-function p97(power){
-    let binary = WritePowerAsBinary(power);
-    return FindLastDigit(binary);
-}
-
-function WritePowerAsBinary(power){
-    let powers = [];
-    while(power > 0){
-        log = Math.floor(Math.log2(power));
-        powers.push(log);
-        power -= Math.pow(2,log);
-    }
-    return powers;
-}
-
-function FindLastDigit(powers){
-    let remainder = 0; 
-    for(let power of powers){
-        remainder = (remainder + Math.pow(2, power))%10;
-    }
-    return ((remainder*28433 + 1)%10);
-}
 
