@@ -93,7 +93,7 @@ class Sudoku {
         this.length = 9;
         this.rows = rows;
 
-        this._generateVertices(tree.length);
+        this._generateVertices();
         this._generateEdges(tree, tree.length);
     }
 
@@ -120,96 +120,34 @@ class Sudoku {
         }
     }
 
-    dijkstraAlgorithm(startingNode)
-    {
-        let visited = {};
-        for (let key of this.adjacencyList.keys())
-        {
-            visited[key] = {dist: 99999999999, path:undefined};
-        }
-        visited[startingNode].dist = 0;
-
-        let queue = new Queue();
-
-        queue.enqueue(startingNode);
-
-        while (!queue.isEmpty())
-        {
-            let currentVertex = queue.dequeue();
-
-            let neighbours = this.adjacencyList.get(currentVertex);
-    
-            for (let neighbour in neighbours)
-            {
-                let elem = neighbours[neighbour];
-                if (visited[currentVertex].dist + elem.weigh < visited[elem.vertex].dist)
-                {
-                    visited[elem.vertex].dist = visited[currentVertex].dist + elem.weigh;
-                    visited[elem.vertex].path = currentVertex;
-                    if (queue.contains(elem.vertex))
-                    {
-                        queue.enqueue(elem.vertex);
-                    }
-                }
-            }
-
-        }
-
-        //console.log(visited);
-        let path = this._computePath(visited);
-        let length = visited.FINAL.dist;
-
-        return {path, length};
-    }
-
     _generateVertices(length)
     {
-        for (let i = 0; i < length; i++)
+        for (let i = 0; i < 9; i++)
         {
-            for (let j = 0; j < length; j++)
+            for (let j = 0; j < 9; j++)
             {
                 this.newVertex(i.toString() + "," + j.toString());
             }
         }
-
-        this.newVertex("FINAL");
     }
 
-    _generateEdges(tree, length)
+    _generateEdges()
     {
-        for (let i = 0; i < length - 1; i++)
+        //Create the row cycle and column
+        for (let i = 0; i < 9; i++)
         {
-            for (let j = 0; j < length - 1; j++)
+            for (let j = 0; j < 9; j++)
             {
-                this.newEdge(i.toString() + "," + j.toString(), (i).toString() + "," + (j+1).toString(), tree[i][j]);
-                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j).toString(), tree[i][j]);
+                this.newEdge(i.toString() + "," + j.toString(), (i).toString() + "," + ((j+1)%9).toString());
+                this.newEdge(i.toString() + "," + j.toString(), ((i + 1)%9).toString() + "," + (j).toString());
             }
         }
 
-        for (let j = 0; j < length - 1; j++)
-        {
-            this.newEdge((length - 1).toString() + "," + j.toString(), (length - 1).toString() + "," + (j+1).toString(), tree[length - 1][j]);
-            this.newEdge(j.toString() + "," + (length - 1).toString(), (j+1).toString() + "," + (length - 1).toString(), tree[j][(length - 1)]);
+        for (let i = 0; i < 9; i+=3){
+            for (let j = 0; j < 9; j+=3){
+                this.newEdge(i.toString() + "," + j.toString(), (i+1).toString() + "," + ((j+1)%9).toString());
+            }
         }
-
-        this.newEdge((length - 1).toString() + "," + (length - 1).toString(), "FINAL", tree[length - 1][length - 1]);
-
-
-    }
-
-    _computePath(results)
-    {
-        let endingNode = "FINAL";
-        let path = [];
-
-        while (endingNode != "0,0")
-        {
-            console.log(results[endingNode]);
-            endingNode = results[endingNode].path;
-            path.unshift(endingNode);
-        }
-
-        return path;
     }
 }
 

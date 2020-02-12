@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 7 */
 /*
 
     Comparing two numbers written in index form like 2^11 and 3^7 is not difficult, 

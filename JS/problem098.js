@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 7 */
 /*
 
     By replacing each of the letters in the word CARE with 1, 2, 9, and 6 respectively, 
@@ -72,10 +72,8 @@ function GetAnagramPair(wordDict){
 function GenerateSquares(anagramDict){
     let SquareAnagrams = [];
     for (let key of Object.keys(anagramDict)){
-        //console.log(anagramDict[key]);
         for (let i = 0; i < anagramDict[key].length - 1; ++i){
             for (let j = i+1; j < anagramDict[key].length; ++j){
-                //console.log(anagramDict[key][i], anagramDict[key][j]);
                 if(new SquareAnagram(anagramDict[key][i], anagramDict[key][j]).isSquareAnagram()){
 
                 }
@@ -91,7 +89,32 @@ class Word{
         this.anagram = this.word.split("").sort().reduce((a,b) => {return a + b;});
     }
 }
+class Square{
+    constructor(length){
+        this.squares = [1];
+        this.length = length;
+        let i = 2;
+        while (this.squares[this.squares.length - 1].toString().length <= length){
+            this.squares.push(i**2);
+            ++i;
+        }
+    }
+}
 
+class CombinationPermutation{
+    constructor(){
+        this.numbers = [0,1,2,3,4,5,6,7,8,9];
+
+    }
+
+    GetCombination(length){
+
+    }
+
+    GetPermutation(Combination){
+        
+    }
+}
 class SquareAnagram{
     constructor(firstword, secondword){
         this.w1 = firstword;

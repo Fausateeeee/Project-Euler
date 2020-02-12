@@ -38,25 +38,32 @@ rl.question('Press enter to continue : ', (answer) => {
 });
 
 function p100(lowerbound){
-    let i = lowerbound;
-    root(i);
-    // while(!root(i)){
-    //     i++;
-    // }
+    let i = lowerbound + 1;
+    while(!root(i)){
+        i++;
+        if(i%1000 == 0){
+            console.log(i);
+        }
+    }
 
-    return i;
+    return HeronsMethod(i);
 }
-
+function HeronsMethod(potentialsquare){
+    let x_0 = potentialsquare/BigInt(2);
+    let x_1 = (x_0 + potentialsquare/x_0)/BigInt(2);
+    let potentialroot = [x_0];
+    while(!potentialroot.includes(x_1)){
+        // console.log(potentialsquare, x_0, x_1, potentialroot);
+        x_0 = x_1;
+        x_1  = (x_0 + potentialsquare/x_0)/BigInt(2);
+        potentialroot.push(x_0);
+    }
+    if (x_1**BigInt(2) == potentialsquare){
+        return x_1;
+    }
+    return false;
+}
 function root(nbr){    
     let p = (BigInt(nbr) * BigInt(nbr - 1) * BigInt(2)) + BigInt(1);
-    let p_root = BigInt(Math.floor(Math.sqrt(2-0.000000000001)*nbr));
-    console.log(p, p_root, p - p_root**BigInt(2));
-    // while(p - BigInt(p_root)**BigInt(2) > 0){
-    //     p_root = p_root + BigInt(1);
-    // }
-    // if (p - p_root == 0){
-    //     console.log((BigInt(1) + p_root)/BigInt(2));
-    //     return true;
-    // }
-    return false;
+    return HeronsMethod(p);
 }
