@@ -85,84 +85,177 @@ function SudokuReader(){
     return sudoku;
 }
 
-class Sudoku{
-    constructor(){
-     this.rows = {};
-     this.columns = {};
-     this.squares = {};
+class Sudoku {
 
-     this.rows_unknown = [0,0,0,0,0,0,0,0,0];
-     this.columns_unknown = [0,0,0,0,0,0,0,0,0];
-     this.squares_unknown = [0,0,0,0,0,0,0,0,0];
+    constructor(rows) {
+        this.size = 81; //Number of point in the grid equals (dimension + 1)^2
+        this.adjacencyList = new Map();
+        this.length = 9;
+        this.rows = rows;
 
-     for(let i = 1; i < 10; ++i){
-         this.rows[i] = [0,0,0,0,0,0,0,0,0];
-         this.columns[i] = [0,0,0,0,0,0,0,0,0];
-         this.squares[i] = [0,0,0,0,0,0,0,0,0];
-     } 
+        this._generateVertices(tree.length);
+        this._generateEdges(tree, tree.length);
     }
-    addRow(row, index){
-        for(let i = 0; i < 9; ++i){
-            this.rows[index][i] = row[i];
+
+    newVertex(vertex) {
+        this.adjacencyList.set(vertex, []);
+    }
+
+    newEdge(firstVertex, secondVertex, _weigh) {
+        this.adjacencyList.get(firstVertex).push({vertex:secondVertex, weigh:_weigh});
+    }
+
+    printGraph() {
+        let keys = this.adjacencyList.keys();
+
+        for (let key of keys) {
+            let values = this.adjacencyList.get(key);
+            let output = "";
+
+            for (let value of values) {
+                output += value.vertex + " Weigh:" + value.weigh + " .. ";
+            }
+
+            console.log(key + " --> " + output);
         }
     }
 
-    update(){
-        for(let x = 1; x < 10; ++x){
-            for (let y = 1; y < 10; ++y){
-                this.columns[y][x - 1] = this.rows[x][y-1];
-                if (x < 4){
-                    if (y < 4){
-                        this.squares[1][3*(x-1) + y - 1] = this.rows[x][y-1];
-                    }
-                    else if (y < 7){
-                        this.squares[2][3*(x-1) + y - 4] = this.rows[x][y-1];
-                    }
-                    else{
-                        this.squares[3][3*(x-1) + y - 7] = this.rows[x][y-1];
-                    }
-                }
-                else if (x < 7){
-                    if (y < 4){
-                        this.squares[4][3*(x-4) + y - 1] = this.rows[x][y-1];
-                    }
-                    else if (y < 7){
-                        this.squares[5][3*(x-4) + y - 4] = this.rows[x][y-1];
-                    }
-                    else{
-                        this.squares[6][3*(x-4) + y - 7] = this.rows[x][y-1];
-                    }
-                }
-                else{
-                    if (y < 4){
-                        this.squares[7][3*(x-7) + y - 1] = this.rows[x][y-1];
-                    }
-                    else if (y < 7){
-                        this.squares[8][3*(x-7) + y - 4] = this.rows[x][y-1];
-                    }
-                    else{
-                        this.squares[9][3*(x-7) + y - 7] = this.rows[x][y-1];
+    dijkstraAlgorithm(startingNode)
+    {
+        let visited = {};
+        for (let key of this.adjacencyList.keys())
+        {
+            visited[key] = {dist: 99999999999, path:undefined};
+        }
+        visited[startingNode].dist = 0;
+
+        let queue = new Queue();
+
+        queue.enqueue(startingNode);
+
+        while (!queue.isEmpty())
+        {
+            let currentVertex = queue.dequeue();
+
+            let neighbours = this.adjacencyList.get(currentVertex);
+    
+            for (let neighbour in neighbours)
+            {
+                let elem = neighbours[neighbour];
+                if (visited[currentVertex].dist + elem.weigh < visited[elem.vertex].dist)
+                {
+                    visited[elem.vertex].dist = visited[currentVertex].dist + elem.weigh;
+                    visited[elem.vertex].path = currentVertex;
+                    if (queue.contains(elem.vertex))
+                    {
+                        queue.enqueue(elem.vertex);
                     }
                 }
             }
+
         }
+
+        //console.log(visited);
+        let path = this._computePath(visited);
+        let length = visited.FINAL.dist;
+
+        return {path, length};
     }
-    update_unknown(){
-        for(let i = 1; i < 10; i++){
-            this.rows_unknown[i-1] = this.rows[i].NumberOfZeros()
-            this.columns_unknown[i-1] = this.columns[i].NumberOfZeros()
-            this.squares_unknown[i-1] = this.squares[i].NumberOfZeros()
+
+    _generateVertices(length)
+    {
+        for (let i = 0; i < length; i++)
+        {
+            for (let j = 0; j < length; j++)
+            {
+                this.newVertex(i.toString() + "," + j.toString());
+            }
         }
+
+        this.newVertex("FINAL");
+    }
+
+    _generateEdges(tree, length)
+    {
+        for (let i = 0; i < length - 1; i++)
+        {
+            for (let j = 0; j < length - 1; j++)
+            {
+                this.newEdge(i.toString() + "," + j.toString(), (i).toString() + "," + (j+1).toString(), tree[i][j]);
+                this.newEdge(i.toString() + "," + j.toString(), (i + 1).toString() + "," + (j).toString(), tree[i][j]);
+            }
+        }
+
+        for (let j = 0; j < length - 1; j++)
+        {
+            this.newEdge((length - 1).toString() + "," + j.toString(), (length - 1).toString() + "," + (j+1).toString(), tree[length - 1][j]);
+            this.newEdge(j.toString() + "," + (length - 1).toString(), (j+1).toString() + "," + (length - 1).toString(), tree[j][(length - 1)]);
+        }
+
+        this.newEdge((length - 1).toString() + "," + (length - 1).toString(), "FINAL", tree[length - 1][length - 1]);
+
+
+    }
+
+    _computePath(results)
+    {
+        let endingNode = "FINAL";
+        let path = [];
+
+        while (endingNode != "0,0")
+        {
+            console.log(results[endingNode]);
+            endingNode = results[endingNode].path;
+            path.unshift(endingNode);
+        }
+
+        return path;
     }
 }
 
-Array.prototype.NumberOfZeros = function() {
-    let zeros = 0;
-    for(let i=0; i<this.length; ++i) {
-        if (this[i] == 0){
-            zeros++;
-        }
+class Queue
+{
+    constructor()
+    {
+        this.collection = [];
     }
 
-    return zeros;
-};
+    print()
+    {
+        console.log(this.collection);
+    }
+
+    enqueue(item)
+    {
+        this.collection.push(item);
+    }
+
+    dequeue()
+    {
+        return this.collection.pop();
+    }
+
+    front()
+    {
+        return this.collection[0];
+    }
+
+    size()
+    {
+        return this.collection.length;
+    }
+
+    isEmpty()
+    {
+        if  (this.collection.length > 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    contains(item)
+    {
+        return (this.collection.indexOf(item) == -1);
+    }
+}
