@@ -39,16 +39,80 @@
 
 */
 
+/*
+    The first 10 terms are
+    1, 
+    683, 
+    44 287,
+    838 861,
+    8 138 021,
+    51 828 151,
+    247 165 843,
+    954 437 177,
+    3 138 105 961,
+    9 090 909 091
+*/
+
 const readline = require('readline');
-const fs = require('fs');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
 rl.question('Press enter to continue : ', (answer) => {
-
-    console.log("The sum of FITs for the BOPs is", "ANSWER");
+    let FITS = p101();
+    console.log("The sum of FITs for the BOPs is", FITS.reduce((a,b)=>{return a+b;}) , "should be 74", FITS, "should be", [1, 15, 58]);
     rl.close();
 });
 
+function p101(){
+    let points = [];
+    let FITS = [];
+    for (let i = 1; i <= 3; ++i){
+        points.push(cube_test(i));
+        //console.log(NewtonInterpolation(points));
+        FITS.push(NewtonInterpolation(points));
+    }
+
+    return FITS;
+}
+
+function NewtonInterpolation(points){
+    let n_j = [];
+    let a_j = [];
+    let FIT = 0;
+    let x = points.length + 1;
+    for (let i = 0; i < x - 1; i++){
+        a_j[i] = DividedDifference(points, i);
+        n_j[i] = 1;
+        for (let j = 0; j < i; ++j){
+            n_j[i] *= x - j + 1; 
+        }
+        FIT += a_j[i]*n_j[i];
+    }
+
+    return FIT;
+}
+function DividedDifference(points, i){
+    return _DividedDifference(points, 0, i+1);
+}
+
+function _DividedDifference(points, startingIndex, length){
+    if (length == 1){
+        return points[startingIndex];
+    }
+    else if (length == 2){
+        return (points[startingIndex + 1] - points[startingIndex]);
+    }
+    else{
+        return (_DividedDifference(points, startingIndex + 1, length - 1) - 
+            _DividedDifference(points, startingIndex, length - 1))/(length - 1);
+    }
+}
+function u_n(n){
+    return 1 - n + n**2 - n**3 + n**4 - n**5 + n**6 - n**7 + n**8 - n**9 + n**10;
+}
+
+function cube_test(n){
+    return n**3;
+}
