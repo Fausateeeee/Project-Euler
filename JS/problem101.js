@@ -61,16 +61,15 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
     let FITS = p101();
-    console.log("The sum of FITs for the BOPs is", FITS.reduce((a,b)=>{return a+b;}) , "should be 74", FITS, "should be", [1, 15, 58]);
+    console.log("The sum of FITs for the BOPs is", FITS.reduce((a,b)=>{return a+b;}));
     rl.close();
 });
 
 function p101(){
     let points = [];
     let FITS = [];
-    for (let i = 1; i <= 3; ++i){
-        points.push(cube_test(i));
-        //console.log(NewtonInterpolation(points));
+    for (let i = 1; i <= 10; ++i){
+        points.push(u_n(i));
         FITS.push(NewtonInterpolation(points));
     }
 
@@ -85,12 +84,11 @@ function NewtonInterpolation(points){
     for (let i = 0; i < x - 1; i++){
         a_j[i] = DividedDifference(points, i);
         n_j[i] = 1;
-        for (let j = 0; j < i; ++j){
-            n_j[i] *= x - j + 1; 
+        for (let j = 1; j <= i; j++){
+            n_j[i] *= x - j;
         }
         FIT += a_j[i]*n_j[i];
     }
-
     return FIT;
 }
 function DividedDifference(points, i){
@@ -111,8 +109,4 @@ function _DividedDifference(points, startingIndex, length){
 }
 function u_n(n){
     return 1 - n + n**2 - n**3 + n**4 - n**5 + n**6 - n**7 + n**8 - n**9 + n**10;
-}
-
-function cube_test(n){
-    return n**3;
 }
