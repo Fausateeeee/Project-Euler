@@ -43,3 +43,18 @@ rl.question('Press enter to continue : ', (answer) => {
     rl.close();
 });
 
+function p103(){
+
+}
+
+function NextSpecialSumSet(previousSet){
+    let potentialSpecialSumSet = [...previousSet];
+    for(let i = 1; i <= potentialSpecialSumSet.length; i++){
+
+    }
+}
+
+//Compute each partition
+function IsSpecialSumSet(set){
+
+}
