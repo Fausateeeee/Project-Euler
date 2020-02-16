@@ -30,17 +30,21 @@ function p104(){
     while(fib[2] < 2749){
         Fibonacci(fib);
     }
+    let firstAndLast = false;
     do{
         Fibonacci(fib);
         let F = fib[1];
         F_last = (F%BigInt(1000000000)).toString();
-        F_first = F.toString().substring(0, 9);
+        if (IsPandigital(F_last)){
+            F_first = F.toString().substring(0, 9);
+            firstAndLast = IsPandigital(F_first);
+        }
         if(fib[2]%10000 == 0){
             console.log(fib[2]);
         }
     }
-    while(!(IsPandigital(F_first) && IsPandigital(F_last)));
-    return fib.length;
+    while(!firstAndLast);
+    return fib[2];
 }
 
 function IsPandigital(str){
