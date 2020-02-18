@@ -59,7 +59,7 @@ const rl = readline.createInterface({
 
 rl.question('Press enter to continue : ', (answer) => {
 
-    console.log("The sum of all the minimal product-sum numbers for 2 ≤ k ≤ 12000 is", 
+    console.log("The sum of the first three digit numbers in each fifty sudoku is", 
     SudokuReader());
     rl.close();
 });
@@ -69,88 +69,140 @@ function SudokuReader(){
 
     let allRows = allSudokus.split("\n");
     let sudokus = [];
-    let sudoku;
-    for (let row = 0; row < allRows.length; ++row){
-        if (row%10 == 0){
-            sudoku = new Sudoku();
-            sudokus.push(sudoku);
-        }else{
-            sudoku.addRow(allRows[row], row%10);
+    for (let row = 0; row < allRows.length; row += 10){
+        let sudoku_rows = [];
+        for (let i = 1; i <= 9; i++){
+            sudoku_rows[i - 1] = allRows[row + i];
         }
+            sudokus.push(new Sudoku(sudoku_rows));
     }
-    for(let s of sudokus){
-        s.update();
-        s.update_unknown();
-    }
-    return sudoku;
+    sudokus[0].printSudoku();
+    console.log(sudokus[0].adjacencyList);
+    return 0;
 }
 
 class Sudoku {
 
     constructor(rows) {
-        this.size = 81; //Number of point in the grid equals (dimension + 1)^2
         this.adjacencyList = new Map();
-        this.length = 9;
-        this.rows = rows;
 
-        this._generateVertices();
-        this._generateEdges(tree, tree.length);
+        this._generateVertices(rows);
+        this._generateEdges();
+        this.coloringAlgorithm();
     }
 
-    newVertex(vertex) {
-        this.adjacencyList.set(vertex, []);
+    newVertex(x,y,color) {
+            this.adjacencyList.set(new Vertex(x,y,color), []);
     }
 
-    newEdge(firstVertex, secondVertex, _weigh) {
-        this.adjacencyList.get(firstVertex).push({vertex:secondVertex, weigh:_weigh});
+    newEdge(firstVertex, secondVertex) {
+        this.adjacencyList.get(firstVertex).push(secondVertex);
     }
 
-    printGraph() {
-        let keys = this.adjacencyList.keys();
-
-        for (let key of keys) {
-            let values = this.adjacencyList.get(key);
-            let output = "";
-
-            for (let value of values) {
-                output += value.vertex + " Weigh:" + value.weigh + " .. ";
+    printSudoku() {
+        let vertices = this.adjacencyList.keys();
+        let output = [[],[],[],[],[],[],[],[],[]];
+        for (let vertex of vertices) {
+            output[vertex.X][vertex.Y] = vertex.color;
+        }
+        let i = 0;
+        for (let row of output){
+            if(i++%3 == 0){
+                console.log("\n");
             }
-
-            console.log(key + " --> " + output);
+            console.log(row[0], row[1], row[2], " ", row[3], row[4], row[5], " ", row[6], row[7], row[8]);
         }
     }
 
-    _generateVertices(length)
+    coloringAlgorithm(){
+
+    }
+
+    SameGrid(vertex1, vertex2){
+        if (vertex1.X < 3 && vertex2.X < 3){
+            if(vertex1.Y < 3 && vertex2.Y < 3){
+                return true;
+            }
+            else if (vertex1.Y >= 3 && vertex1.Y < 6 && vertex2.Y >= 3 && vertex2 < Y){
+                return true;
+            }
+    
+            else if (vertex1.Y >= 6 && vertex2.Ys >= 6){
+                return true;
+            }
+        }
+
+        else if (vertex1.X >= 3 && vertex1.X < 6 && vertex2.X >= 3 && vertex2 < 6){
+            if(vertex1.Y < 3 && vertex2.Y < 3){
+                return true;
+            }
+            else if (vertex1.Y >= 3 && vertex1.Y < 6 && vertex2.Y >= 3 && vertex2 < Y){
+                return true;
+            }
+    
+            else if (vertex1.Y >= 6 && vertex2.Ys >= 6){
+                return true;
+            }
+        }
+
+        else if (vertex1.X >= 6 && vertex2.X >= 6){
+            if(vertex1.Y < 3 && vertex2.Y < 3){
+                return true;
+            }
+            else if (vertex1.Y >= 3 && vertex1.Y < 6 && vertex2.Y >= 3 && vertex2 < Y){
+                return true;
+            }
+    
+            else if (vertex1.Y >= 6 && vertex2.Ys >= 6){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    _generateVertices(rows)
     {
         for (let i = 0; i < 9; i++)
         {
             for (let j = 0; j < 9; j++)
             {
-                this.newVertex(i.toString() + "," + j.toString());
+                this.newVertex(i,j, Number.parseInt(rows[i][j]));
             }
         }
     }
 
     _generateEdges()
     {
-        //Create the row cycle and column
-        for (let i = 0; i < 9; i++)
-        {
-            for (let j = 0; j < 9; j++)
-            {
-                this.newEdge(i.toString() + "," + j.toString(), (i).toString() + "," + ((j+1)%9).toString());
-                this.newEdge(i.toString() + "," + j.toString(), ((i + 1)%9).toString() + "," + (j).toString());
-            }
-        }
-
-        for (let i = 0; i < 9; i+=3){
-            for (let j = 0; j < 9; j+=3){
-                this.newEdge(i.toString() + "," + j.toString(), (i+1).toString() + "," + ((j+1)%9).toString());
+        let vertices = this.adjacencyList.keys();
+        for(let currentVertex of vertices){
+            for (let adjacentVertex of vertices){
+                if (currentVertex == adjacentVertex){
+                    //do nothing
+                }
+                //same row
+                else if (currentVertex.X == adjacentVertex.X){
+                    this.newEdge(currentVertex,adjacentVertex);
+                }
+                //same column
+                else if (currentVertex.Y == adjacentVertex.Y){
+                    this.newEdge(currentVertex, adjacentVertex);
+                }
+                else if (this.SameGrid(currentVertex, adjacentVertex)){
+                    this.newEdge(currentVertex, adjacentVertex);
+                }
             }
         }
     }
 }
 
+class Vertex{
+    constructor(X, Y, color){
+        this.color = color;
+        this.X = X;
+        this.Y = Y;
+    }
+}
 class Queue
 {
     constructor()
