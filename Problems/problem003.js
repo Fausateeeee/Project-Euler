@@ -1,3 +1,4 @@
+const { performance } = require('perf_hooks')
 /*
 
 The prime factors of 13195 are 5, 7, 13 and 29.
@@ -6,11 +7,11 @@ What is the largest prime factor of the number 600851475143 ?
 
 */
 function p003 (n) {
-  console.time('p003')
+  const t0 = performance.now()
   const answer = LargestPrime(n)
-  const time = console.timeEnd('p003')
+  const t1 = performance.now()
 
-  return { answer: answer, time: time }
+  return { answer: answer, time: t1 - t0 }
 }
 
 function LargestPrime (n) {
