@@ -1,4 +1,3 @@
-/*jshint esversion: 6 */
 /*
 
 The prime factors of 13195 are 5, 7, 13 and 29.
@@ -6,65 +5,48 @@ The prime factors of 13195 are 5, 7, 13 and 29.
 What is the largest prime factor of the number 600851475143 ?
 
 */
-const readline = require('readline');
+function p003 (n) {
+  console.time('p003')
+  const answer = LargestPrime(n)
+  const time = console.timeEnd('p003')
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.question('Enter a natural number ', (answer) => {
-
-    const parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
-    }
-
-    if (parsed < 2) {
-        console.log("Enter a number greater than 1 next time");
-        rl.close();
-    }
-  
-    let Primes = getPrimesArray(parsed/2);
-
-    lpf = -1;
-    for (i = Primes.length - 1; i >=0; i--)
-    {
-        if (parsed % Primes[i] == 0)
-        {
-            lpf = Primes[i];
-            break;
-        }
-    }
-
-    if (lpf == -1)
-    {
-        lpf = parsed;
-    }
-
-    console.log("The largest prime factor of ", parsed, " is :", lpf);
-    rl.close();
-});
-
-function getPrimesArray(number)
-{
-    let primes = [2];
-    for (let i = 3; i <= number; i = i + 2) 
-    {
-        for (let j = 0; j < primes.length; j++)
-        {
-            if (i%primes[j] == 0)
-            {
-                break;
-            }
-            else if (j == primes.length - 1)
-            {
-                primes.push(i);
-            }
-        }
-    }
-
-    return primes;
+  return { answer: answer, time: time }
 }
+
+function LargestPrime (n) {
+  if (n === 1) {
+    return 1
+  }
+  let biggestPrime = 1n
+  let N = BigInt(n)
+  while (N % 2n === 0n) {
+    N /= 2n
+    biggestPrime = 2n
+  }
+  let currentPrime = 3n
+  let maxPrime = BigInt(Math.ceil(Math.sqrt(N.toString())))
+
+  // currentPrime is not always a prime but it will only enter the do condition if it is a prime
+  // Could be a possibility to construct a prime sieve but I don't think it will be usefull for 10 cases at most
+
+  while (N > 1n && currentPrime <= maxPrime) {
+    if (N % currentPrime === 0n) {
+      do {
+        N /= currentPrime
+        biggestPrime = currentPrime
+      } while (N % currentPrime === 0n)
+
+      maxPrime = BigInt(Math.floor(Math.sqrt(N.toString())))
+    }
+
+    currentPrime += 2n
+  }
+
+  if (N === 1n) {
+    return biggestPrime.toString()
+  } else {
+    return N.toString()
+  }
+}
+
+module.exports = p003
