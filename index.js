@@ -4,6 +4,7 @@ const p003 = require('./Problems/problem003')
 const p004 = require('./Problems/problem004')
 const p005 = require('./Problems/problem005')
 const p006 = require('./Problems/problem006')
+const p007 = require('./Problems/problem007')
 
 const a001 = p001(1000)
 console.log('Problem 1', a001)
@@ -22,3 +23,6 @@ console.log('Problem 5', a005)
 
 const a006 = p006(100)
 console.log('Problem 6', a006)
+
+const a007 = p007(10001)
+console.log('Problem 7', a007)

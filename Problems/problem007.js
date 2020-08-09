@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+const { performance } = require('perf_hooks')
 /*
 
 By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
@@ -7,50 +7,50 @@ What is the 10 001st prime number?
 
 */
 
-const readline = require('readline');
+function p007 (n) {
+  const t0 = performance.now()
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+  if (n === 1) {
+    const t1 = performance.now()
 
-rl.question('Enter a natural number ', (answer) => {
+    return { answer: 2, time: t1 - t0 }
+  } else if (n === 2) {
+    const t1 = performance.now()
 
-    const parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
+    return { answer: 3, time: t1 - t0 }
+  } else {
+    let primeTotal = 2
+    var primeCandidate = 1
+    while (primeTotal < n) {
+      primeCandidate += 2
+      primeTotal += IsPrime(primeCandidate)
     }
 
-    if (parsed < 0) {
-        console.log("Enter a positive number next time");
-        rl.close();
-    }
+    const t1 = performance.now()
 
-    let primes = getPrimesArray(parsed);
-
-    console.log("The ", parsed, "-th prime is :", primes[primes.length - 1]);
-    rl.close();
-});
-
-function getPrimesArray(number)
-{
-    let primes = [2];
-    for (let i = 3; primes.length < number; i = i + 2) 
-    {
-        for (let j = 0; j < primes.length; j++)
-        {
-            if (i%primes[j] == 0)
-            {
-                break;
-            }
-            else if (j == primes.length - 1)
-            {
-                primes.push(i);
-            }
-        }
-    }
-
-    return primes;
+    return { answer: primeCandidate, time: t1 - t0 }
+  }
 }
+
+// I do not check every case since I assume the number here is odd
+function IsPrime (n) {
+  if (n % 3 === 0) {
+    return 0
+  } else {
+    const upperbound = Math.floor(Math.sqrt(n))
+    let f = 5
+    while (f <= upperbound) {
+      if (n % f === 0) {
+        return 0
+      }
+      if (n % (f + 2) === 0) {
+        return 0
+      }
+      f += 6
+    }
+  }
+
+  return 1
+}
+
+module.exports = p007
