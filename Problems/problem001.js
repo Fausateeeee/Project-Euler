@@ -27,6 +27,4 @@ function nbrDivisible (upperBound, quotient) {
   return (upperBound - 1n) / BigInt(quotient)
 }
 
-console.log(p001(100))
-
 module.exports = p001
