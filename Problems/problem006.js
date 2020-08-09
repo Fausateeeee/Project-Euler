@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+const { performance } = require('perf_hooks')
 /*
 
 The sum of the squares of the first ten natural numbers is,
@@ -13,32 +13,13 @@ Find the difference between the sum of the squares of the first one hundred natu
 
 */
 
-const readline = require('readline');
+function p006 (n) {
+  const t0 = performance.now()
+  const squaredsum = Math.pow(n * (n + 1) / 2, 2)
+  const sumofsquares = n * (n + 1) * (2 * n + 1) / 6
+  const t1 = performance.now()
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+  return { answer: squaredsum - sumofsquares, time: t1 - t0 }
+}
 
-rl.question('Enter a natural number ', (answer) => {
-
-    const parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
-    }
-
-    if (parsed < 1) {
-        console.log("Enter a number greater than 0 next time");
-        rl.close();
-    }
-
-    let squaredsum = Math.pow(parsed*(parsed + 1)/2,2);
-    let sumofsquares = parsed*(parsed + 1)*(2*parsed + 1)/6;
-
-
-    console.log("The difference between the square of the sum and  the sum of the squares of the first ", parsed, " numbers is :", 
-    squaredsum - sumofsquares);
-    rl.close();
-});
+module.exports = p006
