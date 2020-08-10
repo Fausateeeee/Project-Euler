@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+const { performance } = require('perf_hooks')
 /*
 
 A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
@@ -11,12 +11,11 @@ Find the product abc.
 
 */
 
-
 /*
 
     Using Euclid's formula, we have the fact that for m > n > 0 and m != n, a = m^2 - n^2, b = 2mn and c = m^2 + n^2.
     For any integer m and n respecting that condition, we will get a Pythaforean triple.
-    Using the fact that we know a + b + c = K, we get the expression m(m + n) = K/2 
+    Using the fact that we know a + b + c = K, we get the expression m(m + n) = K/2
     Since m and n are integer, this means that m must divide K/2 and same is true for m + n.
     If we get each divider of K/2, we can try for each K/(2m) - m = n.
     When we find a solution where both m and n are positive integer, we stop.
@@ -25,78 +24,56 @@ Find the product abc.
 
 */
 
-const readline = require('readline');
+function p009 (nbr) {
+  const t0 = performance.now()
+  if (nbr % 2 === 1) {
+    const t1 = performance.now()
+    return { answer: -1, time: t1 - t0 }
+  }
+  const sum = nbr / 2
+  const solution = [0, 0, 0]
+  const upperbound = Math.ceil(Math.sqrt(sum)) - 1
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.question('Enter an even natural number ', (answer) => {
-    
-    const parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
-        
-    }
-
-    if (parsed%2 != 0) {
-        console.log("Please, enter an even natural number next time <3");
-        rl.close();
-    }
-
-    if (parsed < 1) {
-        console.log("Enter a number greater than 0 next time");
-        rl.close();
-    }
-
-    const K = parsed/2;
-    let factor = findFactor(K);
-
-    let m_sol = 0;
-    let n_sol = 0;
-
-    for(let i = 0; i < factor.length; i++)
-    {
-        let m = factor[i];
-        let n = K/m - m;
-
-        if (n > 0 && Number.isInteger(n) && m > n)
-        {
-            m_sol = m;
-            n_sol = n;
-            break;
+  for (let m = 2; m <= upperbound; ++m) {
+    if (sum % m === 0) {
+      let sumM = sum / m
+      while (sumM % 2 === 0) {
+        sumM /= 2
+      }
+      let k = (m % 2 === 1 ? m + 2 : m + 1)
+      while (k < 2 * m && k <= sumM) {
+        if (sumM % k === 0 && gcd(k, m) === 1) {
+          const d = sum / (k * m)
+          const n = k - m
+          const a = d * (m ** 2 - n ** 2)
+          const b = 2 * d * m * n
+          const c = d * (m ** 2 + n ** 2)
+          if (a * b * c > solution[0] * solution[1] * solution[2]) {
+            solution[0] = a
+            solution[1] = b
+            solution[2] = c
+          }
         }
+        k += 2
+      }
     }
-    let a = Math.pow(m_sol,2) - Math.pow(n_sol,2);
-    let b = 2*m_sol*n_sol;
-    let c = Math.pow(m_sol,2) + Math.pow(n_sol,2);
-    let triple = "("+a.toString()+", "+b.toString()+", "+c.toString()+")";
-    if (a == 0 || b == 0 || c == 0)
-    {
-        console.log("No pythagorean triple adding to ", parsed, " were found, sorry :(");
-    }
-    else
-    {
-        console.log("The pythagorean triple", triple, "was found. It multiplies to ", a*b*c);
-    }
-    
-    rl.close();
-});
-
-//We don't want 1 or number in our factor list since it won't work with the other algorith
-function findFactor(number)
-{
-    factor = [];
-    for (let i = 2; i <= number; i++)
-    {
-        if (number%i == 0)
-        {
-            factor.push(i);
-        }
-    }
-
-    return factor;
+  }
+  const t1 = performance.now()
+  return { answer: (solution[0] * solution[1] * solution[2] > 0) ? solution[0] * solution[1] * solution[2] : -1, time: t1 - t0 }
 }
+
+function gcd (number1, number2) {
+  if (number1 < number2) {
+    return gcd(number2, number1)
+  }
+
+  while (number2 > 0) {
+    const rest = number1 % number2
+    number1 = number2
+    number2 = rest
+  }
+
+  return number1
+}
+
+module.exports = p009
