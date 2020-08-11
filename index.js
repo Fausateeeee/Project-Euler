@@ -7,6 +7,7 @@ const p006 = require('./Problems/problem006')
 const p007 = require('./Problems/problem007')
 const { p008, TEST_NUMBER_008 } = require('./Problems/problem008')
 const p009 = require('./Problems/problem009')
+const p010 = require('./Problems/problem010')
 
 const a001 = p001(1000)
 console.log('Problem 1', a001)
@@ -33,4 +34,7 @@ const a008 = p008(13, TEST_NUMBER_008)
 console.log('Problem 8', a008)
 
 const a009 = p009(1000)
-console.log(a009)
+console.log('Problem 9', a009)
+
+const a010 = p010(2000000)
+console.log('Problem 10', a010)
