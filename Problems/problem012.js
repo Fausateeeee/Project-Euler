@@ -28,44 +28,41 @@ What is the value of the first triangle number to have over five hundred divisor
 
 */
 
-/*
-    Optimisation needed, brute force is SLOW
-*/
-
 function p012 (n) {
   const t0 = performance.now()
-  let factors = 0
-  let triangular = 0
-  let natural = 1
   const primes = EratosthenesSieve(10 ** 6)
-
-  while (factors <= n) {
-    triangular += natural++
-    factors = Factorise(triangular, primes)
-  }
-
+  const answer = Factorise(n, primes)
   const t1 = performance.now()
-  return { answer: triangular, time: t1 - t0 }
+  return { answer: answer, time: t1 - t0 }
 }
 
 function Factorise (number, primes) {
-  const factorNumber = []
-  let index = 0
-  if (primes.indexOf(number) > 0) {
-    return 1
-  }
-  for (const prime of primes) {
-    while (number % prime === 0) {
-      number /= prime
-      factorNumber[index] !== undefined ? ++factorNumber[index] : factorNumber[index] = 2
-      if (number % prime !== 0) {
-        ++index
+  let k = 3
+  let divisorCount = 0
+  let primaryDivisorCount = 2
+  while (divisorCount <= number) {
+    let k1 = ++k
+    if (k1 % 2 === 0) {
+      k1 /= 2
+    }
+    let subDivCount = 1
+    for (let i = 0; i < primes[primes.length - 1]; ++i) {
+      if (primes[i] ** 2 > k1) {
+        subDivCount *= 2
+        break
       }
+      let e = 1
+      while (k1 % primes[i] === 0) {
+        ++e
+        k1 /= primes[i]
+      }
+      if (e > 1) subDivCount *= e
+      if (k1 === 1) break
     }
-    if (number === 1) {
-      return Object.values(factorNumber).reduce((acc, val) => { return acc * val }, 1)
-    }
+    divisorCount = primaryDivisorCount * subDivCount
+    primaryDivisorCount = subDivCount
   }
+  return k * (k - 1) / 2
 }
 
 function EratosthenesSieve (upperbound) {

@@ -9,6 +9,7 @@ const { p008, TEST_NUMBER_008 } = require('./Problems/problem008')
 const p009 = require('./Problems/problem009')
 const p010 = require('./Problems/problem010')
 const { p011, TEST_GRID_011 } = require('./Problems/problem011')
+const p012 = require('./Problems/problem012')
 
 const a001 = p001(1000)
 console.log('Problem 1', a001)
@@ -42,3 +43,6 @@ console.log('Problem 10', a010)
 
 const a011 = p011(TEST_GRID_011)
 console.log('Problem 11', a011)
+
+const a012 = p012(1000)
+console.log('Problem 12', a012)
