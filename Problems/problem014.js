@@ -27,6 +27,7 @@ function p014 (n) {
 function Collatz (upperBound) {
   var chain = [0, 1, 2]
   var max = [2, 2]
+  var currentlongest = [0, 1, 2]
   for (let currentValue = 3; currentValue < upperBound; ++currentValue) {
     if (currentValue % 2 === 0) {
       chain[currentValue] = chain[currentValue / 2] + 1
@@ -47,6 +48,7 @@ function Collatz (upperBound) {
       if (chain[currentValue] >= max[1]) {
         max = [currentValue, chain[currentValue]]
       }
+      currentlongest[currentValue] = max[0]
     }
   }
   return max[0]
