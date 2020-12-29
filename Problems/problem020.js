@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+const { performance } = require('perf_hooks')
 /*
 
 n! means n × (n − 1) × ... × 3 × 2 × 1
@@ -11,42 +11,22 @@ Find the sum of the digits in the number 100!
 */
 
 /*
-    Run npm install big-integer 
+    Run npm install big-integer
 */
 
-const bigInt = require("big-integer");
-const readline = require('readline');
+function p020 (n) {
+  const t0 = performance.now()
+  let factorial = BigInt(1)
+  for (let i = 2; i <= n; i++) {
+    factorial *= BigInt(i)
+  }
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+  let answer = 0
+  for (const digit of factorial.toString()) {
+    answer += Number.parseInt(digit)
+  }
+  const t1 = performance.now()
+  return { answer: answer, time: t1 - t0 }
+}
 
-rl.question('Enter a natural number ', (answer) => {
-
-    let parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
-    }
-
-    if (parsed < 0) {
-        console.log("Enter a number greater or equals to 0 next time");
-        rl.close();
-    }
-    let BigArray = [bigInt(1)];
-    for (let i = 2; i <= parsed; i++)
-    {
-        BigArray.push(bigInt(i));
-    }
-    
-    let BigNumber = bigInt(1);
-    for (let i of BigArray)
-    {
-        BigNumber = BigNumber.multiply(i) ;
-    }
-
-    console.log("The sum of the digits for the factorial of", parsed, "is :", BigNumber.toArray(10).value.reduce((a,b) => a+b));
-    rl.close();
-});
+module.exports = p020

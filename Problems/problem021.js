@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+const { performance } = require('perf_hooks')
 /*
 
 Let d(n) be defined as the sum of proper divisors of n (numbers less than n which divide evenly into n).
@@ -10,67 +10,42 @@ Evaluate the sum of all the amicable numbers under 10000.
 
 */
 
-const readline = require('readline');
+function p021 (n) {
+  const t0 = performance.now()
+  const values = {}
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.question('Enter a natural number ', (answer) => {
-
-    let parsed = parseInt(answer);
-
-    if (isNaN(parsed)) {
-        console.log("Please, enter a natural number next time <3");
-        rl.close();
+  for (let i = 2; i <= n; i++) {
+    values[i] = { divisorSum: reduceFactor(i), isAmicable: false }
+    if (i !== values[i].divisorSum && reduceFactor(values[i].divisorSum) === i) {
+      values[i].isAmicable = true
     }
-
-    if (parsed <= 0) {
-        console.log("Enter a number greater to 0 next time");
-        rl.close();
-    }
-
-    let values = {};
-
-    for (let i = 2; i <= parsed; i++)
-    {
-        values[i]= {divisorSum:reduceFactor(i), isAmicable: false};
-        if ( i != values[i].divisorSum &&  reduceFactor(values[i].divisorSum) == i)
-        {
-            values[i].isAmicable = true;
-        }
-    }
-    console.log("The sum of all amicable numbers under", parsed, "is :", findAmicableSum(values));
-    rl.close();
-});
-
-function reduceFactor(number)
-{
-    factor = [1];
-    for (let i = 2; i <= Math.ceil(number/2); i++)
-    {
-        if (number%i == 0)
-        {
-            factor.push(i);
-        }
-    }
-
-    return factor.reduce((a,b) => {return a+b;});
+  }
+  const answer = findAmicableSum(values)
+  const t1 = performance.now()
+  return { answer: answer, time: t1 - t0 }
 }
-function findAmicableSum(values)
-{
-    let amicables = 0;
-    //console.log(values);
-    for(let i in values)
-    {
-        //console.log(i, values[i]);
-        if (values[i].isAmicable)
-        {
-            amicables += parseInt(i);
-        }
+
+function reduceFactor (number) {
+  const factor = [1]
+  for (let i = 2; i <= Math.ceil(number / 2); i++) {
+    if (number % i === 0) {
+      factor.push(i)
     }
+  }
 
-    return amicables;
-
+  return factor.reduce((a, b) => { return a + b })
 }
+function findAmicableSum (values) {
+  let amicables = 0
+  // console.log(values);
+  for (const i in values) {
+    // console.log(i, values[i]);
+    if (values[i].isAmicable) {
+      amicables += parseInt(i)
+    }
+  }
+
+  return amicables
+}
+
+module.exports = p021

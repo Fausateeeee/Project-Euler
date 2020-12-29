@@ -31,7 +31,7 @@ function p019 (startingYear, endingYear) {
 
 function setData (data) {
   for (let i = 1901; i <= 2000; i++) {
-    data[i] = { leap: (i % 4 == 0 && (i % 100 != 0 || i % 400 == 0)), startingDayOfTheMonth: [], numberOfSundays: 0 }
+    data[i] = { leap: (i % 4 === 0 && (i % 100 !== 0 || i % 400 === 0)), startingDayOfTheMonth: [], numberOfSundays: 0 }
   }
   data[1901].startingDayOfTheMonth.push('Tuesday')
   populateData(data)
